@@ -56,7 +56,10 @@ const click = "click"
 const method = () => {
   alert(1111);
 }
-
+/**
+ * nullを設定するとハンドラごと消える
+ */
+const attributeName = 'hoge';
 </script>
 
 <template>
@@ -97,7 +100,7 @@ const method = () => {
     <!-- 制御 -->
     <p v-if="seen">Now you see me</p>
 
-    <a v-bind:hoge="url"> アンカータグ </a>
+    <a v-bind:[attributeName]="url"> アンカータグ </a>
     <a @click="method"> null入ってます </a>
 
   </div>

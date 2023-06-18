@@ -1,5 +1,10 @@
 {
   "files": [],
+  "compilerOptions": {
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
   "references": [
     {
       "path": "./tsconfig.node.json"

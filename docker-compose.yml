@@ -2,7 +2,7 @@ version: '3'
 services:
   laugh_vue_app:
     container_name: laugh_vue
-    command: /bin/bash -c "cd laugh/ && npm run dev"
+    command: /bin/bash -c "cd laugh/ && npm install && npm run dev"
     build:
       context: .
       dockerfile: Dockerfile
