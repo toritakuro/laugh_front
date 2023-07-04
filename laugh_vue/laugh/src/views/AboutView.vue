@@ -13,3 +13,18 @@
   }
 }
 </style>
+<script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+export default {
+  setup () {
+    const store = useStore()
+
+    return {
+      // computed 関数のステートにアクセスします
+      count: computed(() => store.state.count),
+    }
+  }
+}
+</script>

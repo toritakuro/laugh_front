@@ -1,9 +1,15 @@
 {
   "files": [],
   "compilerOptions": {
-    "verbatimModuleSyntax": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "target": "esnext",
+    "module": "esnext",
+    // これは `this` のデータプロパティに対してより厳密な推論を可能にします
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node"
+    // "verbatimModuleSyntax": true,
+    // "esModuleInterop": true,
+    // "allowSyntheticDefaultImports": true
   },
   "references": [
     {
