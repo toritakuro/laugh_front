@@ -23,9 +23,6 @@
         </v-row>
       </v-container>
     </v-form>
-
-
-
     <v-table>
     <thead>
       <tr>
@@ -44,21 +41,26 @@
     </tbody>
    </v-table>
   
-
+   <div>vuexでIdTokenを表示</div>
+   {{ idToken }}
 </div>
 </template>
 
 <script setup lang="ts">
 // TypeScript が有効
 import axios from "axios";
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
 import DemoService from '@/services/DemoService';
 import ResponseData from "@/types/ResponseData";
 import Demo from "@/types/Demo";
 
 const demos = ref([] as Demo[])
 const title = ref('');
+const store = useStore()
 
+/** HomeViewで設定したidToken */
+const idToken = computed(() => store.state.token.idToken)
 const reg = async () => {
   // オブジェクトで置き換えたい
   let data = {
