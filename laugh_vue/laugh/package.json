@@ -18,7 +18,8 @@
     "vue": "^3.3.2",
     "vue-router": "^4.2.0",
     "vuetify": "^3.3.3",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
