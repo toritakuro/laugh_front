@@ -22,6 +22,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
+    "@mdi/font": "^7.2.96",
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node18": "^2.0.1",
     "@types/jsdom": "^21.1.1",
