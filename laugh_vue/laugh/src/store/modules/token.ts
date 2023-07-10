@@ -1,7 +1,7 @@
 export default {
   state() {
     return {
-      idToken: "s"
+      idToken: ""
     }
   },
   mutations: {

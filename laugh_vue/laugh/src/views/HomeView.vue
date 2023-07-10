@@ -8,8 +8,9 @@
   const count = computed(() => store.state.counter.count)
   const idToken = computed(() => store.state.token.idToken)
 
+  // login後、newIdTokenにつける
   const click =  () => {
-    store.commit('saveIdToken', "idtoken")
+    store.commit('saveIdToken', "newIdToken")
   }
 
 </script>

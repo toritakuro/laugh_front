@@ -4,20 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store/index'
 import router from './router'
-
-
-// Vuetify
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-
-
-console.log(store);
-const vuetify = createVuetify({
-  components,
-  directives,
-})
+import { vuetify } from '@/plugins/vuetify'
 
 const app = createApp(App)
 app.use(vuetify)
