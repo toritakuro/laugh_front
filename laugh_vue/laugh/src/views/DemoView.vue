@@ -52,8 +52,8 @@ import axios from "axios";
 import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import DemoService from '@/services/DemoService';
-import ResponseData from "@/types/ResponseData";
-import Demo from "@/types/Demo";
+import type ResponseData from "@/types/ResponseData";
+import type Demo from "@/types/Demo";
 
 const demos = ref([] as Demo[])
 const title = ref('');
