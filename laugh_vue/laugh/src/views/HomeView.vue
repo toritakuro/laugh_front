@@ -13,7 +13,7 @@
   const click =  () => {
     store.commit('saveIdToken', "newIdToken")
   }
-  const setFile =  (f:File[]) => {
+  const setFile =  (f:File) => {
     console.log('親')
     console.log(f)
   }
