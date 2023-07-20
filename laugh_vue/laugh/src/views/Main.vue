@@ -40,7 +40,7 @@
 
   const cards = ['Today', 'Yesterday']
   const links = [
-    ['mdi-home', 'ホーム', '/'],
+    ['mdi-home', 'ホーム', '/home'],
     ['mdi-bomb', 'デモ', '/demo'],
   ]
 

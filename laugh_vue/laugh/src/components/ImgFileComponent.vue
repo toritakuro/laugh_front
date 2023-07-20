@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- dragenterはホバーされた時 https://reffect.co.jp/vue/drag-drop-file-upload/で記事になっている-->
     <div 
       @dragenter="dragenter"
       @dragleave="dragLeave"
@@ -10,17 +9,13 @@
     >
       ファイルの場所
     </div>
-    <img :src="targetImage" alt="選択された画像" class="image">
-    <canvas ref="canvas"></canvas>
+    <!-- <img :src="targetImage" alt="選択された画像" class="image"> -->
+    <canvas class="ds-none" ref="canvas"></canvas>
   </div>
 </template>
-<!-- https://qiita.com/hoshimado/items/7b9f73f9f146a66e2502 -->
 <script setup lang="ts">
-  // 親コンポーネントから呼び出す時のv-onディレクティブの定義
-  // <FileComponet @setFile>の@setFileの部分=の渡らせる親の定義した関数の引数として設定した値を渡す
   const emit = defineEmits(['setFile']);
-  //import { emit } from 'process';
-  import { computed, ref } from 'vue'
+  import { ref } from 'vue'
 
   const enterFlg = ref(false);
   let file = ref<File>();
@@ -28,28 +23,37 @@
   
   const canvas = ref<HTMLCanvasElement>(); // canvas要素のrefを作成
 
-  // ref は値にreactiveはオブジェクトに設定
   const dragenter = () => {
-    // .valueで値を設定することが可能
     enterFlg.value = true;
   }
   const dragLeave = () => {
-    // .valueで値を設定することが可能
     enterFlg.value = false;
   }
-  // これが発火したときに親が取得したい
-  const drop = (e: DragEvent) => {
-    if (e.dataTransfer) {
-      enterFlg.value = false;
-      file.value = e.dataTransfer.files[0];
-      getFileAsBase64(e.dataTransfer.files[0])
-      .then((imgDateBase64: string)=> {
-        return resizeImage64withCanvase(imgDateBase64, canvas);
-      });
-      // これを呼び出したときに親のメソッドも呼び出される
-      emit('setFile', file);
+
+  /**
+   * ファイルをリサイズしemitで親へbase64を渡す
+   * @param e 
+   */
+  const drop = async (e: DragEvent) => {
+    if (!e.dataTransfer) {
+      return;
     }
+    enterFlg.value = false;
+    file.value = e.dataTransfer.files[0];
+
+    try {
+      const imgDateBase64 = await getFileAsBase64(e.dataTransfer.files[0]);
+      if (!canvas.value) {
+        throw new Error('Canvas is undefined');
+      }
+
+      const resizedBase64 = await resizeImage64withCanvase(imgDateBase64, canvas.value);
+      emit('setFile', resizedBase64);
+    } catch (error) {
+      console.error(error);
+    }    
   }
+
   /**
    * ファイルオブジェクトからBase64へ変換
    * @param filePath 
@@ -59,14 +63,12 @@
         const reader = new FileReader();
         reader.onload = e => {
           if (e.target && e.target.result) {
-            // : Promise<string>で定義したのでe.target.result as stringで定義する
             resolve(e.target.result as string)
           } else {
             reject(new Error('Failed to read file.'));
           }
         };
         reader.onerror = error => reject(error);
-
         reader.readAsDataURL(filePath);
       }
     );
@@ -74,46 +76,54 @@
 
   /**
    * ファイルをリサイズ
-   * @param loeadFile 
-   * @param canvas 
+   * @param loeadFile
+   * @param canvas
    */
   const resizeImage64withCanvase = (loeadFile: string, canvas: HTMLCanvasElement) => {
-    return new Promise<HTMLImageElement>((resolve) => {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image();
       image.onload = () => resolve(image);
+      image.onerror = error => reject(error);;
       image.src = loeadFile;
     }).then((image: HTMLImageElement) => {
+      const regex = image.src.match(/data:(.*);base64/);
+      let mineType;
+      if (regex) {
+        mineType = regex[1]
+      } else {
+        throw new Error('illeagal');
+      }
       const ctx = canvas.getContext('2d');
       if (!ctx) {
         throw new Error('2d context is not supported.');
       }
-      const MAX_SIZE = 600;
+
+      const MAX_SIZE = 300;
+      let canvasWidth = 0
+      let canvasHeight = 0
       if (image.width < MAX_SIZE && image.height < MAX_SIZE) {
-        [canvas.width, canvas.height] = [image.width, image.height];
+        canvasWidth = image.width;
+        canvasHeight = image.height;
       } else {
-        let dstWidth;
-        let dstHeight;
-        // 横 : 縦 = 320 : x で計算 
+        // 横 : 縦 = MAX_SIZE : x で計算 
         if (image.width > image.height) {
-          dstWidth = MAX_SIZE;
-          dstHeight = (image.height * MAX_SIZE) / image.width;
+          canvasWidth = MAX_SIZE;
+          canvasHeight = (image.height * MAX_SIZE) / image.width;
         } else {
-          dstHeight = MAX_SIZE;
-          dstWidth = (image.width * MAX_SIZE) / image.height;
+          canvasHeight = MAX_SIZE;
+          canvasWidth = (image.width * MAX_SIZE) / image.height;
         }
-        canvas.width = dstWidth;
-        canvas.height = dstHeight;
-        // canvasに既に描画されている画像があればそれを消す
-        ctx.clearRect(0,0,dstWidth,dstHeight);
-        ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, dstWidth, dstHeight);
       }
 
-      // canvasから画像をbase64として取得する
-      const base64 = canvas.toDataURL('image/jpeg');
-      return Promise.resolve(base64);
-    });
+      // 描画処理
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
+      ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvasWidth, canvasHeight);
+
+      return Promise.resolve(canvas.toDataURL(mineType));
+    })
   }
-  // アスペクト比というのは矩形の長辺(横):短辺(縦)
 </script>
 
 <style scoped>

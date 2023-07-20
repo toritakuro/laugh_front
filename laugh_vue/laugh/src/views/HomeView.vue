@@ -13,9 +13,8 @@
   const click =  () => {
     store.commit('saveIdToken', "newIdToken")
   }
-  const setFile =  (f:File) => {
-    console.log('親')
-    console.log(f)
+  const setFile =  (base64:String) => {
+    console.log(base64);
   }
   // emitで呼び出される処理を何に割り当てるのか
 </script>
@@ -24,7 +23,6 @@
   <main>
     <v-file-input label="File input"></v-file-input>
     <div class="test">ここには適応されない</div>
-    <!-- 呼び出し型(定義箇所はキャメルだがvueが変換してくれる)はケバブケース(-で区切る)がおすすめらしい-->
     <ImgFileComponent @set-file="setFile"/>
     <TheWelcome />
     {{ count }}
