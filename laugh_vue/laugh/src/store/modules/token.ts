@@ -1,8 +1,6 @@
 export default {
-  state() {
-    return {
+  state: {
       idToken: ""
-    }
   },
   mutations: {
     saveIdToken(state, idToken: string) {
@@ -12,7 +10,7 @@ export default {
       state.token = ""
   }
   },
-  getter: {
+  getters: {
     getIdToken(state) {
       return state.idToken;
     }

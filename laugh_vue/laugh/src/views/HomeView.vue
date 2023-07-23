@@ -26,7 +26,7 @@
     <ImgFileComponent @set-file="setFile"/>
     <TheWelcome />
     {{ count }}
-    <div @click="click">{{ idToken }}</div>
+    <div @click="click">ここ{{ idToken }}</div>
   </main>
 </template>
 

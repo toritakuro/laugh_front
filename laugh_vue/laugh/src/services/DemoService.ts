@@ -1,4 +1,5 @@
 import http from "@/http-common";
+import store from "@/store"
 // import type Demo from "@/types/Demo";
 
 class DemoService {

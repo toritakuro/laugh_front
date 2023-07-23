@@ -1,13 +1,18 @@
 import { createStore } from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 import counter from './modules/counter'
-import token from './modules/token'
+import tokenModule from './modules/token'
 
 const store = createStore({
-  plugins: [createPersistedState()], 
+  plugins: [
+    createPersistedState({
+      // 永続化したいモジュールを指定
+      paths: ['counter','token'],
+    }),
+  ], 
   modules: {
     counter,
-    token
+    token: tokenModule
   }
 })
 export default store
