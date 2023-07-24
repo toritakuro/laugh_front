@@ -1,4 +1,5 @@
-<script setup>
+<script setup lang="ts">
+  import ImgFileComponent from '../components/ImgFileComponent.vue'
   import { computed } from 'vue'
   import { useStore } from 'vuex'
 
@@ -10,17 +11,22 @@
 
   // login後、newIdTokenにつける
   const click =  () => {
-    store.commit('saveIdToken', "newIdToken")
+    store.commit('token/saveIdToken', "newIdToken")
   }
-
+  const setFile =  (base64:String) => {
+    console.log(base64);
+  }
+  // emitで呼び出される処理を何に割り当てるのか
 </script>
 
 <template>
   <main>
-    ho-mudesu
+    <v-file-input label="File input"></v-file-input>
+    <div class="test">ここには適応されない</div>
+    <ImgFileComponent @set-file="setFile"/>
     <TheWelcome />
     {{ count }}
-    <div @click="click">{{ idToken }}</div>
+    <div @click="click">ここ{{ idToken }}</div>
   </main>
 </template>
 

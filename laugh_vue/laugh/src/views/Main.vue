@@ -31,16 +31,17 @@
     </v-navigation-drawer>
 
     <v-main>
+      <Message></Message>
       <RouterView />
     </v-main>
   </v-app>
 </template>
 <script setup>
   import { ref } from 'vue'
-
+  import Message from '../components/MessageComponent.vue'
   const cards = ['Today', 'Yesterday']
   const links = [
-    ['mdi-home', 'ホーム', '/'],
+    ['mdi-home', 'ホーム', '/home'],
     ['mdi-bomb', 'デモ', '/demo'],
   ]
 

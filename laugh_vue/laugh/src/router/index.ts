@@ -18,6 +18,10 @@ const router = createRouter({
         {
           path: 'demo',
           component: DemoView
+        },
+        {
+          path: 'home',
+          component: HomeView
         }
       ]
     }
