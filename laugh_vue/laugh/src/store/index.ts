@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 import counter from './modules/counter'
-import tokenModule from './modules/token'
+import token from './modules/token'
+import message from './modules/message'
 
 const store = createStore({
   plugins: [
@@ -12,7 +13,8 @@ const store = createStore({
   ], 
   modules: {
     counter,
-    token: tokenModule
+    token,
+    message
   }
 })
 export default store

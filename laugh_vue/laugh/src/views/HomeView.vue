@@ -11,7 +11,7 @@
 
   // login後、newIdTokenにつける
   const click =  () => {
-    store.commit('saveIdToken', "newIdToken")
+    store.commit('token/saveIdToken', "newIdToken")
   }
   const setFile =  (base64:String) => {
     console.log(base64);
