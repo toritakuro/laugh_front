@@ -20,9 +20,9 @@ const actions = {
   showMessage ({ commit }, obj) {
     commit('setMessage', obj.messages);
     commit('setResult', obj.result);
-    setTimeout(() => {
-      commit('hideMessage');
-    }, 3000)
+      setTimeout(() => {
+        commit('hideMessage');
+      }, 3000)
   }
 };
 export default {

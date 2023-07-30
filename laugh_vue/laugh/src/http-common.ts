@@ -6,21 +6,44 @@ const apiClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:8080/",
   headers: {
     "Content-type": "application/json",
-    "Authorization": "Bearer " + store.state.token.idToken,
+    "Authorization": "Bearer " + "aaa",
   },
 });
 
 apiClient.interceptors.response.use(
-  response => response,
-  error => {
-    if (true) {
+  function (response) {
+    // ステータスコードが 2xx の範囲にある場合、この関数が起動します
+    // リクエスト データの処理
+    if (response.data.messages !== undefined) {
       store.dispatch('message/showMessage',{
-        messages: ['1' ,'2','2'], // TODO返却値からmsgがあれば取り出す
-        result: 'warning'
-      });  
+        messages: [...response.data.messages], // TODO返却値からmsgがあれば取り出す
+        result: 'success'
+      });
     }
-    return;
-    //return Promise.reject(error);
-  }
+    return response;
+  },
+  function (error) {
+    switch (error.response.status) {
+      case 400: // バリデーション
+        const msg = error.response.data.errMsg;
+        if (msg !== undefined) {
+          const _msg = [];
+          for (let key in msg) {
+            if (msg.hasOwnProperty(key)) {
+              _msg.push(msg[key]);
+              console.log(key + ': ' + msg[key]);
+            }
+          }
+          store.dispatch('message/showMessage',{
+            messages: [..._msg],
+            result: 'warning'
+          });
+        }
+        break;
+      default:
+        break
+    }
+    return error;
+  },
 );
 export default apiClient;

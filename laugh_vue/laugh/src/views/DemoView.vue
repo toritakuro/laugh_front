@@ -75,8 +75,8 @@ const getData = async () => {
   DemoService.getAll()
   .then((response: ResponseData) => 
   {
-    demos.value = response.data;
-    console.log(response.data);
+    // demos.value = response.data;
+    // console.log(response.data);
   });
 };
 
