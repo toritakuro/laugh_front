@@ -8,10 +8,12 @@
   const store = useStore()
   const count = computed(() => store.state.counter.count)
   const idToken = computed(() => store.state.token.idToken)
-
+  const userId = computed(() => store.state.user.userId);
   // login後、newIdTokenにつける
   const click =  () => {
     store.commit('token/saveIdToken', "newIdToken")
+    console.log("aaa");
+    store.commit('user/saveUserId', 3);
   }
   const setFile =  (base64:String) => {
     console.log(base64);
@@ -27,6 +29,7 @@
     <TheWelcome />
     {{ count }}
     <div @click="click">ここ{{ idToken }}</div>
+    <div>{{ userId }}</div>
   </main>
 </template>
 
