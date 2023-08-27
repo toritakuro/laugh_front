@@ -89,14 +89,25 @@
               v-model="name"
               :rules="nameRules"
               required
-            ></v-text-field>
+        ></v-text-field>
 
-      <li class="search-ttl">性別</li>
-      <li>
-          <v-radio label="男" name=gender value="1" id="man"></v-radio>
-          <v-radio label="女" name=gender value="2" id="woman"></v-radio>
-          <v-radio label="男女" name=gender value="3" id="man-woman"></v-radio>
-      </li>
+  <li class="search-ttl">性別</li>   
+  <v-radio-group v-model="radiosGender">
+    <v-radio
+      v-for="select in optionGender"
+      v-bind:key="select.id"
+      v-bind:label="select.name"
+      v-bind:value="select.name"
+    ></v-radio>
+  </v-radio-group>
+
+
+
+
+
+
+
+
   
       <li class="search-ttl">活動歴</li>
       <li>
@@ -322,15 +333,14 @@
   
   </style>
   <script setup lang="ts">
+  import { ref } from 'vue'
   
-  //   export default {
-  //     data() {
-  //       return {
-  //         ex4: [
-  //           'orange',
-  //         ],
-  //       }
-  //     },
-  //   }
+  const radiosGender = ref([])
+  const optionGender = [
+    { id: 1, name: '男'},
+    { id: 2, name: '女'},
+    { id: 3, name: '男女'}
+  ]
+
   
   </script>
