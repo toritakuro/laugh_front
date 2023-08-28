@@ -6,6 +6,7 @@
         <tr
           :class="{ 'tr-hover': isHovering }"
           v-bind="props"
+          @click="displayUser(item)"
         >
         <td style="width:50px;">
             <v-icon v-if='item.status == 10 || item.status == 11' size="x-large" color="#EC407A" icon="mdi-handshake" />
@@ -38,13 +39,15 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 import type Laugh from "@/types/Laugh";
 import http from "@/http-common";
 
 const store = useStore()
-const userId = computed(() => store.state.user.userId);
-const laughs = ref<Laugh[]>([]);
+const router = useRouter()
+const userId = computed(() => store.state.user.userId)
+const laughs = ref<Laugh[]>([])
 
 /** Laugh一覧を取得する */
 const getLaugh = async () => {
@@ -52,12 +55,17 @@ const getLaugh = async () => {
     params: {
       userId: userId.value
     }}
-  );
+  )
   laughs.value = data.data;
-};
+}
+/** ユーザ詳細へ遷移 */
+const displayUser = (laugh:Laugh) => {
+  router.push({ path: '/home', query: { userId: laugh.targetUserId }  })
+}
+
 defineExpose({
   getLaugh,
-});
+})
 </script>
 
 
