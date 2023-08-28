@@ -8,12 +8,12 @@
           v-bind="props"
           @click="displayUser(item)"
         >
-        <td style="width:50px;">
+        <td class="status-icon">
             <v-icon v-if='item.status == 10 || item.status == 11' size="x-large" color="#EC407A" icon="mdi-handshake" />
             <v-icon v-if='item.mySendLough == false && item.status == 0' size="x-large" color="#42A5F5" icon="mdi-timer-sand" />
             <v-icon v-if='item.mySendLough && item.status == 0' size="x-large" color="#42A5F5" icon="mdi-send-clock" />
         </td>
-        <td style="width:100px;">
+        <td class="img">
             <v-avatar color="surface-variant">
             <v-img
               aspect-ratio="16/9"
@@ -22,8 +22,8 @@
             ></v-img>
             </v-avatar>
           </td>
-          <td style="width:100px;">{{ item.name }}</td>
-          <td class="text-right" style="width:80px;"> {{ item.activeTermYear }}年目</td>
+          <td  class="name">{{ item.name }}</td>
+          <td class="text-right active-term">{{ item.activeTermYear }}年目</td>
           <td>
             <v-chip
               class="ma-2"
@@ -58,6 +58,7 @@ const getLaugh = async () => {
   )
   laughs.value = data.data;
 }
+
 /** ユーザ詳細へ遷移 */
 const displayUser = (laugh:Laugh) => {
   router.push({ path: '/home', query: { userId: laugh.targetUserId }  })
@@ -68,17 +69,9 @@ defineExpose({
 })
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<style scoped>
+.status-icon { width:50px; }
+.img { width:100px; }
+.name { width:100px; }
+.active-term { width:80px; }
+</style>

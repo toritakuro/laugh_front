@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import ImgFileComponent from '../components/ImgFileComponent.vue'
   import { computed } from 'vue'
   import { useStore } from 'vuex'
@@ -14,12 +14,11 @@
 
   // login後、newIdTokenにつける
   const click =  () => {
-    
-    alert(route.query.userId)
-    console.log(router);
-    //store.commit('token/saveIdToken', "newIdToken")
+    // alert(route.query.userId)
+    // console.log(router);
+    store.commit('token/saveIdToken', "newIdToken")
   }
-  const setFile =  (base64:String) => {
+  const setFile = (base64:String) => {
     console.log(base64);
   }
   // emitで呼び出される処理を何に割り当てるのか
