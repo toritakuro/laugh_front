@@ -1,7 +1,7 @@
 <template>
     
   <body>
-    
+
   <main class="main-content">
     <section>
       <div class="sort-box">
@@ -91,7 +91,7 @@
               required
         ></v-text-field>
 
-  <li class="search-ttl">性別</li>   
+  <li class="search-ttl">性別</li>
   <v-radio-group v-model="radiosGender">
     <v-radio
       v-for="select in optionGender"
@@ -101,32 +101,26 @@
     ></v-radio>
   </v-radio-group>
 
+  <li class="search-ttl">活動歴</li>
+  <v-radio-group v-model="radiosActiveHistory">
+    <v-radio
+      v-for="select in optionActiveHistory"
+      v-bind:key="select.id"
+      v-bind:label="select.name"
+      v-bind:value="select.name"
+    ></v-radio>
+  </v-radio-group>
 
-
-
-
-
-
-
-  
-      <li class="search-ttl">活動歴</li>
-      <li>
-          <v-radio label="1年未満" value="1"></v-radio>
-          <v-radio label="1年以上" value="2"></v-radio>
-          <v-radio label="3年以上" value="3"></v-radio>
-          <v-radio label="5年以上" value="1"></v-radio>
-          <v-radio label="7年以上" value="2"></v-radio>
-          <v-radio label="9年以上" value="3"></v-radio>
-          <v-radio label="指定しない" value="3"></v-radio>
-      </li>
-  
-      <li class="search-ttl">事務所</li>
-        <v-checkbox label="吉本興業" name="office" value=1 id="yoshimoto"></v-checkbox>
-        <v-checkbox label="人力舎" name="office" value=2 id="jinrikisha"></v-checkbox>
-        <v-checkbox label="マセキ芸能社" name="office" value=3 id="maseki"></v-checkbox>
-        <v-checkbox label="松竹芸能" name="office" value=4 id="shochiku"></v-checkbox>
-        <v-checkbox label="その他" name="office" value=5 id="office-sonota"></v-checkbox>
-  
+  <li class="search-ttl">事務所</li>
+  <v-checkbox-group v-model="optionOffice">
+    <v-checkbox
+      v-for="select in optionOffice"
+      v-bind:key="select.id"
+      v-bind:label="select.name"
+      v-bind:value="select.name"
+    ></v-checkbox>
+  </v-checkbox-group>
+    
       <li class="search-ttl">芸風</li>
       <v-checkbox label="漫才" name="office" value=1 id="mannzai"></v-checkbox>
       <v-checkbox label="ピン" name="office" value=2 id="pin"></v-checkbox>
@@ -137,13 +131,15 @@
       <v-checkbox label="リズムネタ" name="office" value=7 id="rhythmneta"></v-checkbox>
       <v-checkbox label="その他" name="office" value=8 id="geihu-sonota"></v-checkbox>
 
-      <li class="search-ttl">料金体系</li>
-      <li>
-        <v-select
-          label=""
-          :items="['時給', '出来高']"
-        ></v-select>
-      </li>
+    <li class="search-ttl">料金体系</li>   
+    <v-select v-model="selectedFeeType">
+      <option v-for="select in optionFeeType"
+      v-bind:key="select.id"
+      v-bind:label="select.name"
+      v-bind:value="select.name">
+      {{ select.name }}
+      </option>
+    </v-select>
   
       <li class="search-ttl">金額</li>
       <li class="search-fee">
@@ -178,16 +174,6 @@
       </div>
     </ul>
 
-    
-    
-  
-  
-  
-  
-  
-  
-  
-  
   </main>
   </body>
   </template>
@@ -342,5 +328,30 @@
     { id: 3, name: '男女'}
   ]
 
-  
+  const radiosActiveHistory = ref([])
+  const optionActiveHistory = [
+    { id: 1, name: '1年未満'},
+    { id: 2, name: '1年以上'},
+    { id: 3, name: '3年以上'},
+    { id: 3, name: '5年以上'},
+    { id: 3, name: '7年以上'},
+    { id: 3, name: '9年以上'},
+    { id: 3, name: '指定しない'},
+  ]
+
+  const checkOffice = ref([])
+  const optionOffice = ref([
+    { id: 1, name: '吉本興業', flg: false},
+    { id: 2, name: '人力舎', flg: false},
+    { id: 3, name: 'マセキ芸能社', flg: false},
+    { id: 4, name: '松竹芸能', flg: false},
+    { id: 5, name: 'その他', flg: false}
+  ])
+
+  const selectedFeeType = ref([])
+  const optionFeeType = [
+    { id: 1, name: '時給'},
+    { id: 2, name: '出来高' }
+  ]
+
   </script>
