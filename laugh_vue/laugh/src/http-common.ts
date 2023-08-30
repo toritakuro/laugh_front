@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance,AxiosResponse } from "axios";
 import Vue from 'vue'
 import store from "@/store"
 
@@ -11,16 +11,40 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 apiClient.interceptors.response.use(
-  response => response,
-  error => {
-    if (true) {
+  function (response) {
+    // ステータスコードが 2xx の範囲にある場合、この関数が起動します
+    // リクエスト データの処理
+    if (response.data.data.messages !== undefined) {
       store.dispatch('message/showMessage',{
-        messages: ['1' ,'2','2'], // TODO返却値からmsgがあれば取り出す
-        result: 'warning'
-      });  
+        messages: [...response.data.data.messages], // TODO返却値からmsgがあれば取り出す
+        result: 'success'
+      });
     }
-    return;
-    //return Promise.reject(error);
-  }
+    return response;
+  },
+  function (error) {
+    switch (error.response.status) {
+      case 400: // バリデーション
+        const msg = error.response.data.errMsg;
+        if (msg !== undefined) {
+          const _msg = [];
+          for (let key in msg) {
+            if (msg.hasOwnProperty(key)) {
+              _msg.push(msg[key]);
+              console.log(key + ': ' + msg[key]);
+            }
+          }
+          store.dispatch('message/showMessage',{
+            messages: [..._msg],
+            result: 'warning'
+          });
+        }
+        break;
+      case 401: // バリデーション
+      default:
+        break
+    }
+    return error;
+  },
 );
 export default apiClient;

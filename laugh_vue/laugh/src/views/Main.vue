@@ -41,10 +41,12 @@
   import Message from '../components/MessageComponent.vue'
   const cards = ['Today', 'Yesterday']
   const links = [
+    ['mdi-account', 'マイページ', '/mypage'],
     ['mdi-home', 'ホーム', '/home'],
     ['mdi-bomb', 'デモ', '/demo'],
     ['mdi-bomb', 'プロフィール登録画面', '/profile/register'],
     ['mdi-bomb', 'テスト用_プロフィール登録画面', '/profile/register2'],
+
   ]
 
   const drawer = ref(null)
