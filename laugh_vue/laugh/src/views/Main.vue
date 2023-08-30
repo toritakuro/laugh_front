@@ -43,8 +43,8 @@
   const links = [
     ['mdi-home', 'ホーム', '/home'],
     ['mdi-bomb', 'デモ', '/demo'],
-    ['mdi-bomb', 'ホーム_國栖テスト用', '/profile/register'],
-    ['mdi-bomb', 'ホーム_錦画面適用後', '/profile/register2'],
+    ['mdi-bomb', 'プロフィール登録画面', '/profile/register'],
+    ['mdi-bomb', 'テスト用_プロフィール登録画面', '/profile/register2'],
   ]
 
   const drawer = ref(null)
