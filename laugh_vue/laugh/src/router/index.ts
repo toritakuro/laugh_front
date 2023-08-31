@@ -4,6 +4,7 @@ import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginViuw from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
+import ProfileRegister from '../views/ProfileRegister.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,11 @@ const router = createRouter({
         {
           path: 'mypage',
           component: MyPage,
+        },
+        {
+          path: '/profile/register',
+          name: 'register',
+          component: ProfileRegister
         }
       ]
     }
