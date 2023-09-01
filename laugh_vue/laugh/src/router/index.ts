@@ -4,7 +4,7 @@ import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginViuw from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
-import ProfileRegister from '../views/ProfileRegister.vue'
+import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +15,14 @@ const router = createRouter({
       component: LoginViuw
     },
     {
-      path: '/', redirect: '/demo',component: Main,
+      path: '/profile/register',
+      name: 'profile',
+      component: ProfileRegister
+    },
+    {
+      path: '/', 
+      redirect: '/demo',
+      component: Main,
       children : [
         {
           path: 'demo',
@@ -28,11 +35,6 @@ const router = createRouter({
         {
           path: 'mypage',
           component: MyPage,
-        },
-        {
-          path: '/profile/register',
-          name: 'register',
-          component: ProfileRegister
         }
       ]
     }
