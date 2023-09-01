@@ -1,273 +1,44 @@
 <template>
-<!-- 
-<v-container fluid>
-        <v-row>
-<v-col
-            cols="12"
-            sm="6"
-          >
-            <v-text-field
-              v-model="password"
-              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="[rules.required, rules.min]"
-              :type="show1 ? 'text' : 'password'"
-              name="input-10-1"
-              label="Normal with hint text"
-              hint="At least 8 characters"
-              counter
-              @click:append="show1 = !show1"
-            ></v-text-field>
-          </v-col>
-  
-          <v-col
-            cols="12"
-            sm="6"
-          >
-            <v-text-field
-              :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="[rules.required, rules.min]"
-              :type="show2 ? 'text' : 'password'"
-              name="input-10-2"
-              label="Visible"
-              hint="At least 8 characters"
-              value="wqfasds"
-              class="input-group--focused"
-              @click:append="show2 = !show2"
-            ></v-text-field>
-          </v-col>
+  <v-container>
+    <v-row>ステップバーを書く(錦)</v-row>
+    <v-row>
+      <v-card
+        class="mx-auto w-50"
+        width="400"
+        prepend-icon="mdi-home"
+      >
+        <template v-slot:title>
+          新規登録
+        </template>
 
-      </v-row>
-      </v-container> -->
-
-  <header>
-    <h1 class="menu_top">
-      Laugh
-    </h1>
-  </header>
-  <main>
-    <section class="user-register-box">
-      <!-- <v-form> -->
-        <h2 class="title-sub">新規会員登録</h2>
-        <table class="user-register-list">
-          <tr>
-            <th>e-mail（ユーザーID）</th>
-            <td>
-              <v-col cols="12" sm="6" md="10">
-                <v-text-field dense single-line outlined label="メール"></v-text-field>
-              </v-col>
-            </td>
-          </tr>
-          <tr>
-            <th>パスワード</th>
-            <td>
-              <v-col cols="12" sm="6" md="10">
-                <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible1 ? 'text' : 'password'" density="compact"
-                              placeholder="パスワードを入力してください" prepend-inner-icon="mdi-lock-outline" variant="outlined" @click:append-inner="visible1 = !visible1">
-                            </v-text-field>
-              </v-col>
-            </td>
-          </tr>
-          <tr>
-            <th>パスワード【確認用】</th>
-            <td>
-              <v-col cols="12" sm="6" md="10">
-                <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible2 ? 'text' : 'password'" density="compact"
-                              placeholder="パスワード【確認用】を入力してください" prepend-inner-icon="mdi-lock-outline" variant="outlined" @click:append-inner="visible2 = !visible2">
-                            </v-text-field>
-              </v-col>
-            </td>
-          </tr>
-          <tr>
-            <th>作家/芸人</th>
-            <td>
-              <!-- <input type="radio" name="sakka-geinin" v-model="userType" value="1" id="composer"><label for="composer">作家</label>
-              <input type="radio" name="sakka-geinin" v-model="userType" value="2" id="comedian"><label for="comedian">芸人</label> -->
-              <v-container fluid>
-                <v-radio-group column class="aaa">
-                  <v-radio label="作家" value="radio-1"></v-radio>
-                  <v-radio label="芸人" value="radio-2"></v-radio>
-                </v-radio-group>
-              </v-container>
-            </td>
-          </tr>
-          <tr>
-            <th>活動名</th>
-            <td>
-              <v-col cols="12" sm="6" md="10">
-                <v-text-field dense single-line outlined label="美味しんぼーず"></v-text-field>
-              </v-col>
-            </td>
-          </tr>
-          <tr>
-            <th>活動名（カナ）</th>
-            <td>
-              <v-col cols="12" sm="6" md="10">
-                <v-text-field dense single-line outlined label="オイシンボーズ"></v-text-field>
-              </v-col>
-            </td>
-          </tr>
-          <tr>
-            <th>活動開始年月</th>
-            <td>
-            <span ><input type="num" v-model="debutYear" class="text-box">年</span>
-            <input type="num" v-model="debutMonth" class="text-box">月
-            </td>
-          </tr>
-          <tr v-if="userType == 2">
-            <th>活動人数</th>
-            <td><input type="number" value="" class="num-box" min="0"/>人</td>
-          </tr>
-          <tr>
-            <th>性別</th>
-            <td>
-              <v-container fluid>
-                <v-radio-group column class="aaa">
-                  <v-radio label="回答なし" value="radiooo-1"></v-radio>
-                  <v-radio label="男性" value="radiooo-2"></v-radio>
-                  <v-radio label="女性" value="radiooo-3"></v-radio>
-                  <v-radio label="男女" value="radiooo-4"></v-radio>
-                </v-radio-group>
-              </v-container>
-            </td>
-          </tr>
-          <tr>
-            <th>事務所</th>
-            <td>
-              <v-container fluid>
-                <v-row align="center">
-                  <v-col class="d-flex" cols="12" sm="10">
-                    <v-select :items="geininsakka" label="事務所"></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </td>
-          </tr>
-            <tr>
-              <th>得意分野</th>
-              <td>
-                <!-- <input type="checkbox" id="manzai" v-model="comedyStyleIdList" value="1"><label for="manzai">漫才</label>
-                <input type="checkbox" id="pin" v-model="comedyStyleIdList" value="2"><label for="pin">ピン</label>
-                <input type="checkbox" id="comte" v-model="comedyStyleIdList" value="3"><label for="comte">コント</label>
-                <input type="checkbox" id="gag" v-model="comedyStyleIdList" value="4"><label for="gag">ギャグ</label>
-                <input type="checkbox" id="impersonate" v-model="comedyStyleIdList" value="5"><label for="impersonate">モノマネ</label>
-                <input type="checkbox" id="singing" v-model="comedyStyleIdList" value="6"><label for="singing">歌ネタ</label>
-                <input type="checkbox" id="rythm" v-model="comedyStyleIdList" value="7"><label for="rythm">リズムネタ</label>
-                <input type="checkbox" id="other" v-model="comedyStyleIdList" value="8"><label for="other">その他</label> -->
-                
-                <v-card flat>
-                  <v-card-text>
-                      <v-row>
-                        <v-col class="d-flex justify-center" cols="12" sm="10">
-                          <div class="d-flex justify-center">
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="漫才" color="orange" value="chk1" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="ピン" color="orange" value="chk2" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="コント" color="orange" value="chk3" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="ギャグ" color="orange" value="chk4" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="モノマネ" color="orange" value="chk5" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="歌ネタ" color="orange" value="chk6" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="リズムネタ" color="orange" value="chk7" ></v-checkbox>
-                              </v-col>
-                              <v-col cols="6" sm="3" md="2">
-                                <v-checkbox v-model="ex4" label="その他" color="orange" value="chk8" ></v-checkbox>
-                              </v-col>
-                            </div>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-              </td>
-            </tr>
-            <tr>
-              <th>料金体系</th>
-              <td>
-                <!-- <input type="radio" name="okane" id="hour-base" v-model="feeType" value="1">
-                <label for="hour-base">時給</label>
-                <input type="radio" name="okane" id="result-base" v-model="feeType" value="2">
-                <label for="result-base">成果物による</label> -->
-                <v-container >
-                <v-radio-group column class="aaa">
-                  <v-radio label="時給" value="radioo-1"></v-radio>
-                  <v-radio label="成果物による" value="radioo-2"></v-radio>
-                </v-radio-group>
-              </v-container>
-              </td>
-            </tr>
-            <tr>
-              <th>金額</th>
-              <td v-if="feeType == 1"><input type="number" v-model="fee" class="num-box" min="0"/>円/時間</td>
-              <td v-if="feeType == 2"><input type="number" v-model="fee" class="num-box" min="0"/>円</td>
-            </tr>
-            <tr v-if="userType == 1">
-              <th>特殊スキル</th>
-              <td>
-                <input type="checkbox" id="movie" v-model="specialSkillIdList" value="1">
-                <label for="movie">動画編集</label>
-                <input type="checkbox" id="illustration" v-model="specialSkillIdList" value="2">
-                <label for="illustration">イラスト</label>
-                <input type="checkbox" id="sound_production" v-model="specialSkillIdList" value="3">
-                <label for="sound_production">音源制作</label>
-                <input type="checkbox" id="other_skill" v-model="specialSkillIdList" value="4">
-                <label for="other_skill">その他</label>
-                <input type="text" v-model="anotherSkill" class="register-input" placeholder="その他の内容を記載下さい">
-              </td>
-            </tr>
-            <tr>
-              <th>活動場所</th>
-              <td>
-                <v-col class="d-flex" cols="12" sm="10">
-                  <v-select :items="tihou" label="地方を選択"></v-select>
-                </v-col>
-              </td>
-            </tr>
-            <tr>
-              <th>自己紹介</th>
-              <!-- <td><input type="textarea" v-model="selfIntroduction" placeholder="よろしくお願いします。" class="self-introduction-box" /></td> -->
-              <!-- <td><textarea v-model="selfIntroduction" placeholder="よろしくお願いします。" class="self-introduction-box" ></textarea></td> -->
-              <td>
-                <v-col cols="12" sm="6" md="10">
-                  <v-textarea v-model="selfIntroduction" single-line outlined solo name="input-7-4" label="よろしくおねがいします。" ></v-textarea>
-                </v-col>
-              </td>
-            </tr>
-            <tr>
-							<th>画像</th>
-              <td>
-                <!-- <ImgFileComponent @set-file="setFile"/>
-                <div>
-                  <label v-if="!value" class="upload-content-space user-photo default">
-                    <input ref="file" class="file-button" type="file" @change="upload" />アップロード</label>
-                    <div v-if="value" class="uploaded">
-                      <label class="upload-content-space user-photo">
-                      <input ref="file" class="file-button" type="file" @change="upload" />
-                      <img class="user-photo-image" :src="value" />
-                    </label>
-                  </div>
-                </div> -->
-                <v-col cols="12" sm="6" md="10">
-                  <v-file-input label="画像のアップロード" filled prepend-icon="mdi-camera"></v-file-input>
-                </v-col>
-              </td>
-            </tr>
-        </table>
-        <div class="d-block">
-          <v-btn block elevation="2" small x-large color="orange">登録</v-btn>
-        </div>
-      <!-- </v-form> -->
-    </section>
-  </main>
+        <v-card-text>
+          <v-form @submit.prevent>
+            <v-text-field
+              v-model="firstName"
+              :rules="rules"
+              label="名前"
+            ></v-text-field>
+            <v-text-field
+              v-model="firstName"
+              :rules="rules"
+              label="メールアドレス"
+            ></v-text-field>
+            <v-text-field
+              v-model="firstName"
+              :rules="rules"
+              label="ほげげ"
+            ></v-text-field>
+            <v-text-field
+              v-model="firstName"
+              :rules="rules"
+              label="ほげ"
+            ></v-text-field>
+            <v-btn type="submit" block class="mt-2">Submit</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
@@ -276,10 +47,10 @@
 import axios from "axios";
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
-//import ImgFileComponent from '../components/ImgFileComponent.vue'
 
 const router = useRouter();
 const route = useRoute();
+// setupをscriptタグに書くことによってexport defaultせずに使えるようになる compositionAPIというvue3からの機能
 const test = ref('test');
 test.value = "aiueo";
 // //画像のアップロード
