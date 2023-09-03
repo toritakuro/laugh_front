@@ -1,7 +1,98 @@
 <template>
-    
-  <body>
+  <v-container fluid>
+    <v-row justify="center">
+      <v-col cols="7" >
+        <v-row>
+          <v-col cols="6">
+          <v-card>
+              <v-img
+                aspect-ratio="16/9"
+                cover
+                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+              ></v-img>
+              <v-card-title class="text-h5">美味しんぼーず</v-card-title>
+              <v-card-subtitle class="mb-1 text-subtitle-1">芸歴:1年</v-card-subtitle>
+              <v-card-item class="pl-3">
+                <v-chip-group>
+                  <v-chip>漫才</v-chip><v-chip>コント</v-chip>
+                </v-chip-group>
+              </v-card-item>
+              <v-list density="compact">
+                <v-list-subheader>
+                  <div class="font-weight-bold text-subtitle-1 recomend-script">イチオシのネタ</div>
+                </v-list-subheader>
+                <v-list-item
+                  v-for="(item, i) in items"
+                  :key="i"
+                  :value="item"
+                  color="primary"
+                >
+                  <template v-slot:prepend>
+                    <v-icon :icon="item.icon"></v-icon>
+                  </template>
+                  <v-list-item-title v-text="item.text"></v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-col>
+          <v-col
+            class="ps-6"
+            cols="4"
+            >
+            <v-card
+            class="pa-4"
+            >
+            <v-col>
+              <v-text-field
+                label="芸名"
+                density="compact"
+                bg-color="#fffffff"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-card-subtitle class="text-subtitle-1">事務所</v-card-subtitle>
+              <v-checkbox
+                label="吉本興業"
+                density="compact"
+                hide-details="true"
+                value="John"
+              ></v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="マセキ芸能社"
+                value="Jacob">
+              </v-checkbox>
+            </v-col>
+            <v-col>
+              <v-card-subtitle class="text-subtitle-1">性別</v-card-subtitle>
+              <v-checkbox
+                label="男"
+                density="compact"
+                hide-details="true"
+                value="John"
+              ></v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="女"
+                value="Jacob">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="男女"
+                value="Jacob">
+              </v-checkbox>
+            </v-col>
+          </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
 
+
+  </v-container>
   <main class="main-content">
     <section>
       <div class="sort-box">
@@ -173,12 +264,14 @@
         <v-btn class="clear-btn">条件クリア</v-btn>
       </div>
     </ul>
-
   </main>
-  </body>
   </template>
-  <style>
-      ヘッダー
+  <style scoped>
+  .recomend-script {
+    border-left: 3px solid #7CB342;
+    padding-left: 5px;
+    color: #000000;
+  }
   .user-header { 
       text-align: center;
       padding: 20px 0;
@@ -320,7 +413,12 @@
   </style>
   <script setup lang="ts">
   import { ref } from 'vue'
-  
+  const aa = ref(true);
+
+  const items = ref([
+        { text: 'トカゲのおっさん', icon: 'mdi-video' },
+        { text: 'ゴレンジャイ', icon: 'mdi-file' },
+      ]) ;
   const radiosGender = ref([])
   const optionGender = [
     { id: 1, name: '男'},
