@@ -43,6 +43,8 @@
   const links = [
     ['mdi-home', 'ホーム', '/home'],
     ['mdi-bomb', 'デモ', '/demo'],
+    ['mdi-bomb', 'Top', '/top'],
+    ['mdi-bomb', 'Test', '/test'],
   ]
 
   const drawer = ref(null)
