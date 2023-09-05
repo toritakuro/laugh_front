@@ -13,7 +13,7 @@
       <v-table>
         <tbody>
           <ul v-for="item in users" class="user-profile">
-            <p>{{ item.profileImg }}</p>
+            <!-- <p>{{ item.profileImg }}</p> -->
             <p>活動名 : {{ item.userName }}</p>
             <p v-if="item.gender==1">性別 : 男</p>
             <p v-if="item.gender==2">性別 : 女</p>
@@ -148,34 +148,49 @@
   import TopService from '@/services/TopService';
   import type User from "@/types/User";
   import SearchForm from "@/components/SearchForm.vue"
+  import http from "@/http-common"
   
-  const selectedSorts = ref<string>('')
+  const users = ref([] as User[]);
+  const usersOrigin = ref([] as User[]);
+  const today = new Date();
+  
+  // const getData = async () => {
+  //   let userType = 1
+  //   TopService.getUserList(userType)
+  //   .then((response: ResponseData) => 
+  //   {
+  //     users.value = response.data;
+  //     usersOrigin.value = response.data;
+  //     console.log(response.data);
+  //   });
+  // };
+
+  onMounted(() => {
+    getData();
+  })
+  
+/** User一覧を取得する */
+const getData = async () => {
+  const {data} = await http.get('/top/init',{
+    params: {
+      userType: 1
+    }}
+  )
+  users.value = data.data;
+}
+
+defineExpose({
+  getData,
+})
+
+
+const selectedSorts = ref<string>('')
   const optionSorts = [
     { id: 1, name: 'ログイン'},
     { id: 2, name: '面白い' }, 
     { id: 3, name: '登録日' } 
   ]
 
-
-  const users = ref([] as User[]);
-  const usersOrigin = ref([] as User[]);
-  const today = new Date();
-  
-  const getData = async () => {
-    let userType = 1
-    TopService.getUserList(userType)
-    .then((response: ResponseData) => 
-    {
-      users.value = response.data;
-      usersOrigin.value = response.data;
-      console.log(response.data);
-    });
-  };
-
-  onMounted(() => {
-    getData();
-  })
-  
   const sortUser = ref<string>('')
 
   //search
