@@ -7,6 +7,7 @@ import Main from '../views/Main.vue'
 import ProfileRegister from '../views/ProfileRegister.vue'
 import ProfileRegister2 from '../views/ProfileRegister2.vue'
 import ProfileInit from '../views/ProfileInit.vue'
+import ProfileEdit from '../views/ProfileEdit.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,7 +35,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/profile/register',
+      path: '/profile/register/:address(.*)',
       name: 'register',
       component: ProfileRegister
     },
@@ -47,6 +48,11 @@ const router = createRouter({
       path: '/profile/init',
       name: 'registerInit',
       component: ProfileInit
+    },
+    {
+      path: '/profile/edit',
+      name: 'registerEdit',
+      component: ProfileEdit
     }
   ]
 })
