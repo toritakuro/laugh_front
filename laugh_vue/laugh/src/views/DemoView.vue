@@ -54,11 +54,15 @@ import { useStore } from 'vuex'
 import DemoService from '@/services/DemoService';
 import type ResponseData from "@/types/ResponseData";
 import type Demo from "@/types/Demo";
-
+import http from "@/http-common";
+import type demo from "@/types/Demo";
+import { reactive } from "vue";
 const demos = ref([] as Demo[])
-const title = ref('');
-const store = useStore()
 
+const title = ref('');
+const store = useStore();
+// Demoで
+let de = reactive<Demo>({});
 /** HomeViewで設定したidToken */
 const idToken = computed(() => store.state.token.idToken)
 const reg = async () => {
@@ -72,12 +76,30 @@ const reg = async () => {
 }
 
 const getData = async () => {
-  DemoService.getAll()
-  .then((response: ResponseData) => 
-  {
-    demos.value = response.data;
-    console.log(response.data);
-  });
+  try {
+    const {data } = await http.get('/demo/list');
+    de = data.data;
+    console.log(de.id);
+  } catch (error) {
+
+  }
+  
+  
+    // console.log("aaa");
+    // console.log(response);
+    // de = response.data;
+    // console.log(de);
+    // const responsea = await http.get('/demo/list');
+    // console.log("bbb");
+    // console.log(responsea);
+    // de = responsea.data;
+    // console.log(de);
+  // DemoService.getAll()
+  // .then((response: Demo) => 
+  // {
+  //   //console.log(response);
+  //   // console.log(response.data);
+  // });
 };
 
 onMounted(() => {

@@ -3,3 +3,5 @@
 
 /** ここに共通で使いたいスタイルを定義する */
 .ds-none { display: none; }
+
+.tr-hover td { background-color: var(--blue-grey-lighten-5);}

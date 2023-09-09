@@ -1,4 +1,4 @@
 export default interface Demo {
-  id: number;
-  title: string;
+  id?: number;
+  title?: number;
 }

@@ -12,7 +12,7 @@
     <div class="user-list">
       <v-table>
         <tbody>
-          <ul v-for="item in users" class="user-profile">
+          <ul v-for="item in dispUsers" class="user-profile">
             <!-- <p>{{ item.profileImg }}</p> -->
             <p>活動名 : {{ item.userName }}</p>
             <p v-if="item.gender==1">性別 : 男</p>
@@ -150,7 +150,7 @@
   import SearchForm from "@/components/SearchForm.vue"
   import http from "@/http-common"
   
-  const users = ref([] as User[]);
+  const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
   const today = new Date();
   
@@ -176,12 +176,13 @@ const getData = async () => {
       userType: 1
     }}
   )
-  users.value = data.data;
+  dispUsers.value = data.data;
+  usersOrigin.value = data.data;
 }
 
-defineExpose({
-  getData,
-})
+// defineExpose({
+//   getData,
+// })
 
 
 const selectedSorts = ref<string>('')
@@ -260,10 +261,66 @@ const selectedSorts = ref<string>('')
     const checkedGenderId = { id: id }
     // チェックつけた時
     if (!flg) {
+      const kariCheckedUser = ref([] as User[]);
       checkedGenderIds.value.push(checkedGenderId)
-      // AND検索
-      if (checkedOfficeIds.value.length > 1) {
-        checkedUser.value = checkedUser.value.filter(t => t.gender == id)
+      // AND検索 他の検索項目にチェックが入っている時
+      if (checkedOfficeIds.value.length > 1
+      || checkedComedyStyleIds.value.length > 1) {
+        if (checkedOfficeIds.value.length > 1) {
+          if (kariCheckedUser.value.length > 1) {
+            for (var officeId of checkedOfficeIds.value) {
+              user.value = kariCheckedUser.value.filter(t => t.officeId === officeId.id)
+              for (var item of user.value) {
+                kariCheckedUser.value.push(item)
+              }
+            }
+          } else {
+            for (var officeId of checkedOfficeIds.value) {
+              user.value = usersOrigin.value.filter(t => t.officeId === officeId.id)
+              for (var item of user.value) {
+                kariCheckedUser.value.push(item)
+              }
+            }
+          }
+        }
+        if (checkedComedyStyleIds.value.length > 1) {
+          console.log(checkedComedyStyleIds.value)
+          if (kariCheckedUser.value.length > 1) {
+            for (var comedyStyleId of checkedComedyStyleIds.value) {
+              user.value = kariCheckedUser.value.filter(function(value) {
+                return value.comedyStyleIdList.includes(comedyStyleId.id)
+              })
+            }
+          } else {
+            for (var comedyStyleId of checkedComedyStyleIds.value) {
+              var comedyId = comedyStyleId.id
+              console.log("a comest",comedyStyleId.id)
+              console.log("a",comedyId)
+              user.value = usersOrigin.value.filter(function(value) {
+                console.log("b comest",comedyStyleId.id)
+                return value.comedyStyleIdList.includes(comedyStyleId.id)
+              })
+            }
+          }
+          console.log(user.value)
+          for (var item of user.value) {
+            // 重複するデータ以外を含める
+            if (!kariCheckedUser.value.includes(item)){
+              kariCheckedUser.value.push(item)
+            }
+          }
+        }
+        const checkuserssss = ref([] as User[]);
+        for (var genderId of checkedGenderIds.value) {
+          user.value = kariCheckedUser.value.filter(t => t.gender === genderId.id)
+          for (var item of user.value) {
+            // 重複するデータ以外を含める
+            if (!checkuserssss.value.includes(item)){
+              checkuserssss.value.push(item)
+            }
+          }
+        }
+        checkedUser.value = checkuserssss.value
       } else {
         // OR検索
         user.value = usersOrigin.value.filter(t => t.gender == id)
@@ -274,19 +331,56 @@ const selectedSorts = ref<string>('')
           }
         }
       }   
-      users.value = checkedUser.value
+      dispUsers.value = checkedUser.value
       optionGender.value[id - 1].flg = true
     } else {
       // チェック外した時
       checkedGenderIds.value = checkedGenderIds.value.filter(t => t.id !== id)
-      user.value = checkedUser.value.filter(t => t.gender !== id)
-      checkedUser.value = user.value
-      if (checkedUser.value.length == 0) {
-        users.value = usersOrigin.value
+      kariCheckedUsers.value = kariCheckedUsers.value.filter(t => t.gender !== id)
+      if (checkedGenderIds.value.length > 1
+       || checkedOfficeIds.value.length > 1) {
+        const kariCheckedUser = ref([] as User[]);
+        const kariCheckedGenderUser = ref([] as User[]);
+        if (checkedGenderIds.value.length > 1) {
+          for (var genderId of checkedGenderIds.value) {
+            user.value = usersOrigin.value.filter(t => t.gender === genderId.id)
+            for (var item of user.value) {
+              kariCheckedGenderUser.value.push(item)
+            }
+          }
+          kariCheckedUser.value = kariCheckedGenderUser.value
+        }
+        // 事務所にチェックが入っている時
+        const kariCheckedOfficeUser = ref([] as User[]);
+        if (checkedOfficeIds.value.length > 1) {
+          const kariCheckedOfficeUser = ref([] as User[]);
+          // 他の検索項目にチェックが入っている時
+          if (kariCheckedGenderUser.value.length > 0) {
+            for (var officeId of checkedOfficeIds.value) {
+              user.value = kariCheckedGenderUser.value.filter(t => t.officeId === officeId.id)
+              for (var item of user.value) {
+                // 重複するデータ以外を含める
+                if (!kariCheckedOfficeUser.value.includes(item)){
+                  kariCheckedOfficeUser.value.push(item)
+                }
+              }
+            kariCheckedUser.value = kariCheckedOfficeUser.value
+            }
+          } else {
+            // 事務所のみにチェックが入っている時
+            for (var officeId of checkedOfficeIds.value) {
+              user.value = usersOrigin.value.filter(t => t.officeId === officeId.id)
+              for (var item of user.value) {
+                kariCheckedUser.value.push(item)
+              }
+            }
+          }
+        }
+        dispUsers.value = kariCheckedUser.value
       } else {
-        users.value = checkedUser.value
+        dispUsers.value = usersOrigin.value
       }
-      optionGender.value[id - 1].flg = false
+    optionGender.value[id - 1].flg = false
     }
   }
 
@@ -298,19 +392,59 @@ const selectedSorts = ref<string>('')
     const checkedOfficeId = { id: id }
     // チェックつけた時
     if (!flg) {
-      checkedOfficeIds.value.push(checkedOfficeId)
       const kariCheckedUser = ref([] as User[]);
-      // AND検索
-      if (checkedGenderIds.value.length > 1) {
-        for (var genderId of checkedGenderIds.value) {
-          user.value = usersOrigin.value.filter(t => t.gender === genderId.id)
+      // AND検索　他の検索項目にチェックが入っている時
+      if (checkedGenderIds.value.length > 1
+      || checkedComedyStyleIds.value.length > 1) {
+        if (checkedGenderIds.value.length > 1) {
+          for (var genderId of checkedGenderIds.value) {
+            user.value = usersOrigin.value.filter(t => t.gender === genderId.id)
+            for (var item of user.value) {
+              kariCheckedUser.value.push(item)
+            }
+          }
+        }
+        if (checkedOfficeIds.value.length > 1) {
+          if (kariCheckedUser.value.length > 1) {
+            for (var officeId of checkedOfficeIds.value) {
+              user.value = kariCheckedUser.value.filter(t => t.officeId === officeId.id)
+              for (var item of user.value) {
+                kariCheckedUser.value.push(item)
+              }
+            }
+          } else {
+            for (var officeId of checkedOfficeIds.value) {
+              user.value = usersOrigin.value.filter(t => t.officeId === officeId.id)
+              for (var item of user.value) {
+                kariCheckedUser.value.push(item)
+              }
+            }
+          }
+        }
+        if (checkedComedyStyleIds.value.length > 1) {
+          if (kariCheckedUser.value.length > 1) {
+            for (var comedyStyleId of checkedComedyStyleIds.value) {
+              user.value = kariCheckedUser.value.filter(function(value) {
+                return value.comedyStyleIdList.includes(comedyStyleId.id)
+              })
+            }
+          } else {
+            for (var comedyStyleId of checkedComedyStyleIds.value) {
+              user.value = usersOrigin.value.filter(function(value) {
+                return value.comedyStyleIdList.includes(comedyStyleId.id)
+              })
+            }
+          }
           for (var item of user.value) {
-            kariCheckedUser.value.push(item)
+            // 重複するデータ以外を含める
+            if (!kariCheckedUser.value.includes(item)){
+              kariCheckedUser.value.push(item)
+            }
           }
         }
         user.value = kariCheckedUser.value.filter(t => t.officeId === id)
+        console.log(user.value)
         for (var item of user.value) {
-          // todo
           kariCheckedUsers.value.push(item)
         }
         checkedUser.value = kariCheckedUsers.value
@@ -324,7 +458,8 @@ const selectedSorts = ref<string>('')
           }
         }
       }
-      users.value = checkedUser.value
+      dispUsers.value = checkedUser.value
+      checkedOfficeIds.value.push(checkedOfficeId)
       optionOffice.value[id - 1].flg = true
     } else {
       // チェック外した時
@@ -369,9 +504,9 @@ const selectedSorts = ref<string>('')
             }
           }
         }
-      users.value = kariCheckedUser.value
+        dispUsers.value = kariCheckedUser.value
       } else {
-        users.value = usersOrigin.value
+        dispUsers.value = usersOrigin.value
       }
     optionOffice.value[id - 1].flg = false
     }
@@ -384,9 +519,8 @@ const selectedSorts = ref<string>('')
     const checkedComedyStyleId = { id: id }
     // チェックつけた時
     if (!flg) {
-      checkedComedyStyleIds.value.push(checkedComedyStyleId)
       user.value = usersOrigin.value.filter(function(value){
-        return value.comedyStyleId.includes(id)
+        return value.comedyStyleIdList.includes(id)
       })
       for (var item of user.value) {
         // 重複するデータ以外を含める
@@ -394,7 +528,8 @@ const selectedSorts = ref<string>('')
           checkedUser.value.push(item)
         }
       }
-      users.value = checkedUser.value
+      dispUsers.value = checkedUser.value
+      checkedComedyStyleIds.value.push(checkedComedyStyleId)
       optionComedyStyle.value[id - 1].flg = true
     } else {
       // チェック外した時
@@ -403,16 +538,16 @@ const selectedSorts = ref<string>('')
       // 表示中のデータからチェック済みの芸風を持つデータを取得
       user.value = checkedUser.value.filter(function(value){
         for (var item of checkedComedyStyleIds.value) {
-          if (value.comedyStyleId.includes(item.id)){
+          if (value.comedyStyleIdList.includes(item.id)){
             return value
           }
         }
       })
       checkedUser.value = user.value
       if (checkedUser.value.length == 0) {
-        users.value = usersOrigin.value
+        dispUsers.value = usersOrigin.value
       } else {
-        users.value = checkedUser.value
+        dispUsers.value = checkedUser.value
       }
       optionComedyStyle.value[id - 1].flg = false
     }
