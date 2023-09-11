@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="7" >
+      <v-col cols="6">
         <v-row>
-          <v-col cols="6">
+          <v-col cols="7">
           <v-card>
               <v-img
                 aspect-ratio="16/9"
@@ -37,7 +37,7 @@
           </v-col>
           <v-col
             class="ps-6"
-            cols="4"
+            cols="5"
             >
             <v-card
             class="pa-4"
@@ -55,13 +55,31 @@
                 label="吉本興業"
                 density="compact"
                 hide-details="true"
-                value="John"
+                value="yoshimoto"
               ></v-checkbox>
               <v-checkbox
                 density="compact"
                 hide-details="true"
+                label="人力舎"
+                value="jinrikisya">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
                 label="マセキ芸能社"
-                value="Jacob">
+                value="maseki">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="松竹芸能"
+                value="shochiku">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="指定しない"
+                value="Unspecified">
               </v-checkbox>
             </v-col>
             <v-col>
@@ -84,12 +102,178 @@
                 label="男女"
                 value="Jacob">
               </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="指定しない"
+                value="Unspecified">
+              </v-checkbox>
             </v-col>
+            <v-col>
+              <v-card-subtitle class="text-subtitle-1">活動歴</v-card-subtitle>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="1年未満"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="1年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="3年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="5年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="7年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="9年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="指定しない"
+                value="Unspecified">
+              </v-checkbox>
+            </v-col>
+            <v-col>
+              <v-card-subtitle class="text-subtitle-1">芸風</v-card-subtitle>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="漫才"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="ピン"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="コント"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="ギャグ"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="モノマネ"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="歌ネタ"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="リズムネタ"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="その他"
+                value="Unspecified">
+              </v-checkbox>
+            </v-col>
+            <v-col>
+              <v-card-subtitle class="text-subtitle-1 py-2">料金体系</v-card-subtitle>
+              <v-select
+                label=""
+                :items="['','時給','出来高']"
+              ></v-select>
+            </v-col>
+            <v-col>
+            <v-card-subtitle class="text-subtitle-1">金額</v-card-subtitle>
+            <div class="d-flex flex-row">
+              <v-sheet class="py-2 w-100">
+                <v-select
+                  label=""
+                  :items="['','下限なし', '1,000円', '2,000円', '3,000円', '4,000円', '5,000円', '6,000円', '7,000円', '8,000円', '9,000円', '10,000円']"
+                ></v-select>
+              </v-sheet>
+              <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
+              <v-sheet class="py-2 w-100">
+                <v-select
+                  label=""
+                  :items="['','上限なし', '1,000円', '2,000円', '3,000円', '4,000円', '5,000円', '6,000円', '7,000円', '8,000円', '9,000円', '10,000円']"
+                ></v-select>
+              </v-sheet>
+            </div>
+          </v-col>
+          <v-col>
+          <v-card-subtitle class="text-subtitle-1">特殊スキル</v-card-subtitle>
+            <v-checkbox
+              density="compact"
+              hide-details="true"
+              label="動画編集"
+              value="Unspecified">
+            </v-checkbox>
+            <v-checkbox
+              density="compact"
+              hide-details="true"
+              label="イラスト"
+              value="Unspecified">
+            </v-checkbox>
+            <v-checkbox
+              density="compact"
+              hide-details="true"
+              label="音源制作"
+              value="Unspecified">
+            </v-checkbox>
+            <v-checkbox
+              density="compact"
+              hide-details="true"
+              label="その他"
+              value="Unspecified">
+            </v-checkbox>
+          </v-col>
+          <v-col>
+              <v-card-subtitle class="text-subtitle-1 py-2">活動場所</v-card-subtitle>
+              <v-select
+                label=""
+                :items="['','北海道','東北','関東','中部','近畿','中国・四国','九州']"
+              ></v-select>
+          </v-col>
+
+
+
+
           </v-card>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
+
 
 
   </v-container>
