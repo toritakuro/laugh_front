@@ -1,17 +1,15 @@
 <template>
-  {{ tokuibunya }}
   <v-container>
     <v-row justify="center" align-content="center">
       <ul class="step-box">
-        <li class="step-1"><div class="step-num">１</div><div class="step-desc">会員登録</div></li>
-        <li class="step-2"><div class="step-num">２</div><div class="step-desc">本人情報の入力</div></li>
+        <li class="step-1 done"><div class="step-num">１</div><div class="step-desc">会員登録</div></li>
+        <li class="step-2 done"><div class="step-num">２</div><div class="step-desc">本人情報の入力</div></li>
         <li class="step-3"><div class="step-num">３</div><div class="step-desc">本人認証</div></li>
       </ul>
     </v-row>
     <v-row>
       <v-card
-        class="mx-auto w-50"
-        width="400"
+        class="mx-auto profileRegWrap"
         prepend-icon="mdi-home"
       >
         <template v-slot:title>
@@ -20,20 +18,18 @@
 
         <v-card-text>
           <v-form @submit.prevent>
-            <!-- <v-text-field
-              v-model="firstName"
-              :rules="rules"
-              label="名前"
-            ></v-text-field> -->
             <v-text-field
               v-model="email"
-              :rules="rules"
               label="メールアドレス"
+              disabled
             ></v-text-field>
+            <!-- <div class="mail-box">
+              <p class="mail-text">jjjj@gmail.com</p>
+            </div> -->
             <v-text-field
               v-model="password1"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="[rules.required, rules.min]"
+              :rules="[rules.required,rules.min]"
               :type="show1 ? 'text' : 'password'"
               label="パスワード"
               counter
@@ -42,7 +38,7 @@
             <v-text-field
               v-model="password2"
               :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="[rules.required, rules.min]"
+              :rules="[rules.required, rules.min, rules.matched]"
               :type="show2 ? 'text' : 'password'"
               label="【確認用】パスワード"
               counter
@@ -62,12 +58,10 @@
             </v-radio-group>
             <v-text-field
               v-model="gropName"
-              :rules="rules"
               label="活動名"
             ></v-text-field>
             <v-text-field
               v-model="gropNameKana"
-              :rules="rules"
               label="活動名（カナ）"
             ></v-text-field>            
             <v-radio-group v-model="sei" inline>
@@ -83,7 +77,7 @@
               ></v-radio>
               <v-radio
                 label="女性"
-                value="man"
+                value="woman"
                 color="orange"
               ></v-radio>
               <v-radio
@@ -93,6 +87,7 @@
               ></v-radio>
             </v-radio-group>
             <v-select :items="geininsakka" label="所属事務所"></v-select>
+            <v-col class="d-flex justify-start">
               <v-checkbox
                 v-model="tokuibunya"
                 label="漫才"
@@ -149,6 +144,7 @@
                 value="sonota"
                 hide-details
               ></v-checkbox>
+            </v-col>
             <v-select :items="tihou" label="活動場所"></v-select>
             <v-textarea 
               v-model="selfIntroduction" 
@@ -157,7 +153,21 @@
               name="input-7-4" 
               label="自己紹介" 
             ></v-textarea>
-            <v-btn type="submit" block class="mt-2">送信</v-btn>
+            <img v-if="uploadImageUrl" :src="uploadImageUrl" />
+            <v-file-input
+              v-model="input_image"
+              accept="image/*"
+              label="画像ファイルをアップロードしてください"
+              prepend-icon="mdi-image"
+              @change="onImagePicked"
+            ></v-file-input>
+            <div>{{ input_image }}</div>
+            <v-btn 
+              type="submit" 
+              block 
+              class="mt-2" 
+              color="orange" 
+            >送信</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
@@ -193,21 +203,57 @@ const password2 = ref('');
 const row = ref(null);
 const sei = ref(null);
 const tokuibunya = ref([]);
+const selfIntroduction = ref('');
+const gropName = ref('');
+const gropNameKana = ref('');
+const email = ref('jjj@gmail.com');
 
-// passwordバリデーションチェック一旦保留
-const required1 = ref('');
-const min1 = ref('');
-const required2 = ref('');
-const min2 = ref('');
-const required = ref('');
-const min = ref('');
-const rules = ref(['aa','bb']);
-if ((password1.value).length == 0) {
-  required1.value = "パスワードを入力してください";
+// passwordバリデーションチェック
+const rules = {
+  matched: v => password1.value == password2.value || 'パスワードと確認用パスワードが異なります',
+  required: value => !!value || 'パスワードを入力してください',
+  min: v => v.length >= 8 || 'パスワードは8文字以上、入力してください',
 }
-if ((password1.value).length < 8) {
-  min1.value = "パスワードは8文字以上、入力してください";
-}
+
+// 画像のアップロード
+const input_image = ref(null);
+const uploadImageUrl = ref('');
+
+// const methods = {
+//   onImagePicked(file) {
+//       if (file !== undefined && file !== null) {
+//         if (file.name.lastIndexOf('.') <= 0) {
+//           return
+//         }
+//         const fr = new FileReader()
+//         fr.readAsDataURL(file)
+//         fr.addEventListener('load', () => {
+//           this.uploadImageUrl.value = fr.result
+//         })
+//       } else {
+//         this.uploadImageUrl.value = ''
+//       }
+//     }
+// };
+
+// if ((password1.value).length == 0 ) {
+//   relative1.value = "パスワードを入力してください";
+// }
+
+// const rules = ref(
+//   const required1 = ref('');
+//   const min1 = ref('');
+//   if ((password1.value).length == 0 ) {
+//     relative1.value = "パスワードを入力してください";
+//   }
+//   if ((password1.value).length < 8 ) {
+//     min1.value = "パスワードは8文字以上、入力してください";
+//   }
+// );
+
+// if ((password1.value).length < 8) {
+//   min1 = "パスワードは8文字以上、入力してください";
+// }
 // -------------------------------
 
 // data: () => ({
@@ -234,10 +280,25 @@ if ((password1.value).length < 8) {
 
 <style scoped>
 
-p {
-  color: red;
-  font-size: 12px;
+.profileRegWrap {
+  width: 900px;
 }
+
+.d-flex {
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
+
+.mail-box {
+  margin-bottom: 22px;
+}
+
+.mail-text {
+  font-size: 24px;
+  padding: 12px;
+}
+
 .step-box {
   display: flex;
   justify-content: center;
