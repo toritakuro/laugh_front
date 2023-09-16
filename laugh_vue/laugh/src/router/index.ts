@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DemoView from '../views/DemoView.vue'
 import TopView from '../views/TopView.vue'
+import MyPage from '../views/MyPage.vue'
 import LoginViuw from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
 
@@ -26,7 +27,11 @@ const router = createRouter({
         },
         {
           path: 'top',
-          component: TopView
+          component: TopView,
+        },
+        {
+          path: 'mypage',
+          component: MyPage
         }
       ]
     }

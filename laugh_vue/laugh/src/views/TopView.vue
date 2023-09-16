@@ -114,7 +114,31 @@
               <v-checkbox
                 density="compact"
                 hide-details="true"
-                label="1年未満"
+                label="10年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="8年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="6年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="4年以上"
+                value="Unspecified">
+              </v-checkbox>
+              <v-checkbox
+                density="compact"
+                hide-details="true"
+                label="2年以上"
                 value="Unspecified">
               </v-checkbox>
               <v-checkbox
@@ -126,25 +150,7 @@
               <v-checkbox
                 density="compact"
                 hide-details="true"
-                label="3年以上"
-                value="Unspecified">
-              </v-checkbox>
-              <v-checkbox
-                density="compact"
-                hide-details="true"
-                label="5年以上"
-                value="Unspecified">
-              </v-checkbox>
-              <v-checkbox
-                density="compact"
-                hide-details="true"
-                label="7年以上"
-                value="Unspecified">
-              </v-checkbox>
-              <v-checkbox
-                density="compact"
-                hide-details="true"
-                label="9年以上"
+                label="1年以下"
                 value="Unspecified">
               </v-checkbox>
               <v-checkbox
@@ -273,183 +279,11 @@
         </v-row>
       </v-col>
     </v-row>
-
-
-
   </v-container>
-  <main class="main-content">
-    <section>
-      <div class="sort-box">
-        <v-select
-          label=""
-          :items="['', '最終投稿日', '芸歴(昇順)', '芸歴(降順)']"
-        ></v-select>
-      </div>
-      <v-card class="card-box">
-        <v-img
-          :width="460"
-          aspect-ratio="16/9"
-          cover
-          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        ></v-img>
-        <ul class="profile">
-            <li>活動名： よしもと</li>
-            <li>活動歴： 1年未満</li>
-            <li>芸風の種類： 漫才</li>
-            <li>一言： よろしくお願いします。</li>
-          </ul>
-        <ul class="neta-list">
-          <li class="sp-neta-list">イチオシのネタ</li>
-          <li class="neta-list"><a href="./aaa">こんなC4C杯は嫌だ</a></li>
-        </ul>
-      </v-card>
-      <v-card class="card-box">
-        <v-img
-          :width="460"
-          aspect-ratio="16/9"
-          cover
-          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        ></v-img>
-        <ul class="profile">
-            <li>活動名： よしもと</li>
-            <li>活動歴： 1年未満</li>
-            <li>芸風の種類： 漫才</li>
-            <li>一言： よろしくお願いします。</li>
-          </ul>
-        <ul class="neta-list">
-          <li class="sp-neta-list">イチオシのネタ</li>
-          <li class="neta-list"><a href="./aaa">こんなC4C杯は嫌だ</a></li>
-        </ul>
-      </v-card>
-      <v-card class="card-box">
-        <v-img
-          :width="460"
-          aspect-ratio="16/9"
-          cover
-          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        ></v-img>
-        <ul class="profile">
-            <li>活動名： よしもと</li>
-            <li>活動歴： 1年未満</li>
-            <li>芸風の種類： 漫才</li>
-            <li>一言： よろしくお願いします。</li>
-          </ul>
-        <ul class="neta-list">
-          <li class="sp-neta-list">イチオシのネタ</li>
-          <li class="neta-list"><a href="./aaa">こんなC4C杯は嫌だ</a></li>
-        </ul>
-      </v-card>
-      <v-card class="card-box">
-        <v-img
-          :width="460"
-          aspect-ratio="16/9"
-          cover
-          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        ></v-img>
-        <ul class="profile">
-            <li>活動名： よしもと</li>
-            <li>活動歴： 1年未満</li>
-            <li>芸風の種類： 漫才</li>
-            <li>一言： よろしくお願いします。</li>
-          </ul>
-        <ul class="neta-list">
-          <li class="sp-neta-list">イチオシのネタ</li>
-          <li class="neta-list"><a href="./aaa">こんなC4C杯は嫌だ</a></li>
-        </ul>
-      </v-card>
-  </section> 
-    <ul class="user-search-box">
-      <li class="search-ttl">芸名</li>
-        <v-text-field
-              v-model="name"
-              :rules="nameRules"
-              required
-        ></v-text-field>
+</template>  
 
-  <li class="search-ttl">性別</li>
-  <v-radio-group v-model="radiosGender">
-    <v-radio
-      v-for="select in optionGender"
-      v-bind:key="select.id"
-      v-bind:label="select.name"
-      v-bind:value="select.name"
-    ></v-radio>
-  </v-radio-group>
 
-  <li class="search-ttl">活動歴</li>
-  <v-radio-group v-model="radiosActiveHistory">
-    <v-radio
-      v-for="select in optionActiveHistory"
-      v-bind:key="select.id"
-      v-bind:label="select.name"
-      v-bind:value="select.name"
-    ></v-radio>
-  </v-radio-group>
 
-  <li class="search-ttl">事務所</li>
-  <v-checkbox-group v-model="optionOffice">
-    <v-checkbox
-      v-for="select in optionOffice"
-      v-bind:key="select.id"
-      v-bind:label="select.name"
-      v-bind:value="select.name"
-    ></v-checkbox>
-  </v-checkbox-group>
-    
-      <li class="search-ttl">芸風</li>
-      <v-checkbox label="漫才" name="office" value=1 id="mannzai"></v-checkbox>
-      <v-checkbox label="ピン" name="office" value=2 id="pin"></v-checkbox>
-      <v-checkbox label="コント" name="office" value=3 id="kont"></v-checkbox>
-      <v-checkbox label="ギャグ" name="office" value=4 id="gyagu"></v-checkbox>
-      <v-checkbox label="モノマネ" name="office" value=5 id="monomane"></v-checkbox>
-      <v-checkbox label="歌ネタ" name="office" value=6 id="utaneta"></v-checkbox>
-      <v-checkbox label="リズムネタ" name="office" value=7 id="rhythmneta"></v-checkbox>
-      <v-checkbox label="その他" name="office" value=8 id="geihu-sonota"></v-checkbox>
-
-    <li class="search-ttl">料金体系</li>   
-    <v-select v-model="selectedFeeType">
-      <option v-for="select in optionFeeType"
-      v-bind:key="select.id"
-      v-bind:label="select.name"
-      v-bind:value="select.name">
-      {{ select.name }}
-      </option>
-    </v-select>
-  
-      <li class="search-ttl">金額</li>
-      <li class="search-fee">
-        <v-select
-          label=""
-          :items="['下限なし', '1,000円', '2,000円', '3,000円', '4,000円', '5,000円', '6,000円', '7,000円', '8,000円', '9,000円', '10,000円']"
-        ></v-select>
-        <span class="search-ttl-span">～</span>
-        <v-select
-          label=""
-          :items="['上限なし', '1,000円', '2,000円', '3,000円', '4,000円', '5,000円', '6,000円', '7,000円', '8,000円', '9,000円', '10,000円']"
-        ></v-select>
-      </li>
-  
-      <li class="search-ttl">特殊スキル</li>
-      <v-checkbox label="動画編集" name="office" value=1 id="videoEdit"></v-checkbox>
-      <v-checkbox label="イラスト" name="office" value=2 id="illustration"></v-checkbox>
-      <v-checkbox label="音源制作" name="office" value=3 id="soundMake"></v-checkbox>
-      <v-checkbox label="その他" name="office" value=4 id="skill-sonota"></v-checkbox>
-  
-      <li class="search-ttl">活動場所</li>
-      <li>
-        <v-select
-          label=""
-          :items="['', '北海道', '東北', '関東', '中部', '近畿', '中国・四国', '九州']"
-        ></v-select>
-      </li>
-  
-      <div>
-        <v-btn>絞り込み</v-btn>
-        <v-btn class="clear-btn">条件クリア</v-btn>
-      </div>
-    </ul>
-  </main>
-  </template>
   <style scoped>
   .recomend-script {
     border-left: 3px solid #7CB342;
