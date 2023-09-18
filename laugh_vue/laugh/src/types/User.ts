@@ -2,6 +2,7 @@ export default interface User {
     id: number;
     userName: string;
     userNameKana: string;
+    searchUserName: string;
     userType: number;
     debutDt: string;
     activityDt: string;
