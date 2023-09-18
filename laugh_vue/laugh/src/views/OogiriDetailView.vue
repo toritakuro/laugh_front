@@ -55,7 +55,7 @@
                     width="auto"
                   >
                   <v-card>
-                    <v-card-text>
+                    <v-card-text style="background-color: #f57c00; color: white;">
                       この回答を削除します。よろしいですか？
                     </v-card-text>
                     <v-card-actions class="justify-center d-flex">
@@ -73,7 +73,7 @@
       <!-- 新規回答 -->
       <v-row justify="center">
         <v-col cols="12" sm="6" class="d-flex align-center justify-center">
-          <v-textarea v-model="newAnswer" label="新規回答" variant="solo-filled" class="ma-2"></v-textarea>
+          <v-textarea v-model="newAnswer" label="新規回答" variant="solo-filled" class="ma-2" :counter="100" :maxlength="100"></v-textarea>
           <v-btn @click="regAnswer" :disabled="!isInputValid">送信</v-btn>
         </v-col>
       </v-row>
@@ -100,7 +100,7 @@ const getOogiriDetail = async () => {
       themeId: themeId
     }}
   )
-  oogiri.value = [data];
+  oogiri.value = [data.data];
 }
 
 // 各回答モーダルを非表示に
