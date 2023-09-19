@@ -7,7 +7,7 @@
         <h3>性別</h3>
         <div v-for="select in optionGender">
           <input type="checkbox"  
-            v-bind:value="select.id" 
+            v-bind:value="select.id"
             v-bind:key="select.id" 
             v-model="checkGender"
             @click="postGender(select.id, select.flg)">
@@ -128,10 +128,18 @@ type Props = {
 
 defineProps<Props>()
 
-const emit = defineEmits(['post-Name'])
-const postName = () => {
-  emit('post-Name',searchName.value, isChecked)
-}
+// const emit = defineEmits(['post-name','post-gender'])
+// const postEmit = () => {
+//   isCheckedCategory()
+//   emit('post-name',searchName.value,isChecked)
+//   emit('post-gender', checkedGenderIdList.value, isChecked)
+// }
+
+// const emitGender = defineEmits(['post-gender'])
+// const postGender = () => {
+//   isCheckedCategory()
+//   emitGender('post-gender', checkGender.value, isChecked)
+// }
 
 const dispUsers = ref([] as User[]);
 const usersOrigin = ref([] as User[]);
@@ -268,9 +276,9 @@ const selectedSorts = ref<string>('')
 
   // 活動名
   const searchName = ref('')
-  // const postName = () => {
-  //   userSearch()
-  // }
+  const postName = () => {
+    userSearch()
+  }
 
   // 性別
   const checkedGenderIds = ref([{ id: 0 }]);

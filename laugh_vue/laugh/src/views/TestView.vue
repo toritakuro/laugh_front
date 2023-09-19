@@ -1,15 +1,15 @@
 <template>
   <main class="main-content">
-    <!-- <div class="sort">
+    <div class="sort">
       <p>並べ替え</p>
-      <select v-model="selectedSorts">
+      <select v-model="selectedSorts" @change="postSort()">
         <option v-for="sort in optionSorts" 
-          v-bind:value="sort.name" 
+          v-bind:value="sort.id" 
           v-bind:key="sort.id">
           {{ sort.name }}
         </option>
       </select>
-    </div> -->
+    </div>
     <div class="user-list">
       <v-table>
         <tbody>
@@ -30,7 +30,7 @@
      </v-table>
     </div>
     <div class="user-search">
-      <!-- <SearchForm :dispUserType="dispUserType" @post-Name="postName"/> -->
+      <!-- <SearchForm :dispUserType="dispUserType" @post-name="postName" @post-gender="postGender"/> -->
       <div class="search">
         <h3>活動名</h3>
         <input class="search-name" type="text" @input="postName" v-model="searchName" />
@@ -115,6 +115,7 @@
           <input type="checkbox"  
             v-bind:value="select.id" 
             v-bind:key="select.id"
+            v-model="checkSpecialSkill"
             @click="postSpecialSkill(select.id, select.flg)">
           <label>{{ select.name }}</label>
         </div>
@@ -132,7 +133,7 @@
     </div>
     <!-- <div> -->
     <!-- コンポーネントを再マウントするトリガーボタン -->
-    <!-- <button @click="remountComponent">再マウント</button> -->
+    <button type="button" @click="clear">クリア</button>
 
     <!-- コンポーネントを条件付きで表示し、キーを設定 -->
     <!-- <component :is="dynamicComponent" :key="componentKey" />
@@ -245,13 +246,13 @@ export default {
 const getData = async () => {
   const {data} = await http.get('/top/init',{
     params: {
-      userType: 2
+      userType: 1
     }}
   )
   dispUsers.value = data.data;
   usersOrigin.value = data.data;
   dispUserType.value = usersOrigin.value[0].userType
-  console.log("usersOrigin",dispUsers.value)
+  postSort()
 }
 // defineExpose({
 //   getData,
@@ -278,14 +279,35 @@ const getData = async () => {
 
 // }
 
-const selectedSorts = ref<string>('')
+const selectedSorts = ref(1)
   const optionSorts = [
     { id: 1, name: 'ログイン'},
-    { id: 2, name: '面白い' }, 
-    { id: 3, name: '登録日' } 
+    { id: 2, name: '登録日' } 
   ]
 
-  const sortUser = ref<string>('')
+  const postSort = () => {
+    console.log("kiteru",selectedSorts.value)
+    switch (selectedSorts.value) {
+      case 1:
+        dispUsers.value = dispUsers.value.sort((a, b) => {
+          console.log("aaa11")
+          return a.activityNum - b.activityNum
+        })
+        break
+      case 2:
+        dispUsers.value = dispUsers.value.sort((a, b) => {
+          console.log("aaa22")
+          return b.activityNum - a.activityNum
+        })
+        break
+    }
+
+        //   dispUsers.value = usersOrigin.value.sort((a, b) => {
+        //     return a.loginAt - b.loginAt})
+        // })
+  }
+
+
 
   //search
   const checkGender = ref([])
@@ -412,7 +434,10 @@ const selectedSorts = ref<string>('')
 
   // 活動名
   const searchName = ref('')
+  const searchKariName = ref('')
   const postName = () => {
+    // スペースを削除
+    searchKariName.value = searchName.value.trim().replace(/\s/g,"")
     userSearch()
   }
 
@@ -520,12 +545,11 @@ const selectedSorts = ref<string>('')
     const kariCheckedUser = ref([] as User[]);
     isCheckedCategory()
     if (isChecked.value) {
-      console.log("kiteru2")
       // 活動名
       if (searchName.value != '') {
         // 検索内容と一致するユーザー名を取得
         user.value = usersOrigin.value.filter(function(value) {
-          return value.searchUserName.indexOf(searchName.value) !== -1
+          return value.searchUserName.indexOf(searchKariName.value) !== -1
         })
         for (var item of user.value) {
           kariCheckedUser.value.push(item)
@@ -742,9 +766,52 @@ const selectedSorts = ref<string>('')
     dispUsers.value = checkedUser.value
   }
    
+// クリアボタン（初期化）
+const clear = () => {
+  // 活動名
+  searchName.value = ''
+  searchKariName.value = ''
+  // 性別
+  checkGender.value = []
+  checkedGenderIds.value = [{ id: 0 }]
+  console.log(optionGender.value.length)
+  for (var i = 0; i < optionGender.value.length; i++) {
+    optionGender.value[i].flg = false
+  }
+  // 活動歴 
+  radiosActivity.value = []
+  checkedActivityId.value= 0
+  checkedActivityValue.value= 0
+  // 事務所
+  checkOffice.value = []
+  checkedOfficeIds.value = [{ id: 0 }]
+  for (var i = 0; i < optionOffice.value.length; i++) {
+    optionOffice.value[i].flg = false
+  }
+  // 芸風
+  checkComedyStyle.value = []
+  checkedComedyStyleIds.value = [{ id: 0 }]
+  for (var i = 0; i < optionComedyStyle.value.length; i++) {
+    optionComedyStyle.value[i].flg = false
+  }
+  // 料金形態
+  selectFeeType.value = ''
+  checkedFeeTypeId.value = 0
   // 料金
-  const clear = () => {
-    
+  selectLowPrice.value = 0
+  selectHighPrice.value = 0
+  // 特殊スキル
+  checkSpecialSkill.value = []
+  checkedSpecialSkillIds.value = [{ id: 0 }]
+  for (var i = 0; i < optionSpecialSkill.value.length; i++) {
+    optionSpecialSkill.value[i].flg = false
+  }
+  // 活動地域
+  selectArea.value = ''
+  checkedAreaId.value = 0
+
+  isCheckedCategory()
+  getData();
   }
 
 
