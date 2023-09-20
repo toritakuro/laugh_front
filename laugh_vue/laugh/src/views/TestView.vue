@@ -24,7 +24,9 @@
             <p v-if="item.userType==2">芸風 : {{ item.comedyStyleName }}</p>
             <p v-if="item.userType==1">得意分野 : {{ item.comedyStyleName }}</p>
             <p v-if="item.userType==1">特殊スキル : {{ item.specialSkillName }}</p>
-            <p>自己紹介 : {{ item.selfIntroduction }}</p>
+            <p>ログイン : {{ item.loginAt }}</p>
+            <p>ログイン : {{ item.loginAtInt }}</p>
+            <p>更新 : {{ item.updateAtInt }}</p>
           </ul>
         </tbody>
      </v-table>
@@ -282,7 +284,7 @@ const getData = async () => {
 const selectedSorts = ref(1)
   const optionSorts = [
     { id: 1, name: 'ログイン'},
-    { id: 2, name: '登録日' } 
+    { id: 2, name: '更新' } 
   ]
 
   const postSort = () => {
@@ -290,14 +292,12 @@ const selectedSorts = ref(1)
     switch (selectedSorts.value) {
       case 1:
         dispUsers.value = dispUsers.value.sort((a, b) => {
-          console.log("aaa11")
-          return a.activityNum - b.activityNum
+          return a.loginAtInt - b.loginAtInt
         })
         break
       case 2:
         dispUsers.value = dispUsers.value.sort((a, b) => {
-          console.log("aaa22")
-          return b.activityNum - a.activityNum
+          return a.updateAtInt - b.updateAtInt
         })
         break
     }

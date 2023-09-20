@@ -135,11 +135,11 @@
             </div>
           </v-col>
           <v-col v-if="dispUserType == 1">
-          <v-card-subtitle class="text-subtitle-1">特殊スキル</v-card-subtitle>
-          <v-checkbox-group v-model="checkSpecialSkill">
-            <v-checkbox
-              v-for="select in optionSpecialSkill"
-              v-bind:value="select.id" 
+            <v-card-subtitle class="text-subtitle-1">特殊スキル</v-card-subtitle>
+            <v-checkbox-group v-model="checkSpecialSkill">
+              <v-checkbox
+                v-for="select in optionSpecialSkill"
+                v-bind:value="select.id" 
                 v-bind:key="select.id" 
                 v-bind:label="select.name"
                 @click="postSpecialSkill(select.id, select.flg)"
@@ -826,50 +826,50 @@ const selectedSorts = ref<string>('')
   }
 
   // クリアボタン（初期化）
-const clear = () => {
-  // 活動名
-  searchName.value = ''
-  searchKariName.value = ''
-  // 性別
-  checkGender.value = []
-  checkedGenderIds.value = [{ id: 0 }]
-  console.log(optionGender.value.length)
-  for (var i = 0; i < optionGender.value.length; i++) {
-    optionGender.value[i].flg = false
-  }
-  // 活動歴 
-  radiosActivity.value = []
-  checkedActivityId.value= 0
-  checkedActivityValue.value= 0
-  // 事務所
-  checkOffice.value = []
-  checkedOfficeIds.value = [{ id: 0 }]
-  for (var i = 0; i < optionOffice.value.length; i++) {
-    optionOffice.value[i].flg = false
-  }
-  // 芸風
-  checkComedyStyle.value = []
-  checkedComedyStyleIds.value = [{ id: 0 }]
-  for (var i = 0; i < optionComedyStyle.value.length; i++) {
-    optionComedyStyle.value[i].flg = false
-  }
-  // 料金形態
-  selectFeeType.value = ''
-  checkedFeeTypeId.value = 0
-  // 料金
-  selectLowPrice.value = 0
-  selectHighPrice.value = 0
-  // 特殊スキル
-  checkSpecialSkill.value = []
-  checkedSpecialSkillIds.value = [{ id: 0 }]
-  for (var i = 0; i < optionSpecialSkill.value.length; i++) {
-    optionSpecialSkill.value[i].flg = false
-  }
-  // 活動地域
-  selectArea.value = ''
-  checkedAreaId.value = 0
+  const clear = () => {
+    // 活動名
+    searchName.value = ''
+    searchKariName.value = ''
+    // 性別
+    checkGender.value = []
+    checkedGenderIds.value = [{ id: 0 }]
+    console.log(optionGender.value.length)
+    for (var i = 0; i < optionGender.value.length; i++) {
+      optionGender.value[i].flg = false
+    }
+    // 活動歴 
+    radiosActivity.value = []
+    checkedActivityId.value= 0
+    checkedActivityValue.value= 0
+    // 事務所
+    checkOffice.value = []
+    checkedOfficeIds.value = [{ id: 0 }]
+    for (var i = 0; i < optionOffice.value.length; i++) {
+      optionOffice.value[i].flg = false
+    }
+    // 芸風
+    checkComedyStyle.value = []
+    checkedComedyStyleIds.value = [{ id: 0 }]
+    for (var i = 0; i < optionComedyStyle.value.length; i++) {
+      optionComedyStyle.value[i].flg = false
+    }
+    // 料金形態
+    selectFeeType.value = ''
+    checkedFeeTypeId.value = 0
+    // 料金
+    selectLowPrice.value = 0
+    selectHighPrice.value = 0
+    // 特殊スキル
+    checkSpecialSkill.value = []
+    checkedSpecialSkillIds.value = [{ id: 0 }]
+    for (var i = 0; i < optionSpecialSkill.value.length; i++) {
+      optionSpecialSkill.value[i].flg = false
+    }
+    // 活動地域
+    selectArea.value = ''
+    checkedAreaId.value = 0
 
-  isCheckedCategory()
-  getData();
+    isCheckedCategory()
+    getData();
   }
   </script>

@@ -14,7 +14,9 @@ export default interface User {
     areaNmae: string;
     selfIntroduction: string;
     loginAt: string;
+    loginAtInt: number;
     updateAt: string;
+    updateAtInt: number;
     memberNum: number;
     feeType: number;
     fee: number;
