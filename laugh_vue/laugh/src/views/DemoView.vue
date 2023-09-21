@@ -1,5 +1,40 @@
 <template>
   <div>
+    <v-radio-group
+              v-model="ex7"
+            >
+              <v-radio
+                label="red"
+                color="red"
+                value="red"
+              ></v-radio>
+              <v-radio
+                label="red-darken-3"
+                color="red-darken-3"
+                value="red-darken-3"
+              ></v-radio>
+              <v-radio
+                label="indigo"
+                color="indigo"
+                value="indigo"
+              ></v-radio>
+              <v-radio
+                label="indigo-darken-3"
+                color="indigo-darken-3"
+                value="indigo-darken-3"
+              ></v-radio>
+              <v-radio
+                label="orange"
+                color="orange"
+                value="orange"
+              ></v-radio>
+              <v-radio
+                label="orange-darken-3"
+                color="orange-darken-3"
+                value="orange-darken-3"
+              ></v-radio>
+            </v-radio-group>
+
     <v-form>
       <v-container class="ma-0">
         <v-row>
@@ -58,7 +93,7 @@ import http from "@/http-common";
 import type demo from "@/types/Demo";
 import { reactive } from "vue";
 const demos = ref([] as Demo[])
-
+const ex7 = ref('red')
 const title = ref('');
 const store = useStore();
 // Demoで
