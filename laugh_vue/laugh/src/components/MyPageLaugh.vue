@@ -14,13 +14,13 @@
             <v-icon v-if='item.mySendLough && item.status == 0' size="x-large" color="#42A5F5" icon="mdi-send-clock" />
         </td>
         <td class="img">
-            <v-avatar color="surface-variant">
-            <v-img
-              aspect-ratio="16/9"
-              cover
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-            ></v-img>
-            </v-avatar>
+          <v-avatar color="surface-variant">
+          <v-img
+            aspect-ratio="16/9"
+            cover
+            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+          ></v-img>
+          </v-avatar>
           </td>
           <td  class="name">{{ item.name }}</td>
           <td class="text-right active-term">{{ item.activeTermYear }}年目</td>
@@ -51,12 +51,21 @@ const laughs = ref<Laugh[]>([])
 
 /** Laugh一覧を取得する */
 const getLaugh = async () => {
-  const {data} = await http.get('/mypage/laugh',{
+  await http.get('/mypage/laugh',{
     params: {
-      userId: userId.value
+      userId: 3
     }}
   )
-  laughs.value = data.data;
+  .then(response => {
+      console.log(response.data)
+  })
+  .catch(error => {
+
+console.log(error);
+
+    })
+  console.log(111)
+  //laughs.value = data.data;
 }
 
 /** ユーザ詳細へ遷移 */
