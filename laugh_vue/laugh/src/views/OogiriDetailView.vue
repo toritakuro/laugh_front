@@ -83,10 +83,10 @@
 
 
 <script setup lang="ts">
-  import { ref, onMounted, computed } from 'vue';
-  import { useRoute } from 'vue-router';
-  import type Oogiri from "@/types/Oogiri";
-  import http from "@/http-common";
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import type Oogiri from "@/types/Oogiri";
+import http from "@/http-common";
 
 const oogiri = ref<Oogiri[]>([]);
 const newAnswer = ref('');
