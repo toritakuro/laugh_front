@@ -51,21 +51,12 @@ const laughs = ref<Laugh[]>([])
 
 /** Laugh一覧を取得する */
 const getLaugh = async () => {
-  await http.get('/mypage/laugh',{
+  const {data} = await http.get('/mypage/laugh',{
     params: {
       userId: 3
     }}
   )
-  .then(response => {
-      console.log(response.data)
-  })
-  .catch(error => {
-
-console.log(error);
-
-    })
-  console.log(111)
-  //laughs.value = data.data;
+  laughs.value = data.data;
 }
 
 /** ユーザ詳細へ遷移 */
