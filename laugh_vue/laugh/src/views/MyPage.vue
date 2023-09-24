@@ -57,10 +57,14 @@
         bg-color="orange-darken-2"
         slider-color="orange-lighten-4"
       >
+        <v-tab value="profile" @click="getProfile">Profile</v-tab>
         <v-tab value="laugh" @click="getLugh">Laugh</v-tab>
       </v-tabs>
       <v-card-text>
       <v-window v-model="tab">
+        <v-window-item value="profile">
+        <MyPageProfile ref="profileRef"></MyPageProfile>
+        </v-window-item>
         <v-window-item value="laugh">
           <MyPageLaugh ref="laughRef"></MyPageLaugh>
         </v-window-item>
@@ -75,15 +79,19 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
+  import MyPageProfile from '@/components/MyPageProfile.vue'
   import MyPageLaugh from '@/components/MyPageLaugh.vue'
 
   const laughRef = ref();
+  const profileRef = ref();
 
   /** 子どものメソッドを実行 */
   const getLugh = () => {
     laughRef.value.getLaugh();
   }
-
+  const getProfile = () => {
+  profileRef.value.getProfile();
+  }
   const tab = ref(null);
   const userType = ref("primary");
 </script>
