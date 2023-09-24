@@ -1,6 +1,28 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
+      <v-col cols="6" class="mx-auto mt-5">
+        <v-row>
+          <v-col cols="2" class="text-transform py-4 my-2" align="right">
+            <v-icon>mdi-sort-descending</v-icon>
+            <v-text class="text-subtitle-1">並べ替え</v-text>
+          </v-col>
+          <v-col cols="2">
+            <v-select
+              v-model="selectedSorts"
+              :items="optionSorts"
+              item-title="name"
+              item-value="id"
+              label="Select"
+              persistent-hint
+              return-object
+              single-line
+            ></v-select>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
       <v-col cols="6">
         <v-row>
           <v-col cols="7">
@@ -12,9 +34,13 @@
               ></v-img>
               <v-card-title class="text-h5">{{ item.userName }}</v-card-title>
               <v-card-subtitle class="mb-1 text-subtitle-1">活動歴: {{ item.activityDt }}</v-card-subtitle>
+              <v-card-subtitle class="mb-1 text-subtitle-1">自己紹介: {{ item.selfIntroduction }}</v-card-subtitle>
               <v-card-item class="pl-3">
                 <v-chip-group>
-                  <v-chip>{{ item.comedyStyleName }}</v-chip>
+                  <v-chip v-for="comedyStyle in item.comedyStyleNameList">{{ comedyStyle }}</v-chip>
+                </v-chip-group>
+                <v-chip-group v-if="dispUserType == 1">
+                  <v-chip v-for="specialSkill in item.specialSkillNameList">{{ specialSkill }}</v-chip>
                 </v-chip-group>
               </v-card-item>
               <v-list density="compact">
@@ -44,7 +70,7 @@
             >
             <v-col>
               <v-text-field
-                label="芸名"
+                label="活動名"
                 density="compact"
                 bg-color="#fffffff"
                 @input="postName"
@@ -52,13 +78,14 @@
               ></v-text-field>
             </v-col>
             <v-col>
-              <v-card-subtitle class="text-subtitle-1">性別</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1">性別</v-card-subtitle>
               <v-checkbox-group v-model="checkGender">
                 <v-checkbox
                   v-for="select in optionGender"
                   v-bind:value="select.id" 
                   v-bind:key="select.id" 
                   v-bind:label="select.name"
+                  v-model="select.flg"
                   @click="postGender(select.id, select.flg)"
                   density="compact"
                   hide-details="true"
@@ -66,14 +93,13 @@
               </v-checkbox-group>
             </v-col>
             <v-col>
-              <v-card-subtitle class="text-subtitle-1">活動歴</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動歴</v-card-subtitle>
               <v-radio-group v-model="radiosActivity">
                 <v-radio
                   v-for="select in optionActivity"
-                  v-bind:value="select.name" 
+                  v-bind:value="select.id" 
                   v-bind:key="select.id" 
                   v-bind:label="select.name"
-                  v-bind:checked="select.id == 0"
                   @click="postActivity(select.id, select.value)"
                   density="compact"
                   hide-details="true"
@@ -81,13 +107,14 @@
               </v-radio-group>
             </v-col>
             <v-col>
-              <v-card-subtitle class="text-subtitle-1">事務所</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1">事務所</v-card-subtitle>
               <v-checkbox-group v-model="checkOffice">
                 <v-checkbox
                   v-for="select in optionOffice"
                   v-bind:value="select.id" 
                   v-bind:key="select.id" 
                   v-bind:label="select.name"
+                  v-model="select.flg"
                   @click="postOffice(select.id, select.flg)"
                   density="compact"
                   hide-details="true"
@@ -95,14 +122,15 @@
               </v-checkbox-group>
             </v-col>
             <v-col>
-              <v-card-subtitle class="text-subtitle-1" v-if="dispUserType == 1">得意分野</v-card-subtitle>
-              <v-card-subtitle class="text-subtitle-1" v-if="dispUserType == 2">芸風</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 1">得意分野</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 2">芸風</v-card-subtitle>
               <v-checkbox-group v-model="checkComedyStyle">
                 <v-checkbox
                   v-for="select in optionComedyStyle"
                   v-bind:value="select.id" 
                   v-bind:key="select.id" 
                   v-bind:label="select.name"
+                  v-model="select.flg"
                   @click="postComedyStyle(select.id, select.flg)"
                   density="compact"
                   hide-details="true"
@@ -110,38 +138,57 @@
               </v-checkbox-group>
             </v-col>
             <v-col v-if="dispUserType == 1">
-              <v-card-subtitle class="text-subtitle-1 py-2">料金体系</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">料金体系</v-card-subtitle>
               <v-select
-                label=""
-                :items="['','時給','出来高']"
+                v-model="selectFeeType"
+                :items="optionFeeType"
+                item-title="name"
+                item-value="id"
+                label="Select"
+                persistent-hint
+                return-object
+                single-line
               ></v-select>
             </v-col>
             <v-col v-if="dispUserType == 1">
-            <v-card-subtitle class="text-subtitle-1">金額</v-card-subtitle>
+            <v-card-subtitle class="font-weight-bold text-subtitle-1">金額</v-card-subtitle>
             <div class="d-flex flex-row">
               <v-sheet class="py-2 w-100">
                 <v-select
-                  label=""
-                  :items="['','下限なし', '1,000円', '2,000円', '3,000円', '4,000円', '5,000円', '6,000円', '7,000円', '8,000円', '9,000円', '10,000円']"
+                  v-model="selectLowPrice"
+                  :items="optionLowPrice"
+                  item-title="name"
+                  item-value="id"
+                  label="Select"
+                  persistent-hint
+                  return-object
+                  single-line
                 ></v-select>
               </v-sheet>
               <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
               <v-sheet class="py-2 w-100">
                 <v-select
-                  label=""
-                  :items="['','上限なし', '1,000円', '2,000円', '3,000円', '4,000円', '5,000円', '6,000円', '7,000円', '8,000円', '9,000円', '10,000円']"
+                  v-model="selectHighPrice"
+                  :items="optionHighPrice"
+                  item-title="name"
+                  item-value="id"
+                  label="Select"
+                  persistent-hint
+                  return-object
+                  single-line
                 ></v-select>
               </v-sheet>
             </div>
           </v-col>
           <v-col v-if="dispUserType == 1">
-            <v-card-subtitle class="text-subtitle-1">特殊スキル</v-card-subtitle>
+            <v-card-subtitle class="font-weight-bold text-subtitle-1">特殊スキル</v-card-subtitle>
             <v-checkbox-group v-model="checkSpecialSkill">
               <v-checkbox
                 v-for="select in optionSpecialSkill"
                 v-bind:value="select.id" 
                 v-bind:key="select.id" 
                 v-bind:label="select.name"
+                v-model="select.flg"
                 @click="postSpecialSkill(select.id, select.flg)"
                 density="compact"
                 hide-details="true"
@@ -149,16 +196,40 @@
             </v-checkbox-group> 
           </v-col>
           <v-col>
-            <v-card-subtitle class="text-subtitle-1 py-2">活動場所</v-card-subtitle>
-            <v-select
-              label=""
-              :items="['','北海道','東北','関東','中部','近畿','中国・四国','九州']"
-            ></v-select>
-            <div>
-              <v-select v-model="selectedOption" :items="options" label="選択してください"></v-select>
-            </div>
+            <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動場所</v-card-subtitle>
+            <v-select-group @change="postArea">
+              <v-select
+                v-model="selectArea"
+                :items="optionArea"
+                item-title="text"
+                item-value="id"
+                label="Select"
+                persistent-hint
+                return-object
+                single-line
+              ></v-select>
+          </v-select-group>
+          <v-select-group>
+          <v-select
+            v-model="select"
+            :hint="`${select.state}, ${select.abbr}`"
+            :items="item"
+            item-title="state"
+            item-value="abbr"
+            label="Select"
+            v-bind:value="select.state" 
+            persistent-hint
+            return-object
+            single-line
+            @input="postitem"
+          ></v-select>
+        </v-select-group>
           </v-col>
-          <button type="button" @click="clear">クリア</button>
+          <v-col align="center">
+            <v-btn variant="tonal" @click="clear">
+              clear
+            </v-btn>
+          </v-col>
           </v-card>
           </v-col>
         </v-row>
@@ -176,27 +247,27 @@
     color: #000000;
   }
   .user-header { 
-      text-align: center;
-      padding: 20px 0;
-      background-color: #ffe1a9;
-      position: relative;
-      width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    background-color: #ffe1a9;
+    position: relative;
+    width: 100%;
   }
   .user-header > h2 {
-      margin: auto;
-      letter-spacing: 0.2em;
+    margin: auto;
+    letter-spacing: 0.2em;
   }
   .logo {
-      position: absolute;
-      left: 40px;
-      top: 18%;
-      transform: translateY(-50%);
-      padding: 4px 8px;
-      border: 2px solid #ff8300;
-      color: #ff8300;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size: 24px;
+    position: absolute;
+    left: 40px;
+    top: 18%;
+    transform: translateY(-50%);
+    padding: 4px 8px;
+    border: 2px solid #ff8300;
+    color: #ff8300;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 24px;
   }
   
   /* 全体 */
@@ -205,35 +276,35 @@
     padding: 20px;
   }
   .main-content {
-      display: flex;
-      gap: 30px;
-      justify-content: center;
-      margin: 0 auto;
-      padding: 12px;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 12px;
   }
   
   /* ユーザー一覧 */
   .sort-box > select {
-      border-radius: 3px;
+    border-radius: 3px;
   }
   .sort-box {
-      text-align: end;
+    text-align: end;
   }
   .user-wrap {
-      display: flex;
-      margin-top: 20px;
-      width: 500px;
-      border: 2px solid #008000;
-      border-radius: 10px;
+    display: flex;
+    margin-top: 20px;
+    width: 500px;
+    border: 2px solid #008000;
+    border-radius: 10px;
   }
   .user-photo > img {
-      width: 200px;
-      padding: 12px;
+    width: 200px;
+    padding: 12px;
   }
   .profile {
-      list-style: none;
-      margin-left: 20px;
-      padding: 0 12px;
+    list-style: none;
+    margin-left: 20px;
+    padding: 0 12px;
   }
   .profile > li {
     margin-top: 10px;
@@ -254,23 +325,23 @@
   
   /* 自由検索欄 */
   .user-search-box {
-      list-style: none;
-      margin-top: 70px;
-      padding: 10px 10px;
-      background-color: #ffe1a9;
-      width: 350px;
-      border-radius: 6px;
+    list-style: none;
+    margin-top: 70px;
+    padding: 10px 10px;
+    background-color: #ffe1a9;
+    width: 350px;
+    border-radius: 6px;
   }
   .search-ttl {
-      margin-top: 12px;
-      margin-bottom: 8px;
-      padding: 3px 0 3px 10px;
-      font-weight: bold;
-      border-left: 5px solid #6fba2c;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    padding: 3px 0 3px 10px;
+    font-weight: bold;
+    border-left: 5px solid #6fba2c;
   }
   .search-ttl > li {
-      display: flex;
-      margin-left: 10px;
+    display: flex;
+    margin-left: 10px;
   }
   .search-fee {
     display: flex;
@@ -279,34 +350,34 @@
     margin-top: 20px;
   }
   .user-name-box {
-      border-radius: 3px;
+    border-radius: 3px;
   }
   .fee-box {
-      border-radius: 3px;
+    border-radius: 3px;
   }
   .money-box {
-      border-radius: 3px;
+    border-radius: 3px;
   }
   .active-place {
-      border-radius: 3px;
+    border-radius: 3px;
   }
   .search-btn {
-      align-items: center;
-      justify-content: center;
-      margin-top: 14px;
-      padding: 7px 20px;
-      color: #fff;
-      text-align: center;
-      overflow-wrap: anywhere;
-      background-color: #ff8300;
-      border-radius: 18px;
-      border: none;
-      box-shadow: rgb(217, 217, 217) 0px 2px 1px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    padding: 7px 20px;
+    color: #fff;
+    text-align: center;
+    overflow-wrap: anywhere;
+    background-color: #ff8300;
+    border-radius: 18px;
+    border: none;
+    box-shadow: rgb(217, 217, 217) 0px 2px 1px;
   }
   .search-btn:hover {
-      transition: background-color 0.2s;
-      opacity: 0.8;
-      cursor: pointer;
+    transition: background-color 0.2s;
+    opacity: 0.8;
+    cursor: pointer;
   }
   .clear-btn {
     margin-left: 20px;
@@ -327,7 +398,6 @@
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
   const dispUserType = ref();
-  const today = new Date();
 
 
   onMounted(() => {
@@ -338,13 +408,13 @@
 const getData = async () => {
   const {data} = await http.get('/top/init',{
     params: {
-      userType: 1
+      userType: 2
     }}
   )
   dispUsers.value = data.data;
   usersOrigin.value = data.data;
   dispUserType.value = usersOrigin.value[0].userType
-  console.log("usersOrigin",dispUsers.value)
+  postSort()
 }
 
 const items = ref([
@@ -352,13 +422,26 @@ const items = ref([
   { text: 'ゴレンジャイ', icon: 'mdi-file' },
 ]) ;
 
-const selectedSorts = ref<string>('')
+  const selectedSorts = ref({ id: 1, name: 'ログイン'})
   const optionSorts = [
     { id: 1, name: 'ログイン'},
-    { id: 2, name: '面白い' }, 
-    { id: 3, name: '登録日' } 
+    { id: 2, name: '更新' } 
   ]
 
+  const postSort = () => {
+    switch (selectedSorts.value.id) {
+      case 1:
+        dispUsers.value = dispUsers.value.sort((a, b) => {
+          return b.loginAtInt - a.loginAtInt
+        })
+        break
+      case 2:
+        dispUsers.value = dispUsers.value.sort((a, b) => {
+          return b.updateAtInt - a.updateAtInt
+        })
+        break
+    }
+  }
   const sortUser = ref<string>('')
 
   //search
@@ -369,7 +452,7 @@ const selectedSorts = ref<string>('')
     { id: 3, name: '男女', flg: false}
   ])
 
-  const radiosActivity = ref([0])
+  const radiosActivity = ref(0)
   const optionActivity = ref([
     { id: 0, value: 0, name: '指定しない'},
     { id: 1, value: 1, name: '１年未満'},
@@ -402,14 +485,14 @@ const selectedSorts = ref<string>('')
     { id: 8, name: 'その他', flg: false}
   ])
 
-  const selectFeeType = ref('')
+  const selectFeeType = ref({ id: 0, name: '' });
   const optionFeeType = ref([
     { id: 0, name: ''},
     { id: 1, name: '時給'},
     { id: 2, name: '出来高' }
   ])
 
-  const selectLowPrice = ref(0)
+  const selectLowPrice = ref({ id: 0, value: 0, name: '下限なし' });
   const optionLowPrice = ref([
     { id: 0, value: 0, name: '下限なし'},
     { id: 1, value: 1000, name: '1000円'},
@@ -424,7 +507,7 @@ const selectedSorts = ref<string>('')
     { id: 10, value: 10000, name: '10000円'}
   ])
 
-  const selectHighPrice = ref(0)
+  const selectHighPrice = ref({ id: 0, value: 0, name: '上限なし' });
   const optionHighPrice = ref([
     { id: 0, value: 0, name: '上限なし'},
     { id: 1, value: 1000, name: '1000円'},
@@ -460,16 +543,27 @@ const selectedSorts = ref<string>('')
     { id: 6, text: '中国' }, 
     { id: 7, text: '九州' }
   ])
-  const selectedOption = ref<string | null>(null);
-  const options = ref<Array<{ text: string; value: string }>>([
-  { text: '選択肢1', value: 'option1' },
-  { text: '選択肢2', value: 'option2' },
-  { text: '選択肢3', value: 'option3' },
-  // 他の選択肢を追加できます
-]);
-  
+  const select =   ref({ state: 'Florida', abbr: 'FL' });
+  const item =  ref([
+    { state: 'Florida', abbr: 'FL' },
+    { state: 'Georgia', abbr: 'GA' },
+    { state: 'Nebraska', abbr: 'NE' },
+    { state: 'California', abbr: 'CA' },
+    { state: 'New York', abbr: 'NY' },
+  ]);
+
+  const postitem = () => {
+    console.log("area")
+    console.log("aaa",select.value)
+    userSearch()
+  }
+//   function postitem() {
+//   // 選択が変更されたときの処理をここに記述
+//   console.log("area")
+//   console.log('選択が変更されました。選択項目:', select.value);
+// }
  
-  // チェックフラグ（活動歴以外）
+  // チェックフラグ
   const isChecked = ref(false)
   // チェックフラグ更新
   const isCheckedCategory = () => {
@@ -479,8 +573,8 @@ const selectedSorts = ref<string>('')
     || checkedOfficeIds.value.length > 1
     || checkedComedyStyleIds.value.length > 1
     || checkedFeeTypeId.value > 0
-    || selectLowPrice.value >0
-    || selectHighPrice.value > 0
+    || selectLowPrice.value.value >0
+    || selectHighPrice.value.value  > 0
     || checkedSpecialSkillIds.value.length > 1
     || checkedAreaId.value > 0) {
       isChecked.value = true
@@ -592,6 +686,7 @@ const selectedSorts = ref<string>('')
   // 活動場所
   const checkedAreaId = ref(0);
   const postArea = () => {
+    console.log("aaa",selectArea.value)
     userSearch()
   }
 
@@ -732,7 +827,7 @@ const selectedSorts = ref<string>('')
         }
       }
       // 料金(Low)
-      if (selectLowPrice.value > 0) {
+      if (selectLowPrice.value.value  > 0) {
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
@@ -740,13 +835,13 @@ const selectedSorts = ref<string>('')
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
         || checkedFeeTypeId.value > 0) {
-          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.fee >= selectLowPrice.value)
+          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.fee >= selectLowPrice.value.value )
         } else {
-          kariCheckedUser.value = usersOrigin.value.filter(t => t.fee >= selectLowPrice.value)
+          kariCheckedUser.value = usersOrigin.value.filter(t => t.fee >= selectLowPrice.value.value )
         }
       }
       // 料金(High)
-      if (selectHighPrice.value > 0) {
+      if (selectHighPrice.value.value  > 0) {
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
@@ -754,10 +849,10 @@ const selectedSorts = ref<string>('')
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
         || checkedFeeTypeId.value > 0
-        || selectLowPrice.value > 0) {
-          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.fee <= selectHighPrice.value)
+        || selectLowPrice.value.value  > 0) {
+          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.fee <= selectHighPrice.value.value )
         } else {
-          kariCheckedUser.value = usersOrigin.value.filter(t => t.fee <= selectHighPrice.value)
+          kariCheckedUser.value = usersOrigin.value.filter(t => t.fee <= selectHighPrice.value.value )
         }
       }
       // 特殊スキル
@@ -769,8 +864,8 @@ const selectedSorts = ref<string>('')
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
         || checkedFeeTypeId.value > 0
-        || selectLowPrice.value > 0
-        || selectHighPrice.value > 0) {
+        || selectLowPrice.value.value  > 0
+        || selectHighPrice.value.value  > 0) {
           const kariCheckedSpecialSkillUser = ref([] as User[]);
           for (var specialSkillId of checkedSpecialSkillIds.value) {
             user.value = kariCheckedUser.value.filter(function(value) {
@@ -809,8 +904,8 @@ const selectedSorts = ref<string>('')
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
         || checkedFeeTypeId.value > 0
-        || selectLowPrice.value > 0
-        || selectHighPrice.value > 0
+        || selectLowPrice.value.value > 0
+        || selectHighPrice.value.value > 0
         || checkedSpecialSkillIds.value.length > 1) {
           kariCheckedUser.value = kariCheckedUser.value.filter(t => t.areaId === checkedAreaId.value)
         } else {
@@ -823,6 +918,7 @@ const selectedSorts = ref<string>('')
     }
     // 表示用にセット
     dispUsers.value = checkedUser.value
+    postSort()
   }
 
   // クリアボタン（初期化）
@@ -838,7 +934,7 @@ const selectedSorts = ref<string>('')
       optionGender.value[i].flg = false
     }
     // 活動歴 
-    radiosActivity.value = []
+    radiosActivity.value = 0
     checkedActivityId.value= 0
     checkedActivityValue.value= 0
     // 事務所
@@ -854,11 +950,11 @@ const selectedSorts = ref<string>('')
       optionComedyStyle.value[i].flg = false
     }
     // 料金形態
-    selectFeeType.value = ''
+    selectFeeType.value = { id: 0, name: '' }
     checkedFeeTypeId.value = 0
     // 料金
-    selectLowPrice.value = 0
-    selectHighPrice.value = 0
+    selectLowPrice.value = { id: 0, value: 0, name: '下限なし' }
+    selectHighPrice.value = { id: 0, value: 0, name: '上限なし' }
     // 特殊スキル
     checkSpecialSkill.value = []
     checkedSpecialSkillIds.value = [{ id: 0 }]

@@ -21,10 +21,10 @@
             <p v-if="item.gender==3">性別 : 男女</p>
             <p>活動歴 : {{ item.activityDt }}</p>
             <p>事務所 : {{ item.officeName }}</p>
-            <p v-if="item.userType==2">芸風 : {{ item.comedyStyleName }}</p>
-            <p v-if="item.userType==1">得意分野 : {{ item.comedyStyleName }}</p>
-            <p v-if="item.userType==1">特殊スキル : {{ item.specialSkillName }}</p>
-            <p>ログイン : {{ item.loginAt }}</p>
+            <p v-if="item.userType==2">芸風 : {{ item.comedyStyleNames }}</p>
+            <p v-if="item.userType==1">得意分野 : {{ item.comedyStyleNames}}</p>
+            <p v-if="item.userType==1">特殊スキル : {{ item.specialSkillNames }}</p>
+            <p>ログイン : {{ item.loginAtInt }}</p>
             <p>ログイン : {{ item.loginAtInt }}</p>
             <p>更新 : {{ item.updateAtInt }}</p>
           </ul>
@@ -281,7 +281,7 @@ const getData = async () => {
 
 // }
 
-const selectedSorts = ref(1)
+  const selectedSorts = ref(1)
   const optionSorts = [
     { id: 1, name: 'ログイン'},
     { id: 2, name: '更新' } 
@@ -292,12 +292,12 @@ const selectedSorts = ref(1)
     switch (selectedSorts.value) {
       case 1:
         dispUsers.value = dispUsers.value.sort((a, b) => {
-          return a.loginAtInt - b.loginAtInt
+          return b.loginAtInt - a.loginAtInt
         })
         break
       case 2:
         dispUsers.value = dispUsers.value.sort((a, b) => {
-          return a.updateAtInt - b.updateAtInt
+          return b.updateAtInt - a.updateAtInt
         })
         break
     }
@@ -764,6 +764,7 @@ const selectedSorts = ref(1)
     }
     // 表示用にセット
     dispUsers.value = checkedUser.value
+    postSort()
   }
    
 // クリアボタン（初期化）

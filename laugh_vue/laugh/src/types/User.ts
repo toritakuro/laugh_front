@@ -21,7 +21,9 @@ export default interface User {
     feeType: number;
     fee: number;
     comedyStyleIdList: Array<number>;
-    comedyStyleName: string;
+    comedyStyleNameList: Array<string>;
+    comedyStyleNames: string;
     specialSkillIdList: Array<number>;
-    specialSkillName: string;
+    specialSkillNameList: Array<string>;
+    specialSkillNames: string;
   }
