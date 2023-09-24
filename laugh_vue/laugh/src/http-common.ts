@@ -14,9 +14,9 @@ apiClient.interceptors.response.use(
   function (response) {
     // ステータスコードが 2xx の範囲にある場合、この関数が起動します
     // リクエスト データの処理
-    if (response.data.data.messages !== undefined) {
+    if (response.data.message !== undefined) {
       store.dispatch('message/showMessage',{
-        messages: [...response.data.data.messages], // TODO返却値からmsgがあれば取り出す
+        messages: [...response.data.message], // TODO返却値からmsgがあれば取り出す
         result: 'success'
       });
     }
