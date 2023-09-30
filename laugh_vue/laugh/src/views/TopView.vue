@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center">
-      <v-col cols="6" class="mx-auto mt-5">
+      <v-col cols="7" class="mx-auto mt-5">
         <v-row>
           <v-col cols="2" class="text-transform py-4 my-2" align="right">
             <v-icon>mdi-sort-descending</v-icon>
@@ -17,49 +17,57 @@
               persistent-hint
               return-object
               single-line
+              @update:modelValue="postSort"
             ></v-select>
+          </v-col>
+          <v-col cols="4" class="text-transform py-4 my-2" align="right">
+            <v-text class="text-h4">{{ dispUserCount }}</v-text>
+            <v-text class="text-h6"> 件</v-text>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col cols="6">
+      <v-col cols="7">
         <v-row>
           <v-col cols="7">
-          <v-card v-for="item in dispUsers">
-              <v-img
-                aspect-ratio="16/9"
-                cover
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              ></v-img>
-              <v-card-title class="text-h5">{{ item.userName }}</v-card-title>
-              <v-card-subtitle class="mb-1 text-subtitle-1">活動歴: {{ item.activityDt }}</v-card-subtitle>
-              <v-card-subtitle class="mb-1 text-subtitle-1">自己紹介: {{ item.selfIntroduction }}</v-card-subtitle>
-              <v-card-item class="pl-3">
-                <v-chip-group>
-                  <v-chip v-for="comedyStyle in item.comedyStyleNameList">{{ comedyStyle }}</v-chip>
-                </v-chip-group>
-                <v-chip-group v-if="dispUserType == 1">
-                  <v-chip v-for="specialSkill in item.specialSkillNameList">{{ specialSkill }}</v-chip>
-                </v-chip-group>
-              </v-card-item>
-              <v-list density="compact">
-                <v-list-subheader>
-                  <div class="font-weight-bold text-subtitle-1 recomend-script">イチオシのネタ</div>
-                </v-list-subheader>
-                <v-list-item
-                  v-for="(item, i) in items"
-                  :key="i"
-                  :value="item"
-                  color="primary"
-                >
-                  <template v-slot:prepend>
-                    <v-icon :icon="item.icon"></v-icon>
-                  </template>
-                  <v-list-item-title v-text="item.text"></v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-card>
+            <v-col class="user-card" v-for="item in dispUsers">
+              <v-card>
+                <v-img
+                  aspect-ratio="16/9"
+                  cover
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                ></v-img>
+                <v-card-title class="text-h5">{{ item.userName }}</v-card-title>
+                <v-card-subtitle class="mb-1 text-subtitle-1">活動歴: {{ item.activityDt }}</v-card-subtitle>
+                <v-card-subtitle class="mb-1 text-subtitle-1">自己紹介</v-card-subtitle>
+                <v-card-text class="text-subtitle-1">{{ limitedText(item.selfIntroduction) }}</v-card-text>
+                <v-card-item class="pl-3">
+                  <v-chip-group>
+                    <v-chip v-for="comedyStyle in item.comedyStyleNameList">{{ comedyStyle }}</v-chip>
+                  </v-chip-group>
+                  <v-chip-group v-if="dispUserType == 1">
+                    <v-chip v-for="specialSkill in item.specialSkillNameList">{{ specialSkill }}</v-chip>
+                  </v-chip-group>
+                </v-card-item>
+                <v-list density="compact">
+                  <v-list-subheader>
+                    <div class="font-weight-bold text-subtitle-1 recomend-script">イチオシのネタ</div>
+                  </v-list-subheader>
+                  <v-list-item
+                    v-for="(item, i) in items"
+                    :key="i"
+                    :value="item"
+                    color="primary"
+                  >
+                    <template v-slot:prepend>
+                      <v-icon :icon="item.icon"></v-icon>
+                    </template>
+                    <v-list-item-title v-text="item.text"></v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-col>
           </v-col>
           <v-col
             class="ps-6"
@@ -89,6 +97,23 @@
                   @click="postGender(select.id, select.flg)"
                   density="compact"
                   hide-details="true"
+                  color="orange-darken-1"
+                ></v-checkbox>
+              </v-checkbox-group>
+            </v-col>
+            <v-col v-if="dispUserType == 2">
+              <v-card-subtitle class="font-weight-bold text-subtitle-1">活動形態</v-card-subtitle>
+              <v-checkbox-group v-model="checkActivityNum">
+                <v-checkbox
+                  v-for="select in optionActivityNum"
+                  v-bind:value="select.id" 
+                  v-bind:key="select.id" 
+                  v-bind:label="select.name"
+                  v-model="select.flg"
+                  @click="postActivityNum(select.id, select.flg)"
+                  density="compact"
+                  hide-details="true"
+                  color="orange-darken-1"
                 ></v-checkbox>
               </v-checkbox-group>
             </v-col>
@@ -103,6 +128,7 @@
                   @click="postActivity(select.id, select.value)"
                   density="compact"
                   hide-details="true"
+                  color="orange-darken-1"
                 ></v-radio>
               </v-radio-group>
             </v-col>
@@ -118,6 +144,7 @@
                   @click="postOffice(select.id, select.flg)"
                   density="compact"
                   hide-details="true"
+                  color="orange-darken-1"
                 ></v-checkbox>
               </v-checkbox-group>
             </v-col>
@@ -134,6 +161,7 @@
                   @click="postComedyStyle(select.id, select.flg)"
                   density="compact"
                   hide-details="true"
+                  color="orange-darken-1"
                 ></v-checkbox>
               </v-checkbox-group>
             </v-col>
@@ -148,89 +176,79 @@
                 persistent-hint
                 return-object
                 single-line
+                @update:modelValue="postFeeType"
               ></v-select>
             </v-col>
             <v-col v-if="dispUserType == 1">
             <v-card-subtitle class="font-weight-bold text-subtitle-1">金額</v-card-subtitle>
-            <div class="d-flex flex-row">
-              <v-sheet class="py-2 w-100">
+              <div class="d-flex flex-row">
+                <v-sheet class="py-2 w-100">
+                  <v-select
+                    v-model="selectLowPrice"
+                    :items="optionLowPrice"
+                    item-title="name"
+                    item-value="id"
+                    label="Select"
+                    persistent-hint
+                    return-object
+                    single-line
+                    @update:modelValue="postFee"
+                  ></v-select>
+                </v-sheet>
+                <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
+                <v-sheet class="py-2 w-100">
+                  <v-select
+                    v-model="selectHighPrice"
+                    :items="optionHighPrice"
+                    item-title="name"
+                    item-value="id"
+                    label="Select"
+                    persistent-hint
+                    return-object
+                    single-line
+                    @update:modelValue="postFee"
+                  ></v-select>
+                </v-sheet>
+              </div>
+            </v-col>
+            <v-col v-if="dispUserType == 1">
+              <v-card-subtitle class="font-weight-bold text-subtitle-1">特殊スキル</v-card-subtitle>
+              <v-checkbox-group v-model="checkSpecialSkill">
+                <v-checkbox
+                  v-for="select in optionSpecialSkill"
+                  v-bind:value="select.id" 
+                  v-bind:key="select.id" 
+                  v-bind:label="select.name"
+                  v-model="select.flg"
+                  @click="postSpecialSkill(select.id, select.flg)"
+                  density="compact"
+                  hide-details="true"
+                  color="orange-darken-1"
+                ></v-checkbox>
+              </v-checkbox-group> 
+            </v-col>
+            <v-col>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動場所</v-card-subtitle>
+              <v-select-group>
                 <v-select
-                  v-model="selectLowPrice"
-                  :items="optionLowPrice"
-                  item-title="name"
+                  v-model="selectArea"
+                  :items="optionArea"
+                  item-title="text"
                   item-value="id"
                   label="Select"
                   persistent-hint
                   return-object
                   single-line
+                  @update:modelValue="postArea"
                 ></v-select>
-              </v-sheet>
-              <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
-              <v-sheet class="py-2 w-100">
-                <v-select
-                  v-model="selectHighPrice"
-                  :items="optionHighPrice"
-                  item-title="name"
-                  item-value="id"
-                  label="Select"
-                  persistent-hint
-                  return-object
-                  single-line
-                ></v-select>
-              </v-sheet>
-            </div>
-          </v-col>
-          <v-col v-if="dispUserType == 1">
-            <v-card-subtitle class="font-weight-bold text-subtitle-1">特殊スキル</v-card-subtitle>
-            <v-checkbox-group v-model="checkSpecialSkill">
-              <v-checkbox
-                v-for="select in optionSpecialSkill"
-                v-bind:value="select.id" 
-                v-bind:key="select.id" 
-                v-bind:label="select.name"
-                v-model="select.flg"
-                @click="postSpecialSkill(select.id, select.flg)"
-                density="compact"
-                hide-details="true"
-              ></v-checkbox>
-            </v-checkbox-group> 
-          </v-col>
-          <v-col>
-            <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動場所</v-card-subtitle>
-            <v-select-group @change="postArea">
-              <v-select
-                v-model="selectArea"
-                :items="optionArea"
-                item-title="text"
-                item-value="id"
-                label="Select"
-                persistent-hint
-                return-object
-                single-line
-              ></v-select>
-          </v-select-group>
-          <v-select-group>
-          <v-select
-            v-model="select"
-            :hint="`${select.state}, ${select.abbr}`"
-            :items="item"
-            item-title="state"
-            item-value="abbr"
-            label="Select"
-            v-bind:value="select.state" 
-            persistent-hint
-            return-object
-            single-line
-            @input="postitem"
-          ></v-select>
-        </v-select-group>
-          </v-col>
-          <v-col align="center">
-            <v-btn variant="tonal" @click="clear">
-              clear
-            </v-btn>
-          </v-col>
-          </v-card>
+              </v-select-group>
+            </v-col>
+            <v-col align="center">
+              <v-btn variant="tonal" @click="clear">
+                clear
+              </v-btn>
+            </v-col>
+            </v-card>
           </v-col>
         </v-row>
       </v-col>
@@ -242,7 +260,7 @@
 
   <style scoped>
   .recomend-script {
-    border-left: 3px solid #7CB342;
+    border-left: 5px solid #FB8C00;
     padding-left: 5px;
     color: #000000;
   }
@@ -274,6 +292,11 @@
   .v-card.v-theme--light.v-card--density-default.v-card--variant-elevated.card-box {
     margin-top: 20px;
     padding: 20px;
+  }
+
+  .v-card-text {
+    padding: 0rem 1rem;
+    white-space: pre-line;
   }
   .main-content {
     display: flex;
@@ -398,29 +421,41 @@
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
   const dispUserType = ref();
+  const dispUserCount = ref(0);
 
 
   onMounted(() => {
     getData();
   })
   
-/** User一覧を取得する */
-const getData = async () => {
-  const {data} = await http.get('/top/init',{
-    params: {
-      userType: 2
-    }}
-  )
-  dispUsers.value = data.data;
-  usersOrigin.value = data.data;
-  dispUserType.value = usersOrigin.value[0].userType
-  postSort()
-}
+  /** User一覧を取得する */
+  const getData = async () => {
+    const {data} = await http.get('/top/init',{
+      params: {
+        userType: 2
+      }}
+    )
+    dispUsers.value = data.data;
+    usersOrigin.value = data.data;
+    dispUserType.value = usersOrigin.value[0].userType
+    countUsers()
+    postSort()
+  }
 
-const items = ref([
-  { text: 'トカゲのおっさん', icon: 'mdi-video' },
-  { text: 'ゴレンジャイ', icon: 'mdi-file' },
-]) ;
+  const  limitedText = (text: string) => {
+    console.log(text.length)
+    let maxLength = 60;
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + "...";
+    } else {
+      return text;
+    }
+  }
+
+  const items = ref([
+    { text: 'トカゲのおっさん', icon: 'mdi-video' },
+    { text: 'ゴレンジャイ', icon: 'mdi-file' },
+  ]) ;
 
   const selectedSorts = ref({ id: 1, name: 'ログイン'})
   const optionSorts = [
@@ -442,7 +477,10 @@ const items = ref([
         break
     }
   }
-  const sortUser = ref<string>('')
+
+  const countUsers = () => {
+    dispUserCount.value = dispUsers.value.length
+  }
 
   //search
   const checkGender = ref([])
@@ -450,6 +488,13 @@ const items = ref([
     { id: 1, name: '男', flg: false},
     { id: 2, name: '女', flg: false},
     { id: 3, name: '男女', flg: false}
+  ])
+
+  const checkActivityNum = ref([])
+  const optionActivityNum = ref([
+    { id: 1, name: 'ピン', flg: false},
+    { id: 2, name: 'コンビ', flg: false},
+    { id: 3, name: 'トリオ以上', flg: false}
   ])
 
   const radiosActivity = ref(0)
@@ -476,13 +521,12 @@ const items = ref([
   const checkComedyStyle = ref([])
   const optionComedyStyle = ref([
     { id: 1, name: '漫才', flg: false},
-    { id: 2, name: 'ピン', flg: false},
-    { id: 3, name: 'コント', flg: false},
-    { id: 4, name: 'ギャグ', flg: false},
-    { id: 5, name: 'モノマネ', flg: false},
-    { id: 6, name: '歌ネタ', flg: false},
-    { id: 7, name: 'リズムネタ', flg: false},
-    { id: 8, name: 'その他', flg: false}
+    { id: 2, name: 'コント', flg: false},
+    { id: 3, name: 'ギャグ', flg: false},
+    { id: 4, name: 'モノマネ', flg: false},
+    { id: 5, name: '歌ネタ', flg: false},
+    { id: 6, name: 'リズムネタ', flg: false},
+    { id: 7, name: 'その他', flg: false}
   ])
 
   const selectFeeType = ref({ id: 0, name: '' });
@@ -532,7 +576,7 @@ const items = ref([
     { id: 6, name: 'その他', flg: false}
   ])
 
-  const selectArea = ref('')
+  const selectArea = ref({ id: 0, text: ''});
   const optionArea = ref([
     { id: 0, text: ''},
     { id: 1, text: '北海道'},
@@ -557,6 +601,17 @@ const items = ref([
     console.log("aaa",select.value)
     userSearch()
   }
+  const selectedItem = ref(null);
+  const item2 = ['Option 1', 'Option 2', 'Option 3'];
+
+  const handleSelectionChange = () => {
+    // 選択が変更されたときに実行されるコードをここに書きます
+    console.log('選択が変更されました。選択されたアイテム:', selectedItem.value);
+  };
+  const test = (modelValue:any) => {
+    console.log("area")
+    alert(1111);
+  }
 //   function postitem() {
 //   // 選択が変更されたときの処理をここに記述
 //   console.log("area")
@@ -569,14 +624,15 @@ const items = ref([
   const isCheckedCategory = () => {
     if (searchName.value != ''
     || checkedGenderIds.value.length > 1
+    || checkedMemberNumIds.value.length > 1
     || checkedActivityId.value > 0
     || checkedOfficeIds.value.length > 1
     || checkedComedyStyleIds.value.length > 1
-    || checkedFeeTypeId.value > 0
+    || selectFeeType.value.id > 0
     || selectLowPrice.value.value >0
     || selectHighPrice.value.value  > 0
     || checkedSpecialSkillIds.value.length > 1
-    || checkedAreaId.value > 0) {
+    || selectArea.value.id > 0) {
       isChecked.value = true
     } else {
       isChecked.value = false
@@ -607,6 +663,23 @@ const items = ref([
       checkedGenderIds.value = checkedGenderIds.value.filter(t => t.id !== id)
       userSearch()
       optionGender.value[id - 1].flg = false
+    }
+  }
+
+  // 活動形態
+  const checkedMemberNumIds = ref([{ id: 0 }]);
+  const postActivityNum = (id: number, flg: boolean) => {
+    const checkedMemberNumId = { id: id }
+    // チェックつけた時
+    if (!flg) {
+      checkedMemberNumIds.value.push(checkedMemberNumId)
+      userSearch()
+      optionActivityNum.value[id - 1].flg = true
+    } else {
+      // チェック外した時
+      checkedMemberNumIds.value = checkedMemberNumIds.value.filter(t => t.id !== id)
+      userSearch()
+      optionActivityNum.value[id - 1].flg = false
     }
   }
 
@@ -656,7 +729,6 @@ const items = ref([
   }
 
   // 料金形態
-  const checkedFeeTypeId = ref(0);
   const postFeeType = () => {
     userSearch()
   }
@@ -684,9 +756,7 @@ const items = ref([
   }
 
   // 活動場所
-  const checkedAreaId = ref(0);
   const postArea = () => {
-    console.log("aaa",selectArea.value)
     userSearch()
   }
 
@@ -698,7 +768,6 @@ const items = ref([
     const kariCheckedUser = ref([] as User[]);
     isCheckedCategory()
     if (isChecked.value) {
-      console.log("kiteru2")
       // 活動名
       if (searchName.value != '') {
         // 検索内容と一致するユーザー名を取得
@@ -726,6 +795,37 @@ const items = ref([
           for (var genderId of checkedGenderIds.value) {
             // チェック済みの性別と一致するユーザーを取得
             user.value = usersOrigin.value.filter(t => t.gender === genderId.id)
+            for (var item of user.value) {
+              kariCheckedUser.value.push(item)
+            }
+          }
+        }
+      }
+      // 活動形態
+      if (checkedMemberNumIds.value.length > 1) {
+        // 別カテゴリーにもチェックが入っている場合
+        if (searchName.value != '') {
+          const kariCheckedMemberNumUser = ref([] as User[])
+          for (var memberNum of checkedMemberNumIds.value) {
+            // チェック済みの活動形態と一致するユーザーを取得
+            if (memberNum.id != 3) {
+              user.value = kariCheckedUser.value.filter(t => t.memberNum === memberNum.id)
+            } else {
+              user.value = kariCheckedUser.value.filter(t => t.memberNum >= memberNum.id)
+            }    
+            for (var item of user.value) {
+              kariCheckedMemberNumUser.value.push(item)
+            }
+          }
+          kariCheckedUser.value = kariCheckedMemberNumUser.value
+        } else {
+          for (var memberNum of checkedMemberNumIds.value) {
+            // チェック済みの活動形態と一致するユーザーを取得
+            if (memberNum.id != 3) {
+              user.value = usersOrigin.value.filter(t => t.memberNum === memberNum.id)
+            } else {
+              user.value = usersOrigin.value.filter(t => t.memberNum >= memberNum.id)
+            }
             for (var item of user.value) {
               kariCheckedUser.value.push(item)
             }
@@ -814,16 +914,16 @@ const items = ref([
         }
       }
       // 料金形態
-      if (checkedFeeTypeId.value > 0) {
+      if (selectFeeType.value.id > 0) {
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1) {
-          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.feeType === checkedFeeTypeId.value)
+          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.feeType === selectFeeType.value.id)
         } else {
-          kariCheckedUser.value = usersOrigin.value.filter(t => t.feeType === checkedFeeTypeId.value)
+          kariCheckedUser.value = usersOrigin.value.filter(t => t.feeType === selectFeeType.value.id)
         }
       }
       // 料金(Low)
@@ -834,7 +934,7 @@ const items = ref([
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
-        || checkedFeeTypeId.value > 0) {
+        || selectFeeType.value.id > 0) {
           kariCheckedUser.value = kariCheckedUser.value.filter(t => t.fee >= selectLowPrice.value.value )
         } else {
           kariCheckedUser.value = usersOrigin.value.filter(t => t.fee >= selectLowPrice.value.value )
@@ -848,7 +948,7 @@ const items = ref([
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
-        || checkedFeeTypeId.value > 0
+        || selectFeeType.value.id > 0
         || selectLowPrice.value.value  > 0) {
           kariCheckedUser.value = kariCheckedUser.value.filter(t => t.fee <= selectHighPrice.value.value )
         } else {
@@ -863,7 +963,7 @@ const items = ref([
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
-        || checkedFeeTypeId.value > 0
+        || selectFeeType.value.id > 0
         || selectLowPrice.value.value  > 0
         || selectHighPrice.value.value  > 0) {
           const kariCheckedSpecialSkillUser = ref([] as User[]);
@@ -896,20 +996,20 @@ const items = ref([
         }
       }
       // 活動場所
-      if (checkedAreaId.value > 0) {
+      if (selectArea.value.id > 0) {
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
-        || checkedFeeTypeId.value > 0
+        || selectFeeType.value.id > 0
         || selectLowPrice.value.value > 0
         || selectHighPrice.value.value > 0
         || checkedSpecialSkillIds.value.length > 1) {
-          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.areaId === checkedAreaId.value)
+          kariCheckedUser.value = kariCheckedUser.value.filter(t => t.areaId === selectArea.value.id)
         } else {
-          kariCheckedUser.value = usersOrigin.value.filter(t => t.areaId === checkedAreaId.value)
+          kariCheckedUser.value = usersOrigin.value.filter(t => t.areaId === selectArea.value.id)
         }
       }
       checkedUser.value = kariCheckedUser.value
@@ -918,6 +1018,7 @@ const items = ref([
     }
     // 表示用にセット
     dispUsers.value = checkedUser.value
+    countUsers()
     postSort()
   }
 
@@ -951,7 +1052,6 @@ const items = ref([
     }
     // 料金形態
     selectFeeType.value = { id: 0, name: '' }
-    checkedFeeTypeId.value = 0
     // 料金
     selectLowPrice.value = { id: 0, value: 0, name: '下限なし' }
     selectHighPrice.value = { id: 0, value: 0, name: '上限なし' }
@@ -962,8 +1062,7 @@ const items = ref([
       optionSpecialSkill.value[i].flg = false
     }
     // 活動地域
-    selectArea.value = ''
-    checkedAreaId.value = 0
+    selectArea.value = { id: 0, text: '' }
 
     isCheckedCategory()
     getData();
