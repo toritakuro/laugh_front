@@ -248,7 +248,7 @@ export default {
 const getData = async () => {
   const {data} = await http.get('/top/init',{
     params: {
-      userType: 1
+      userType: 2
     }}
   )
   dispUsers.value = data.data;

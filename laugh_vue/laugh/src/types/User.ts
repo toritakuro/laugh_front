@@ -11,7 +11,7 @@ export default interface User {
     officeId: number;
     officeName: string;
     areaId: number;
-    areaNmae: string;
+    areaName: string;
     selfIntroduction: string;
     loginAt: string;
     loginAtInt: number;

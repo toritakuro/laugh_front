@@ -31,46 +31,87 @@
       <v-col cols="7">
         <v-row>
           <v-col cols="7">
-            <v-col class="user-card" v-for="item in dispUsers">
-              <v-card>
-                <v-img
-                  aspect-ratio="16/9"
-                  cover
-                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                ></v-img>
-                <v-card-title class="text-h5">{{ item.userName }}</v-card-title>
-                <v-card-subtitle class="mb-1 text-subtitle-1">活動歴: {{ item.activityDt }}</v-card-subtitle>
-                <v-card-subtitle class="mb-1 text-subtitle-1">自己紹介</v-card-subtitle>
-                <v-card-text class="text-subtitle-1">{{ limitedText(item.selfIntroduction) }}</v-card-text>
-                <v-card-item class="pl-3">
-                  <v-chip-group>
-                    <v-chip v-for="comedyStyle in item.comedyStyleNameList">{{ comedyStyle }}</v-chip>
-                  </v-chip-group>
-                  <v-chip-group v-if="dispUserType == 1">
-                    <v-chip v-for="specialSkill in item.specialSkillNameList">{{ specialSkill }}</v-chip>
-                  </v-chip-group>
-                </v-card-item>
-                <v-list density="compact">
-                  <v-list-subheader>
-                    <div class="font-weight-bold text-subtitle-1 recomend-script">イチオシのネタ</div>
-                  </v-list-subheader>
-                  <v-list-item
-                    v-for="(item, i) in items"
-                    :key="i"
-                    :value="item"
-                    color="primary"
-                  >
-                    <template v-slot:prepend>
-                      <v-icon :icon="item.icon"></v-icon>
-                    </template>
-                    <v-list-item-title v-text="item.text"></v-list-item-title>
-                  </v-list-item>
-                </v-list>
+            <v-col v-for="item in dispUsers">
+              <v-card class="mx-auto pa-2">
+                <v-container fluid="true">
+                  <v-row>
+                    <v-col class="pa-0 profileInfo" lg="6" md="6" sm="12">
+                      <v-img
+                        :aspect-ratio="1"
+                        src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
+                        cover
+                        class="rounded-lg"
+                    ></v-img>
+                    </v-col>
+                    <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
+                      <v-card-title class="font-weight-black pt-0 pb-0">{{ item.userName }}</v-card-title>
+                      <v-card-subtitle v-if="item?.userType == 2"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ item.activityDt }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item?.officeName }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item?.areaName }}</v-card-subtitle>
+                      <div class="profile_comedyStyle">
+                        <div v-if="item?.userType === 1">
+                          <v-card-subtitle class="mb-1 text-subtitle-1">得意分野</v-card-subtitle>
+                          <v-chip
+                            v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
+                            class="mr-1 mt-1 profile_chip"
+                            color="orange"
+                            text-color="white"
+                            >{{ itemName }}
+                          </v-chip>
+                          <v-card-subtitle class="mb-1 text-subtitle-1">特殊スキル</v-card-subtitle>
+                          <v-chip
+                              v-for="(itemName, i) in item.specialSkillNameList" :key="i"
+                              class="mr-1 mt-1"
+                              color="orange"
+                              text-color="white"
+                              >{{ itemName }}
+                            </v-chip>
+                        </div>
+                        <div v-if="item?.userType === 2">
+                          <v-card-subtitle class="mb-1 text-subtitle-1">芸風</v-card-subtitle>
+                          <v-chip
+                              v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
+                              class="mr-1 mt-1"
+                              color="orange"
+                              text-color="white"
+                              >{{ itemName }}
+                            </v-chip>
+                        </div>
+                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="profile_selfIntroduction">
+                      <v-card-subtitle class="mb-1 text-subtitle-1">自己紹介</v-card-subtitle>
+                      <v-card-text class="text-subtitle-1">{{ item.selfIntroduction }}</v-card-text>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="profile_ichioshi">
+                      <div class="font-weight-bold text-subtitle-1 recomend-script">イチオシのネタ</div>
+                      <v-list class="profile_ichioshi_neta" density="compact">
+                        <v-list-item
+                          class="pl-0"
+                          v-for="(item, i) in items"
+                          :key="i"
+                          :value="item"
+                          color="primary"
+                        >
+                          <template  class="profile_contents" v-slot:prepend>
+                            <v-icon :icon="item.icon"></v-icon>
+                          </template>
+                          <v-list-item-title v-text="item.text"></v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </v-card>
             </v-col>
           </v-col>
           <v-col
-            class="ps-6"
+            class="ps-6 user_filter"
             cols="5"
             >
             <v-card
@@ -259,152 +300,66 @@
 
 
   <style scoped>
+  .template {
+    background-color: #8080800a;
+  }
+
+  /* プロフィール */
+  .profile_info .v-card-subtitle{
+    padding: 0.2rem 0.3rem
+  }
+  .profile_selfIntroduction {
+    padding: 0.5rem 0rem;
+  }
+ .profile_ichioshi {
+    padding: 0.5rem 0rem 0rem 0rem;
+  } 
+  .profile_ichioshi_neta {
+    padding: 0;
+  }
   .recomend-script {
     border-left: 5px solid #FB8C00;
     padding-left: 5px;
     color: #000000;
   }
-  .user-header { 
-    text-align: center;
-    padding: 20px 0;
-    background-color: #ffe1a9;
-    position: relative;
-    width: 100%;
+  .profile_contents {
+    width: 0.5rem;
   }
-  .user-header > h2 {
-    margin: auto;
-    letter-spacing: 0.2em;
-  }
-  .logo {
-    position: absolute;
-    left: 40px;
-    top: 18%;
-    transform: translateY(-50%);
-    padding: 4px 8px;
-    border: 2px solid #ff8300;
-    color: #ff8300;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 24px;
-  }
-  
-  /* 全体 */
-  .v-card.v-theme--light.v-card--density-default.v-card--variant-elevated.card-box {
-    margin-top: 20px;
-    padding: 20px;
+  .profile_comedyStyle {
+    padding-left: 0.2rem;
   }
 
   .v-card-text {
-    padding: 0rem 1rem;
+    padding: 0rem;
     white-space: pre-line;
+    display: -webkit-box; /* 必須 */
+    -webkit-box-orient: vertical; /* 必須 */
+    -webkit-line-clamp: 5; /* 行数を制限 */
+    overflow: hidden; 
   }
-  .main-content {
-    display: flex;
-    gap: 30px;
-    justify-content: center;
-    margin: 0 auto;
-    padding: 12px;
+  .v-card-title {
+    padding: 0.5rem;
   }
   
-  /* ユーザー一覧 */
-  .sort-box > select {
-    border-radius: 3px;
+  .v-card-subtitle{
+    padding: 0;
   }
-  .sort-box {
-    text-align: end;
+  .v-card-subtitle.profileInfo{
+    padding: 0 1rem;
   }
-  .user-wrap {
-    display: flex;
-    margin-top: 20px;
-    width: 500px;
-    border: 2px solid #008000;
-    border-radius: 10px;
+  .v-list-item_prepend {
+    width: 0.5rem;
   }
-  .user-photo > img {
-    width: 200px;
-    padding: 12px;
-  }
-  .profile {
-    list-style: none;
-    margin-left: 20px;
-    padding: 0 12px;
-  }
-  .profile > li {
-    margin-top: 10px;
-  }
-  .neta-list {
-    list-style: none;
-  }
-  .sp-neta-list {
-    margin-top: 10px;
-    padding: 3px 0 3px 10px;
+  .profile_chip {
     font-weight: bold;
-    border-left: 5px solid #6fba2c;
   }
-  .neta-list {
-    margin-left: 20px;
+
+  /* ユーザーフィルター */
+  .user_filter {
+    margin-top: 0.7rem;
   }
   
   
-  /* 自由検索欄 */
-  .user-search-box {
-    list-style: none;
-    margin-top: 70px;
-    padding: 10px 10px;
-    background-color: #ffe1a9;
-    width: 350px;
-    border-radius: 6px;
-  }
-  .search-ttl {
-    margin-top: 12px;
-    margin-bottom: 8px;
-    padding: 3px 0 3px 10px;
-    font-weight: bold;
-    border-left: 5px solid #6fba2c;
-  }
-  .search-ttl > li {
-    display: flex;
-    margin-left: 10px;
-  }
-  .search-fee {
-    display: flex;
-  }
-  .search-ttl-span {
-    margin-top: 20px;
-  }
-  .user-name-box {
-    border-radius: 3px;
-  }
-  .fee-box {
-    border-radius: 3px;
-  }
-  .money-box {
-    border-radius: 3px;
-  }
-  .active-place {
-    border-radius: 3px;
-  }
-  .search-btn {
-    align-items: center;
-    justify-content: center;
-    margin-top: 14px;
-    padding: 7px 20px;
-    color: #fff;
-    text-align: center;
-    overflow-wrap: anywhere;
-    background-color: #ff8300;
-    border-radius: 18px;
-    border: none;
-    box-shadow: rgb(217, 217, 217) 0px 2px 1px;
-  }
-  .search-btn:hover {
-    transition: background-color 0.2s;
-    opacity: 0.8;
-    cursor: pointer;
-  }
-  .clear-btn {
-    margin-left: 20px;
-  }
   
   
   </style>
@@ -432,7 +387,7 @@
   const getData = async () => {
     const {data} = await http.get('/top/init',{
       params: {
-        userType: 2
+        userType: 1
       }}
     )
     dispUsers.value = data.data;
@@ -444,7 +399,7 @@
 
   const  limitedText = (text: string) => {
     console.log(text.length)
-    let maxLength = 60;
+    let maxLength = 300;
     if (text.length > maxLength) {
       return text.slice(0, maxLength) + "...";
     } else {
