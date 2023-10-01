@@ -5,3 +5,8 @@
 .ds-none { display: none; }
 
 .tr-hover td { background-color: var(--blue-grey-lighten-5);}
+
+/** vuetifyの上書き用 */
+.cropper-bg { background-repeat: repeat; }
+.cropper-container,
+.cropper-wrap-box, .cropper-modal, .cropper-wrap-box img { border-radius: 8px;}

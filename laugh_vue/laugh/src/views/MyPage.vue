@@ -52,6 +52,9 @@
       </v-tabs>
       <v-card-text>
       <v-window v-model="tab">
+        <v-window-item value="profile">
+          <MyPageProfile ref="profileRef"></MyPageProfile>
+        </v-window-item>
         <v-window-item value="laugh">
           <MyPageLaugh ref="laughRef"></MyPageLaugh>
         </v-window-item>
@@ -67,13 +70,16 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue';
   import http from "@/http-common";
+
   import MyPageLaugh from '@/components/MyPageLaugh.vue'
   import type User from '@/types/User'
   const user = ref<User>();
   const laughRef = ref();
+
   onMounted(() => {
     getData();
   });
+
 
   /** 初期処理 */
   const getData = async () => {
