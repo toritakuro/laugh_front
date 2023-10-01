@@ -7,7 +7,7 @@ import Main from '../views/Main.vue'
 import ProfileRegister_ from '../views/ProfileRegister_.vue'
 import ProfileRegister2 from '../views/ProfileRegister2.vue'
 import ProfileInit from '../views/ProfileInit.vue'
-import ProfileEdit from '../views/ProfileEdit.vue'
+// import ProfileEdit from '../views/ProfileEdit.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 
@@ -62,11 +62,11 @@ const router = createRouter({
       name: 'registerInit',
       component: ProfileInit
     },
-    {
-      path: '/profile/edit',
-      name: 'registerEdit',
-      component: ProfileEdit
-    }
+    // {
+    //   path: '/profile/edit',
+    //   name: 'registerEdit',
+    //   component: ProfileEdit
+    // }
   ]
 })
 
