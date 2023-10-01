@@ -24,6 +24,7 @@ const router = createRouter({
       children : [
         {
           path: 'demo',
+          name: 'demo',
           component: DemoView
         },
         {
