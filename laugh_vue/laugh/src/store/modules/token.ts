@@ -1,10 +1,14 @@
 const state = {
-  idToken: ""
+  idToken: "",
+  refreshToken: "",
 };
 
 const mutations = {
   saveIdToken(state, idToken: string) {
     state.idToken = idToken;
+  },
+  saveRefreshToken(state, refreshToken: string) {
+    state.refreshToken = refreshToken;
   },
   removeToken(state) {
     state.token = "";
@@ -14,6 +18,9 @@ const mutations = {
 const getters = {
   getIdToken(state) {
     return state.idToken;
+  },
+  getRefreshToken(state) {
+    return state.refreshToken;
   }
 };
 

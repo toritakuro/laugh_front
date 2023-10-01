@@ -1,66 +1,60 @@
 <template>
 <v-container fluid="true">
   <v-row>
-    <v-col lg="3" md="3" sm="3" xs="3">
-      <v-card width="100%">
-      <template v-slot:title>
-        <div class="text-right">
-          <v-chip 
-            :color="userType" 
-            size="large"
-            variant="outlined">
-            芸人
-          </v-chip>
-        </div>
-      </template>
-      <v-card-text>
-        <div>
-          <v-img
-            width="250"
-            :aspect-ratio="1"
-            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-            cover
-          ></v-img>
-        </div>
-
-      <table>
-        <tbody>
-          <tr>
-            <td>活動名</td>
-          </tr>
-          <tr>
-            <td>活動太郎</td>
-          </tr>
-          <tr>
-            <td>活動形態</td>
-          </tr>
-          <tr>
-            <td>漫才</td>
-          </tr>
-          <tr>
-            <td>特殊スキル</td>
-          </tr>
-          <tr>
-            <td>動画</td>
-          </tr>
-        </tbody>
-      </table>
-      </v-card-text>
+    <v-col lg="4" md="4" sm="4" xs="4">
+      <v-card class="mx-auto pa-2">
+        <v-container fluid="true">
+          <v-row>
+            <v-col class="pa-0" lg="6" md="6" sm="12">
+              <v-img
+                :aspect-ratio="1"
+                src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
+                cover
+                class="rounded-lg"
+            ></v-img>
+            </v-col>
+            <v-col class="pa-0" lg="6" md="6" sm="12">
+              <v-card-title class="font-weight-black pt-0 pb-0">{{ user?.userName }}</v-card-title>
+              <v-card-title class="pt-0 pb-0 text-subtitle-2">{{ user?.activityDt }}</v-card-title>
+              <v-card-subtitle class="pt-1"><v-icon icon="mdi-office-building" />{{ user?.officeName }}</v-card-subtitle>
+              <v-card-subtitle class="pt-2 pb-5"><v-icon icon="mdi-map-marker" />{{ user?.areaName }}</v-card-subtitle>
+              <div v-if="user?.userType == 1" class="pl-card">
+                <span>特殊スキル</span>
+                <v-divider></v-divider>
+                <v-chip
+                    v-for="(item, i) in user?.comedyStyleNameList" :key="i"
+                    class="mr-1 mt-1"
+                    size="small"
+                    >{{ item }}</v-chip>
+              </div>
+              <div v-if="user?.userType === 2" class="pl-card">
+                <span>芸風</span>
+                <v-divider></v-divider>
+                <v-chip
+                    v-for="(item, i) in user?.comedyStyleNameList" :key="i"
+                    class="mr-1 mt-1"
+                    size="small"
+                    >{{ item }}</v-chip>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card>
     </v-col>
-    
     <v-col lg="8" md="8" sm="8" xs="8">
       
     <v-card>
       <v-tabs
         v-model="tab"
-        bg-color="orange-darken-2"
-        slider-color="orange-lighten-4"
+        color="orange-darken-2"
       >
         <v-tab value="laugh" @click="getLugh">Laugh</v-tab>
       </v-tabs>
       <v-card-text>
       <v-window v-model="tab">
+        <v-window-item value="profile">
+          <MyPageProfile ref="profileRef"></MyPageProfile>
+        </v-window-item>
         <v-window-item value="laugh">
           <MyPageLaugh ref="laughRef"></MyPageLaugh>
         </v-window-item>
@@ -74,12 +68,26 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import MyPageLaugh from '@/components/MyPageLaugh.vue'
+  import { ref, onMounted } from 'vue';
+  import http from "@/http-common";
 
+  import MyPageLaugh from '@/components/MyPageLaugh.vue'
+  import type User from '@/types/User'
+  const user = ref<User>();
   const laughRef = ref();
 
-  /** 子どものメソッドを実行 */
+  onMounted(() => {
+    getData();
+  });
+
+
+  /** 初期処理 */
+  const getData = async () => {
+    const {data } = await http.get('/mypage');
+    user.value = data.data;
+  }
+
+  /** Laugh取得(子どもコンポーネント) */
   const getLugh = () => {
     laughRef.value.getLaugh();
   }
@@ -92,10 +100,19 @@
   tr:nth-child(odd) td {
     font-weight: bold;
     font-size: 13px;
-    height: 35px;
-    padding-top: 14px;
+    padding-top: 10px;
   }
   tr:nth-child(even) td {
     padding-left: 5px;
+  }
+  .pl-card {
+    padding-left: 1rem;
+  }
+  .profImgWrap {
+    width: 130px;
+    height: 130px;
+  }
+  .profImgWrap > div {
+    border-radius: 5%;
   }
 </style>
