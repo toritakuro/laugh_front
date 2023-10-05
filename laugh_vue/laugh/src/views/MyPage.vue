@@ -48,6 +48,7 @@
         v-model="tab"
         color="orange-darken-2"
       >
+        <v-tab value="profile" @click="getProfile">Profile</v-tab>
         <v-tab value="laugh" @click="getLugh">Laugh</v-tab>
       </v-tabs>
       <v-card-text>
@@ -71,9 +72,11 @@
   import { ref, onMounted } from 'vue';
   import http from "@/http-common";
 
+  import MyPageProfile from '@/components/MyPageProfile.vue';
   import MyPageLaugh from '@/components/MyPageLaugh.vue'
   import type User from '@/types/User'
   const user = ref<User>();
+  const profileRef = ref();
   const laughRef = ref();
 
   onMounted(() => {
@@ -91,7 +94,9 @@
   const getLugh = () => {
     laughRef.value.getLaugh();
   }
-
+  const getProfile = () => {
+    profileRef.value.getProfile();
+  }
   const tab = ref(null);
   const userType = ref("primary");
 </script>
