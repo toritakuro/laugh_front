@@ -25,7 +25,7 @@ const router = createRouter({
       component: OogiriDetail,
     },
     {
-      path: '/profile/register',
+      path: '/profile/register/:address(.*)',
       name: 'profile',
       component: ProfileRegister
     },
@@ -48,7 +48,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/profile/register/:address(.*)',
+      path: '/profile/register_/:address(.*)',
       name: 'register',
       component: ProfileRegister_
     },

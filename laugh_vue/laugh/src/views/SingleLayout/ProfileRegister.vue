@@ -23,9 +23,6 @@
               label="メールアドレス"
               disabled
             ></v-text-field>
-            <!-- <div class="mail-box">
-              <p class="mail-text">jjjj@gmail.com</p>
-            </div> -->
             <v-text-field
               v-model="profileReq.password"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -44,7 +41,11 @@
               counter
               @click:append="show2 = !show2"
             ></v-text-field>
-            <v-radio-group v-model="profileReq.userType" inline>
+            <v-radio-group 
+              v-model="profileReq.userType" 
+              inline
+              :rules="[rules.radioVerify]"
+              >
               <v-radio
                 label="作家"
                 value="1"
@@ -59,22 +60,29 @@
             <v-text-field
               v-model="profileReq.userName"
               label="活動名 ※入力必須"
+              :rules="[rules.textVerify]"
             ></v-text-field>
             <v-text-field
               v-model="profileReq.userNameKana"
               label="活動名（カナ） ※入力必須"
+              :rules="[rules.textVerify]"
             ></v-text-field>
-            <v-col class="d-flex justify-start" cols="6" v-if="profileReq.userType == 2">
-              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear"></v-select>
-              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth"></v-select>
+            <v-col class="d-flex justify-start" cols="7" v-if="profileReq.userType == 2">
+              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear" :rules="[rules.debutYearVerify]" ></v-select>
+              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth" :rules="[rules.debutMonthVerify]" ></v-select>
             </v-col>
-            <v-col v-if="profileReq.userType == 2">
+            <v-col class="d-flex justify-start" v-if="profileReq.userType == 2">
               <v-text-field
                 v-model="profileReq.memberNum"
                 label="活動人数"
-              ></v-text-field>            
+                :rules="[rules.textVerify]"
+              ></v-text-field> 
             </v-col>
-            <v-radio-group inline v-model="profileReq.gender">
+            <v-radio-group 
+              inline 
+              v-model="profileReq.gender"
+              :rules="[rules.radioVerify]"
+              >
               <v-radio
                 label="回答なし"
                 value="0"
@@ -96,70 +104,89 @@
                 color="orange"
               ></v-radio>
             </v-radio-group>
-            <!-- <v-select :items="office" item-text="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select> -->
-            <v-select :items="officeRef" item-title="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select>
-
-            <v-col class="d-flex justify-start">
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="漫才"
-                color="orange"
-                value="1"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="ピン"
-                color="orange"
-                value="2"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="コント"
-                color="orange"
-                value="3"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="ギャグ"
-                color="orange"
-                value="4"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="モノマネ"
-                color="orange"
-                value="5"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="歌ネタ"
-                color="orange"
-                value="6"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="リズムネタ"
-                color="orange"
-                value="7"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="profileReq.comedyStyleIdList"
-                label="その他"
-                color="orange"
-                value="8"
-
-
-                hide-details
-              ></v-checkbox>
+            <v-select 
+              :items="officeRef" 
+              item-title="name" 
+              item-value="id" 
+              label="所属事務所" 
+              v-model="profileReq.officeId"
+            ></v-select>
+            <v-list-item-tile>得意分野（芸風）</v-list-item-tile>
+            <v-col class="d-flex justify-start first_row" >
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="漫才"
+                  color="orange"
+                  value="1"
+                ></v-checkbox>
+              </div>
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="ピン"
+                  color="orange"
+                  value="2"
+                ></v-checkbox>
+              </div>
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="コント"
+                  color="orange"
+                  value="3"
+                ></v-checkbox>
+              </div>
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="ギャグ"
+                  color="orange"
+                  value="4"
+                ></v-checkbox>
+              </div>
             </v-col>
-            <v-radio-group inline v-if="profileReq.userType == 1" v-model="profileReq.feeType">
+            <v-col class="d-flex justify-start second_row" >
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="モノマネ"
+                  color="orange"
+                  value="5"
+                  :rules="[rules.chkVerify]"
+                ></v-checkbox>
+              </div>
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="歌ネタ"
+                  color="orange"
+                  value="6"
+                ></v-checkbox>
+              </div>
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="リズムネタ"
+                  color="orange"
+                  value="7"
+                ></v-checkbox>
+              </div>
+              <div class="chkW">
+                <v-checkbox
+                  v-model="profileReq.comedyStyleIdList"
+                  label="その他"
+                  color="orange"
+                  value="8"
+                ></v-checkbox>
+              </div>
+            </v-col>
+            <v-radio-group 
+              inline 
+              v-if="profileReq.userType == 1" 
+              v-model="profileReq.feeType"
+              :rules="[rules.radioVerify]"
+            >
               <v-radio
                 label="時給"
                 value="1"
@@ -173,8 +200,8 @@
             </v-radio-group>
 
             <v-col class="d-flex justify-start" cols="6">
-              <v-text-field v-model="profileReq.fee" label="金額" suffix="円/時間" v-if="profileReq.userType == 1 && profileReq.feeType == 1"></v-text-field>
-              <v-text-field v-model="profileReq.fee" label="金額" suffix="円" v-if="profileReq.userType == 1 && profileReq.feeType == 2"></v-text-field>
+              <v-text-field v-model="profileReq.fee" label="金額" suffix="円/時間" v-if="profileReq.userType == 1 && profileReq.feeType == 1" :rules="[rules.textVerify]"></v-text-field>
+              <v-text-field v-model="profileReq.fee" label="金額" suffix="円" v-if="profileReq.userType == 1 && profileReq.feeType == 2" :rules="[rules.textVerify]"></v-text-field>
             </v-col>
             
             <v-col class="d-flex justify-start" v-if="profileReq.userType == 1">
@@ -184,21 +211,18 @@
                 label="動画編集"
                 color="orange"
                 value="1"
-                hide-details
               ></v-checkbox>
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
                 label="イラスト"
                 color="orange"
                 value="2"
-                hide-details
               ></v-checkbox>
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
                 label="音源制作"
                 color="orange"
                 value="3"
-                hide-details
               ></v-checkbox>
               </v-col>
               <v-text-field
@@ -207,8 +231,13 @@
               ></v-text-field> 
             </v-col>
 
-            <!-- <v-select :items="tihou" label="活動場所" v-model="profileReq.areaId"></v-select> -->
-            <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId"></v-select>
+            <v-select 
+              :items="areaRef" 
+              item-title="name" 
+              item-value="id" 
+              label="活動場所" 
+              v-model="profileReq.areaId"
+            ></v-select>
 
             <v-textarea 
               v-model="profileReq.selfIntroduction" 
@@ -216,26 +245,31 @@
               solo 
               name="input-7-4" 
               label="自己紹介" 
+              :rules="[rules.max500]"
             ></v-textarea>
 
-            <!-- <img v-if="uploadImageUrl" :src="uploadImageUrl" /> -->
-            <ImgFileComponent2 @set-file="setFile"/>
-
-            <!-- <v-file-input
-              v-model="input_image"
-              accept="image/*"
-              label="画像ファイルをアップロードしてください"
-              prepend-icon="mdi-image"
-              @change="onImagePicked"
-            ></v-file-input> -->
-            <!-- <div>{{ input_image }}</div> -->
+            <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
+            <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
+              <v-img
+                :aspect-ratio="1"
+                :src="src"
+              ></v-img>
+            </div>
+            <div v-if="cropImg !== ''" class="profilePhoto" @click.prevent="showFileChooser">
+              <v-img
+                :aspect-ratio="1"
+                :src="cropImg"
+                cover
+                class="rounded-lg"
+              ></v-img>
+            </div>
+            <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
 
             <v-btn 
               block 
               class="mt-2" 
               color="orange" 
               @click="reg"
-              
             >送信</v-btn>
           </v-form>
         </v-card-text>
@@ -260,18 +294,20 @@
 
 <script setup lang="ts">
 
-// onMounted(() => {
-//   const { ctx } = getCurrentInstance()
-//   form.value = ctx.$refs.form
-// })
+onMounted(() => {
+  if (Array.isArray(route.params.address)) {
+    profileReq.value.userAddress = route.params.address[0].replace(/\+/g, ".") || '';
+  } else {
+    profileReq.value.userAddress = route.params.address.replace(/\+/g, ".") || '';
+  }
+})
 
 // TypeScript が有効
-import axios from "axios";
-import { ref, onMounted, computed, getCurrentInstance  } from 'vue'
+import { ref, onMounted, computed, watch  } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 import http from "@/http-common";
 import type Profile from "../../types/Profile";
-import ImgFileComponent2 from '../../components/ImgFileComponent2.vue'
+import ImageModalComponent from "../../components/ImageModalComponent.vue"
 import { offices } from "../../types/Office";
 import { areas } from "../../types/Area";
 import { years } from "../../types/Year";
@@ -279,52 +315,89 @@ import { months } from "../../types/Month";
 
 const router = useRouter();
 const route = useRoute();
-// setupをscriptタグに書くことによってexport defaultせずに使えるようになる compositionAPIというvue3からの機能
-const test = ref('test');
-// test.value = "aiueo";
-const test2 = ref(['aa']);
 const officeRef = ref(offices);
 const areaRef = ref(areas);
 const yearRef = ref(years);
 const monthRef = ref(months);
-// const actualOffices = officeRef.value;
-// const reactiveOffices = toRaw(actualOffices);
 const showModal = ref(false);
-
-
-const geininsakka = ref(['アヴィラ', '浅井企画', 'ASH&Dコーポレーション', 'アミー・パーク', 'UMEDA芸能', 'FMG', 'MLクリエーション', '大川興業', '太田プロダクション', 'オフィス北野', 'オリジン・コーポレーション'
-                   , 'お笑い集団ティーライズ', 'グレープカンパニー', 'ケイダッシュステージ', 'K-PRO', 'ザ・森東', 'サンミュージックプロダクション', 'SHUプロモーション', '松竹芸能', 'スパンキープロダクション'
-                   , 'ソニー・ミュージックアーティスツ', 'タイタン', 'トゥインクル・コーポレーション', '徳間ジャパンコミュニケーションズ', 'どっかんプロ', 'トップ・カラー', 'ナチュラルエイト', 'ニュースタッフプロダクション'
-                   , 'ノーリーズン', 'ファインステージ', 'プロダクション人力舎', 'プロデューサーハウスあ・うん', 'ホリプロ', 'ホリプロコム', 'マセキ芸能社', '三木プロダクション', '吉本興業', 'ワタナベエンターテインメント'
-                   , 'ワハハ本舗', '無所属']);
-const tihou = ref(['北海道', '東北', '関東', '北陸甲信越', '中部', '関西', '中国', '四国', '九州']);
 
 const show1 = ref(false);
 const show2 = ref(false);
-const password1 = ref('');
 const password2 = ref('');
-const row = ref(null);
-const sei = ref(null);
-const tokuibunya = ref([]);
-const selfIntroduction = ref('');
-const gropName = ref('');
-const gropNameKana = ref('');
-const email = ref('jjj@gmail.com');
-const debutYear = ref();
-const debutMonth = ref();
-const feeType = ref();
-const fee = ref();
-const profileImg = ref('');
 
+const profileReq = ref<Profile>({
+  id : null,
+  userAddress : '',
+  userName : '',
+  userNameKana : '',
+  userType : null,
+  password : '',
+  debutYear : null,
+  debutMonth : null,
+  memberNum : null,
+  gender : null,
+  officeId : null,
+  comedyStyleIdList : [],
+  feeType : null,
+  fee : null,
+  specialSkillIdList : [],
+  anotherSkill : '',
+  areaId : null,
+  selfIntroduction : '',
+  profileImgPath : ''
+})
 
-const setFile =  (base64: string) => {
-  console.log(base64.split(',')[0]);
-  console.log(base64.split(',')[1]);
-	profileReq.value.profileImgPath = base64.split(',')[1];
-}
-const clearImgFile = () => {
-  profileReq.value.profileImgPath = '';
+// 画像登録用
+const modalFlg = ref(false)
+
+/** base64に変換 */
+const imgSrc = ref('');
+const cropImg = ref('');
+const file = ref();
+const src = ref("/img/man.svg");
+const setImage = (e: any) => {
+  const file = e.target.files[0];
+  if (!file.type.includes('image/')) {
+    alert('画像ファイルを選んでください');
+    return;
+  }
+  if (typeof FileReader === 'function') {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target != null) {
+        imgSrc.value = event.target.result as string;
+        // 画像の変更にはreplaceが必要らしい
+        //cropper.value.replace(event.target.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  } else {
+    alert('FileReader APIがサポートされていません');
+  }
+  // 時差が必要みたい
+  setTimeout(() => {
+    console.log(11);
+    modalFlg.value = true;
+  }, 200);
 };
+/** emitで受けるメソッド */
+const setModelValue = (value:Boolean) => {
+  modalFlg.value = false;
+  file.value.value ='' // 初期化
+} 
+const setImg = (img:string) => {
+  cropImg.value = img;
+} 
+const showFileChooser = () => {
+  file.value.click();
+};
+watch(cropImg, (newValue) => {
+  profileReq.value.profileImgPath = newValue;
+  if (newValue !== '') {
+    let parts = newValue.split(',');
+    profileReq.value.profileImgPath = parts[1];
+  }
+})
 
 const reg = async () => {
   
@@ -345,28 +418,6 @@ const reg = async () => {
   });
 }
 
-const profileReq = ref<Profile>({
-  id : null,
-  userAddress : 'jjj@gmail.com',
-  userName : '',
-  userNameKana : '',
-  userType : null,
-  password : '',
-  debutYear : null,
-  debutMonth : null,
-  memberNum : null,
-  gender : null,
-  officeId : null,
-  comedyStyleIdList : [],
-  feeType : null,
-  fee : null,
-  specialSkillIdList : [],
-  anotherSkill : '',
-  areaId : null,
-  selfIntroduction : '',
-  profileImgPath : ''
-})
-
 
 const isFormValid = computed(() => {
   const cmnValid = (profileReq.value.password == password2.value)
@@ -374,6 +425,7 @@ const isFormValid = computed(() => {
     && (profileReq.value.userNameKana != '')
     && (profileReq.value.userType != null)
     && (profileReq.value.password != '')
+    && (profileReq.value.selfIntroduction.length <= 500);
 
   if (profileReq.value.userType == 2) {
     return cmnValid
@@ -399,77 +451,30 @@ const rules = {
   matched: (v: any) => profileReq.value.password == password2.value || 'パスワードと確認用パスワードが異なります',
   required: (value: any) => !!value || 'パスワードを入力してください',
   min: (v: any) => v.length >= 8 || 'パスワードは8文字以上、入力してください',
+  radioVerify: (value: any) => !!value || '必ず選択してください',
+  textVerify: (value: any) => !!value || '必ず入力してください',
+  debutYearVerify: (value: any) => !!value || '活動開始年を入力してください',
+  debutMonthVerify: (value: any) => !!value || '活動開始月を入力してください',
   max500: (v: any) => v.length <= 500 || '500文字以内で入力してください',
+  chkVerify: (v: any) => v.length > 0 || '必ずチェックを入れてください',
 }
 
-// 画像のアップロード
-const input_image = ref(null);
-const uploadImageUrl = ref('');
-
-// const setFile =  (base64: string) => {
-// 	profileImg.value = base64.split(',')[1];
-// }
-
-// const methods = {
-//   onImagePicked(file) {
-//       if (file !== undefined && file !== null) {
-//         if (file.name.lastIndexOf('.') <= 0) {
-//           return
-//         }
-//         const fr = new FileReader()
-//         fr.readAsDataURL(file)
-//         fr.addEventListener('load', () => {
-//           this.uploadImageUrl.value = fr.result
-//         })
-//       } else {
-//         this.uploadImageUrl.value = ''
-//       }
-//     }
-// };
-
-// if ((password1.value).length == 0 ) {
-//   relative1.value = "パスワードを入力してください";
-// }
-
-// const rules = ref(
-//   const required1 = ref('');
-//   const min1 = ref('');
-//   if ((password1.value).length == 0 ) {
-//     relative1.value = "パスワードを入力してください";
-//   }
-//   if ((password1.value).length < 8 ) {
-//     min1.value = "パスワードは8文字以上、入力してください";
-//   }
-// );
-
-// if ((password1.value).length < 8) {
-//   min1 = "パスワードは8文字以上、入力してください";
-// }
-// -------------------------------
-
-// data: () => ({
-//       geininsakka: ['アヴィラ', '浅井企画', 'ASH&Dコーポレーション', 'アミー・パーク', 'UMEDA芸能', 'FMG', 'MLクリエーション', '大川興業', '太田プロダクション', 'オフィス北野', 'オリジン・コーポレーション'
-//                   , 'お笑い集団ティーライズ', 'グレープカンパニー', 'ケイダッシュステージ', 'K-PRO', 'ザ・森東', 'サンミュージックプロダクション', 'SHUプロモーション', '松竹芸能', 'スパンキープロダクション'
-//                   , 'ソニー・ミュージックアーティスツ', 'タイタン', 'トゥインクル・コーポレーション', '徳間ジャパンコミュニケーションズ', 'どっかんプロ', 'トップ・カラー', 'ナチュラルエイト', 'ニュースタッフプロダクション'
-//                   , 'ノーリーズン', 'ファインステージ', 'プロダクション人力舎', 'プロデューサーハウスあ・うん', 'ホリプロ', 'ホリプロコム', 'マセキ芸能社', '三木プロダクション', '吉本興業', 'ワタナベエンターテインメント'
-//                   , 'ワハハ本舗', '無所属'],
-//                   tihou: ['北海道', '東北', '関東', '北陸甲信越', '中部', '関西', '中国', '四国', '九州'],
-//       show1: false,
-//       show2: false,
-//       password1: '',
-//       password2: '',
-//       rules: {
-//           required: value => !!value || 'パスワードを入力してください',
-//           min: v => v.length >= 8 || 'パスワードは8文字以上、入力してください',
-//           matched: 
-//         },
-//     }),
-
-
-// //画像のアップロード
 </script>
 
 <style scoped>
+
+.chkW {
+  width: 206px;
+}
+
+.subText {
+  color: #f6f6f6;
+  font-weight: bold;
+}
+
+.second_row {
+  margin-top: -40px;
+}
 
 .profileRegWrap {
   width: 900px;
@@ -558,5 +563,16 @@ const uploadImageUrl = ref('');
   font-weight: bold;
 }
 
+.default {
+  background-color: #efefef;
+}
+.default:hover {
+  cursor: pointer
+} 
+.profilePhoto {
+  width: 200px;
+  height: 100px;
+  border-radius: 8px;
+}
 
 </style>

@@ -2,7 +2,7 @@
 <v-dialog v-model="modalFlg" width="600">
   <v-card>
     <v-card>
-      <v-card-text class="justify-center" style="height: 430px;">
+      <v-card-text class="justify-center" >
         <vue-cropper
           ref="cropper"
           :aspect-ratio="16 / 9"
