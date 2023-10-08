@@ -305,7 +305,7 @@
 
   <style scoped>
   .top {
-    transform: scale(0.9) translate(0px, -120px);
+    transform: scale(0.85) translate(0px, -180px);
     background-color: #F8F9FA;
   }
 
@@ -347,7 +347,7 @@
   .profile {
     margin-top: 24px;
     padding-top: 0px;
-    height: 1730px;
+    height: 1900px;
     overflow-y: scroll;
   }
   .profile_paddingTop {
@@ -420,7 +420,7 @@
 
   /* ユーザーフィルター */
   .user_filter {
-    transform: scale(0.9) translate(0px, -82px);
+    transform: scale(0.9) translate(0px, -92px);
   }
   .user_filter_card {
     border: 3px solid #FB8C00;
@@ -449,7 +449,7 @@
   const getData = async () => {
     const {data} = await http.get('/top/init',{
       params: {
-        userType: 1
+        userType: 2
       }}
     )
     dispUsers.value = data.data;
