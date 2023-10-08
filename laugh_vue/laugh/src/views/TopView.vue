@@ -449,7 +449,7 @@
   const getData = async () => {
     const {data} = await http.get('/top/init',{
       params: {
-        userType: 2
+        userType: 1
       }}
     )
     dispUsers.value = data.data;
