@@ -122,6 +122,9 @@
   margin: 20px;
   width: 120px;
 }
+.v-main {
+  background-color: #F8F9FA;
+}
 
 /* メニューリストをホバーしたときのCSS */
 .v-list-item-title:hover {

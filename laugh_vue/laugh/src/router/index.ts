@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TopView from '../views/TopView.vue'
 import HomeView from '../views/HomeView.vue'
 import DemoView from '../views/DemoView.vue'
-import TestView from '../views/TestView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
@@ -22,7 +21,7 @@ const router = createRouter({
       component: OogiriDetail,
     },
     {
-      path: '/', redirect: '/demo',component: Main,
+      path: '/', redirect: '/top',component: Main,
       children : [
         {
           path: 'demo',
@@ -35,10 +34,6 @@ const router = createRouter({
         {
           path: 'top',
           component: TopView
-        },
-        {
-          path: 'test',
-          component: TestView
         },
         {
           path: 'mypage',

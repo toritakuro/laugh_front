@@ -1,14 +1,17 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="top">
     <v-row justify="center">
-      <v-col cols="7" class="mx-auto mt-5">
+      <v-col cols="5" class="mx-auto mt-5 upside">
         <v-row>
-          <v-col cols="2" class="text-transform py-4 my-2" align="right">
-            <v-icon>mdi-sort-descending</v-icon>
-            <v-text class="text-subtitle-1">並べ替え</v-text>
+          <v-col cols="4">
+            <v-text class="text-h4 upside_num">{{ dispUserCount }}</v-text>
+            <v-text class="text-h6 upside_ken"> 件</v-text>
           </v-col>
-          <v-col cols="2">
+          <v-col cols="7" class="upside_right">
+            <v-icon class="upside_sortIcon">mdi-sort-descending</v-icon>
+            <v-text class="text-subtitle-1 upside_sortText">並び替え</v-text>
             <v-select
+              class="upside_pulldown"
               v-model="selectedSorts"
               :items="optionSorts"
               item-title="name"
@@ -20,70 +23,71 @@
               @update:modelValue="postSort"
             ></v-select>
           </v-col>
-          <v-col cols="4" class="text-transform py-4 my-2" align="right">
-            <v-text class="text-h4">{{ dispUserCount }}</v-text>
-            <v-text class="text-h6"> 件</v-text>
-          </v-col>
-        </v-row>
+      </v-row>
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col cols="7">
+      <v-col cols="7" class="main">
         <v-row>
-          <v-col cols="7">
-            <v-col v-for="item in dispUsers">
-              <v-card class="mx-auto pa-2">
+          <v-col cols="7" class="profile" >
+            <v-col v-for="item in dispUsers" class="profile_paddingTop">
+              <v-card class="mx-auto pa-2 profile_card">
                 <v-container fluid="true">
                   <v-row>
-                    <v-col class="pa-0 profileInfo" lg="6" md="6" sm="12">
+                    <v-col class="pa-0" lg="6" md="6" sm="12">
                       <v-img
                         :aspect-ratio="1"
                         src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
                         cover
-                        class="rounded-lg"
+                        class="rounded-lg  profile_img"
                     ></v-img>
                     </v-col>
                     <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
-                      <v-card-title class="font-weight-black pt-0 pb-0">{{ item.userName }}</v-card-title>
+                      <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ item.userName }}</v-card-title>
+                      <v-card-subtitle v-if="item.gender == 1"><v-icon icon="mdi-gender-male-female" /> 男 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.gender == 2"><v-icon icon="mdi-gender-male-female" /> 女 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.gender == 3"><v-icon icon="mdi-gender-male-female" /> 男女 </v-card-subtitle>
                       <v-card-subtitle v-if="item?.userType == 2"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ item.activityDt }}</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item?.officeName }}</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item?.areaName }}</v-card-subtitle>
-                      <div class="profile_comedyStyle">
-                        <div v-if="item?.userType === 1">
-                          <v-card-subtitle class="mb-1 text-subtitle-1">得意分野</v-card-subtitle>
-                          <v-chip
-                            v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
-                            class="mr-1 mt-1 profile_chip"
-                            color="orange"
-                            text-color="white"
-                            >{{ itemName }}
-                          </v-chip>
-                          <v-card-subtitle class="mb-1 text-subtitle-1">特殊スキル</v-card-subtitle>
-                          <v-chip
-                              v-for="(itemName, i) in item.specialSkillNameList" :key="i"
-                              class="mr-1 mt-1"
-                              color="orange"
-                              text-color="white"
-                              >{{ itemName }}
-                            </v-chip>
-                        </div>
-                        <div v-if="item?.userType === 2">
-                          <v-card-subtitle class="mb-1 text-subtitle-1">芸風</v-card-subtitle>
-                          <v-chip
-                              v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
-                              class="mr-1 mt-1"
-                              color="orange"
-                              text-color="white"
-                              >{{ itemName }}
-                            </v-chip>
-                        </div>
-                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="profile_selfIntroduction" v-if="item?.userType === 1">
+                      <v-card-subtitle class="mb-1 text-subtitle-1">得意分野</v-card-subtitle>
+                      <v-chip
+                        v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
+                        class="mr-1 mt-1 profile_chip"
+                        color="orange"
+                        text-color="white"
+                        >{{ itemName }}
+                      </v-chip>
+                      <v-card-subtitle class="mb-1 text-subtitle-1 profile_specialSkill_text">特殊スキル</v-card-subtitle>
+                      <v-chip
+                        v-for="(itemName, i) in item.specialSkillNameList" :key="i"
+                        class="mr-1 mt-1"
+                        color="orange"
+                        text-color="white"
+                        >{{ itemName }}
+                      </v-chip>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col class="profile_selfIntroduction" v-if="item?.userType === 2">
+                      <v-card-subtitle class="mb-1 text-subtitle-1">芸風</v-card-subtitle>
+                      <v-chip
+                        v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
+                        class="mr-1 mt-1"
+                        color="orange"
+                        text-color="white"
+                        >{{ itemName }}
+                      </v-chip>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col class="profile_selfIntroduction">
-                      <v-card-subtitle class="mb-1 text-subtitle-1">自己紹介</v-card-subtitle>
+                      <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" />自己紹介</v-card-subtitle>
                       <v-card-text class="text-subtitle-1">{{ item.selfIntroduction }}</v-card-text>
                     </v-col>
                   </v-row>
@@ -115,7 +119,7 @@
             cols="5"
             >
             <v-card
-            class="pa-4"
+            class="pa-4 user_filter_card"
             >
             <v-col>
               <v-text-field
@@ -300,16 +304,76 @@
 
 
   <style scoped>
-  .template {
-    background-color: #8080800a;
+  .top {
+    transform: scale(0.9) translate(0px, -120px);
+    background-color: #F8F9FA;
   }
 
+  /* 上部分 */
+  .upside {
+    transform: translate(-130px, 20px);
+    height: 70px;
+    margin-bottom: 30px;
+  }
+  .upside_num {
+    font-weight: bold;
+    color:  #FB8C00;
+    line-height: 70px;
+    margin-left: 20px;
+  }
+  .upside_right {
+    display: flex;
+  }
+  .upside_ken {
+    margin-right: 15%;
+    margin-left: 5px;
+    line-height: 75px;
+  }
+  .upside_sortIcon {
+    margin-top: 27px;
+  }
+  .upside_sortText {
+    line-height: 75px;
+    margin-right: 5px;
+  } 
+  .upside_pulldown {
+    margin: 9px 70px 0px 0px;
+  }
+
+  .main {
+    height: 1600px;
+  }
   /* プロフィール */
+  .profile {
+    margin-top: 24px;
+    padding-top: 0px;
+    height: 1730px;
+    overflow-y: scroll;
+  }
+  .profile_paddingTop {
+    padding-top: 0px;
+  }
+  .profile_card {
+    border: 4px solid #FB8C00;
+    border-radius: 10px;
+  }
+  .profile_img {
+    border: 2px solid #FB8C00;
+    border-radius: 10px;
+  }
   .profile_info .v-card-subtitle{
-    padding: 0.2rem 0.3rem
+    padding: 0.2rem 0.7rem
+  }
+  .profile_info_name {
+    border-bottom: 2px solid #FB8C00;
+    margin-left: 7px;
+    margin-bottom: 20px;
   }
   .profile_selfIntroduction {
     padding: 0.5rem 0rem;
+  }
+  .profile_specialSkill_text {
+    margin-top: 7px;
   }
  .profile_ichioshi {
     padding: 0.5rem 0rem 0rem 0rem;
@@ -356,22 +420,20 @@
 
   /* ユーザーフィルター */
   .user_filter {
-    margin-top: 0.7rem;
+    transform: scale(0.9) translate(0px, -82px);
   }
-  
+  .user_filter_card {
+    border: 3px solid #FB8C00;
+    border-radius: 10px;
+  }
   
   
   
   </style>
   <script setup lang="ts">
   import { computed, ref, onMounted } from 'vue'
-  import type ResponseData from "@/types/ResponseData";
-  import TopService from '@/services/TopService';
   import type User from "@/types/User";
-  import SearchForm from "@/components/SearchForm.vue"
   import http from "@/http-common"
-  import { toValue } from 'vue';
-  import { useRoute } from 'vue-router';
   
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
@@ -397,25 +459,16 @@
     postSort()
   }
 
-  const  limitedText = (text: string) => {
-    console.log(text.length)
-    let maxLength = 300;
-    if (text.length > maxLength) {
-      return text.slice(0, maxLength) + "...";
-    } else {
-      return text;
-    }
-  }
-
   const items = ref([
     { text: 'トカゲのおっさん', icon: 'mdi-video' },
     { text: 'ゴレンジャイ', icon: 'mdi-file' },
   ]) ;
 
-  const selectedSorts = ref({ id: 1, name: 'ログイン'})
+  // sort
+  const selectedSorts = ref({ id: 1, name: 'ログイン順'})
   const optionSorts = [
-    { id: 1, name: 'ログイン'},
-    { id: 2, name: '更新' } 
+    { id: 1, name: 'ログイン順'},
+    { id: 2, name: '更新順' } 
   ]
 
   const postSort = () => {
@@ -433,6 +486,7 @@
     }
   }
 
+  // 一覧の件数
   const countUsers = () => {
     dispUserCount.value = dispUsers.value.length
   }
@@ -542,36 +596,6 @@
     { id: 6, text: '中国' }, 
     { id: 7, text: '九州' }
   ])
-  const select =   ref({ state: 'Florida', abbr: 'FL' });
-  const item =  ref([
-    { state: 'Florida', abbr: 'FL' },
-    { state: 'Georgia', abbr: 'GA' },
-    { state: 'Nebraska', abbr: 'NE' },
-    { state: 'California', abbr: 'CA' },
-    { state: 'New York', abbr: 'NY' },
-  ]);
-
-  const postitem = () => {
-    console.log("area")
-    console.log("aaa",select.value)
-    userSearch()
-  }
-  const selectedItem = ref(null);
-  const item2 = ['Option 1', 'Option 2', 'Option 3'];
-
-  const handleSelectionChange = () => {
-    // 選択が変更されたときに実行されるコードをここに書きます
-    console.log('選択が変更されました。選択されたアイテム:', selectedItem.value);
-  };
-  const test = (modelValue:any) => {
-    console.log("area")
-    alert(1111);
-  }
-//   function postitem() {
-//   // 選択が変更されたときの処理をここに記述
-//   console.log("area")
-//   console.log('選択が変更されました。選択項目:', select.value);
-// }
  
   // チェックフラグ
   const isChecked = ref(false)
