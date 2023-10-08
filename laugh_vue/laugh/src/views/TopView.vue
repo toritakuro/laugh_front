@@ -49,8 +49,8 @@
                       <v-card-subtitle v-if="item.gender == 3"><v-icon icon="mdi-gender-male-female" /> 男女 </v-card-subtitle>
                       <v-card-subtitle v-if="item?.userType == 2"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ item.activityDt }}</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item?.officeName }}</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item?.areaName }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item.officeName }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item.areaName }}</v-card-subtitle>
                     </v-col>
                   </v-row>
                   <v-row>

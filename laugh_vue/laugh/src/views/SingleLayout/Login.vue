@@ -62,6 +62,7 @@ import { useRouter } from 'vue-router'
 import LoginService from '@/services/LoginService';
 import type ResponseData from "@/types/ResponseData";
 import type User from "@/types/User";
+import store from "@/store";
 
 const valid = ref(true);
 const imgUrl = ref('/img/laugh-logo.png');
@@ -90,8 +91,12 @@ const getUser = async () => {
     if (response.status === 200) {
       // ログイン成功
         alert(`ようこそ！`);
+        const idToken = response.data.data.idToken;
+        const refreshToken = response.data.data.refreshToken;
+        store.commit('token/saveIdToken', idToken);
+        store.commit('token/saveRefreshToken', refreshToken);
         console.log(response);
-        router.push({ name: 'top' });
+        router.push({ name: 'demo' });
     } else {
       // ログイン失敗
       error.value = true;
