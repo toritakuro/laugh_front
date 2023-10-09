@@ -6,6 +6,8 @@ import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
+import UserDetail from '../views/UserDetail.vue'
+import MyPageLaugh from '../components/MyPageLaugh.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +41,16 @@ const router = createRouter({
         {
           path: 'mypage',
           component: MyPage
+        },
+        {
+          path: 'detail',
+          name: 'detail',
+          component: UserDetail,
+          props: true
+        },
+        {
+          path: 'mypage/laugh',
+          component: MyPageLaugh
         }
       ]
     }
