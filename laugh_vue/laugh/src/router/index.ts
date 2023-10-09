@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import TopView from '../views/TopView.vue'
 import HomeView from '../views/HomeView.vue'
 import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
@@ -10,6 +11,7 @@ import ProfileInit from '../views/ProfileInit.vue'
 // import ProfileEdit from '../views/ProfileEdit.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
+import MypageContent from '../components/MyPageContent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +32,7 @@ const router = createRouter({
       component: ProfileRegister
     },
     {
-      path: '/', redirect: '/demo',component: Main,
+      path: '/', redirect: '/top',component: Main,
       children : [
         {
           path: 'demo',
@@ -42,8 +44,12 @@ const router = createRouter({
           component: HomeView
         },
         {
+          path: 'top',
+          component: TopView
+        },
+        {
           path: 'mypage',
-          component: MyPage,
+          component: MyPage
         }
       ]
     },
@@ -62,11 +68,11 @@ const router = createRouter({
       name: 'registerInit',
       component: ProfileInit
     },
-    // {
-    //   path: '/profile/edit',
-    //   name: 'registerEdit',
-    //   component: ProfileEdit
-    // }
+    {
+      path: '/posts-list',
+      name: 'mypageContent',
+      component: MypageContent
+    }
   ]
 })
 
