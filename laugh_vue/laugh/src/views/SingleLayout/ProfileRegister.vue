@@ -310,9 +310,11 @@ onMounted(() => {
 // TypeScript が有効
 import axios from "axios";
 import { ref, onMounted, computed, getCurrentInstance  } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router';
 import http from "@/http-common";
 import type Profile from "../../types/Profile";
+import ImageModalComponent from "../components/ImageModalComponent.vue"
 import ImgFileComponent2 from '../../components/ImgFileComponent2.vue'
 import { offices } from "../../types/Office";
 import { areas } from "../../types/Area";
