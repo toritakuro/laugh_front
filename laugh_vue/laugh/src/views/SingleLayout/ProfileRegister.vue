@@ -232,18 +232,6 @@
               label="自己紹介" 
               :rules="[rules.max500]"
             ></v-textarea>
-
-            <!-- <img v-if="uploadImageUrl" :src="uploadImageUrl" /> -->
-            <!-- <ImgFileComponent2 @set-file="setFile"/> -->
-
-            <!-- <v-file-input
-              v-model="input_image"
-              accept="image/*"
-              label="画像ファイルをアップロードしてください"
-              prepend-icon="mdi-image"
-              @change="onImagePicked"
-            ></v-file-input> -->
-            <!-- <div>{{ input_image }}</div> -->
             <!-- 画像トリミング新規登録はここを見る -->
             <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
             <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
@@ -302,30 +290,55 @@ onMounted(() => {
     profileReq.value.userAddress = route.params.address.replace(/\+/g, ".") || '';
   }
 })
-// onMounted(() => {
-//   const { ctx } = getCurrentInstance()
-//   form.value = ctx.$refs.form
-// })
 
 // TypeScript が有効
-import axios from "axios";
-import { ref, onMounted, computed, getCurrentInstance  } from 'vue'
-import { useStore } from 'vuex'
+import { ref, onMounted, computed, watch  } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 import http from "@/http-common";
 import type Profile from "../../types/Profile";
-import ImageModalComponent from "../components/ImageModalComponent.vue"
-import ImgFileComponent2 from '../../components/ImgFileComponent2.vue'
+import ImageModalComponent from "../../components/ImageModalComponent.vue"
 import { offices } from "../../types/Office";
 import { areas } from "../../types/Area";
 import { years } from "../../types/Year";
 import { months } from "../../types/Month";
 
-// 必要だ
-const modalFlg = ref(false)
-// 必要だ
+const router = useRouter();
+const route = useRoute();
+const officeRef = ref(offices);
+const areaRef = ref(areas);
+const yearRef = ref(years);
+const monthRef = ref(months);
+const showModal = ref(false);
 
-// 20230928 松本画像作業
+const show1 = ref(false);
+const show2 = ref(false);
+const password2 = ref('');
+
+const profileReq = ref<Profile>({
+  id : null,
+  userAddress : '',
+  userName : '',
+  userNameKana : '',
+  userType : null,
+  password : '',
+  debutYear : null,
+  debutMonth : null,
+  memberNum : null,
+  gender : null,
+  officeId : null,
+  comedyStyleIdList : [],
+  feeType : null,
+  fee : null,
+  specialSkillIdList : [],
+  anotherSkill : '',
+  areaId : null,
+  selfIntroduction : '',
+  profileImgPath : ''
+})
+
+// 画像登録用
+const modalFlg = ref(false)
+
 /** base64に変換 */
 const imgSrc = ref('');
 const cropImg = ref('');
@@ -367,66 +380,13 @@ const setImg = (img:string) => {
 const showFileChooser = () => {
   file.value.click();
 };
-// 必要だ
-// 20230928 松本画像作業
-const getData = async () => {
-  try {
-    const {data } = await http.get('/demo/list');
-    de = data.data;
-    console.log(de.id);
-  } catch (error) {
-
+watch(cropImg, (newValue) => {
+  profileReq.value.profileImgPath = newValue;
+  if (newValue !== '') {
+    let parts = newValue.split(',');
+    profileReq.value.profileImgPath = parts[1];
   }
-}
-
-const router = useRouter();
-const route = useRoute();
-// setupをscriptタグに書くことによってexport defaultせずに使えるようになる compositionAPIというvue3からの機能
-const test = ref('test');
-// test.value = "aiueo";
-const test2 = ref(['aa']);
-const officeRef = ref(offices);
-const areaRef = ref(areas);
-const yearRef = ref(years);
-const monthRef = ref(months);
-// const actualOffices = officeRef.value;
-// const reactiveOffices = toRaw(actualOffices);
-const showModal = ref(false);
-
-
-const geininsakka = ref(['アヴィラ', '浅井企画', 'ASH&Dコーポレーション', 'アミー・パーク', 'UMEDA芸能', 'FMG', 'MLクリエーション', '大川興業', '太田プロダクション', 'オフィス北野', 'オリジン・コーポレーション'
-                   , 'お笑い集団ティーライズ', 'グレープカンパニー', 'ケイダッシュステージ', 'K-PRO', 'ザ・森東', 'サンミュージックプロダクション', 'SHUプロモーション', '松竹芸能', 'スパンキープロダクション'
-                   , 'ソニー・ミュージックアーティスツ', 'タイタン', 'トゥインクル・コーポレーション', '徳間ジャパンコミュニケーションズ', 'どっかんプロ', 'トップ・カラー', 'ナチュラルエイト', 'ニュースタッフプロダクション'
-                   , 'ノーリーズン', 'ファインステージ', 'プロダクション人力舎', 'プロデューサーハウスあ・うん', 'ホリプロ', 'ホリプロコム', 'マセキ芸能社', '三木プロダクション', '吉本興業', 'ワタナベエンターテインメント'
-                   , 'ワハハ本舗', '無所属']);
-const tihou = ref(['北海道', '東北', '関東', '北陸甲信越', '中部', '関西', '中国', '四国', '九州']);
-
-const show1 = ref(false);
-const show2 = ref(false);
-const password1 = ref('');
-const password2 = ref('');
-const row = ref(null);
-const sei = ref(null);
-const tokuibunya = ref([]);
-const selfIntroduction = ref('');
-const gropName = ref('');
-const gropNameKana = ref('');
-const email = ref('jjj@gmail.com');
-const debutYear = ref();
-const debutMonth = ref();
-const feeType = ref();
-const fee = ref();
-const profileImg = ref('');
-
-
-const setFile =  (base64: string) => {
-  console.log(base64.split(',')[0]);
-  console.log(base64.split(',')[1]);
-	profileReq.value.profileImgPath = base64.split(',')[1];
-}
-const clearImgFile = () => {
-  profileReq.value.profileImgPath = '';
-};
+})
 
 const reg = async () => {
   
@@ -447,28 +407,6 @@ const reg = async () => {
   });
 }
 
-const profileReq = ref<Profile>({
-  id : null,
-  userAddress : 'jjj@gmail.com',
-  userName : '',
-  userNameKana : '',
-  userType : null,
-  password : '',
-  debutYear : null,
-  debutMonth : null,
-  memberNum : null,
-  gender : null,
-  officeId : null,
-  comedyStyleIdList : [],
-  feeType : null,
-  fee : null,
-  specialSkillIdList : [],
-  anotherSkill : '',
-  areaId : null,
-  selfIntroduction : '',
-  profileImgPath : ''
-})
-
 
 const isFormValid = computed(() => {
   const cmnValid = (profileReq.value.password == password2.value)
@@ -476,6 +414,7 @@ const isFormValid = computed(() => {
     && (profileReq.value.userNameKana != '')
     && (profileReq.value.userType != null)
     && (profileReq.value.password != '')
+    && (profileReq.value.selfIntroduction.length <= 500);
 
   if (profileReq.value.userType == 2) {
     return cmnValid
@@ -501,17 +440,13 @@ const rules = {
   matched: (v: any) => profileReq.value.password == password2.value || 'パスワードと確認用パスワードが異なります',
   required: (value: any) => !!value || 'パスワードを入力してください',
   min: (v: any) => v.length >= 8 || 'パスワードは8文字以上、入力してください',
-  max500: (v: any) => v.length <= 500 || '500文字以内で入力してください',
   radioVerify: (value: any) => !!value || '必ず選択してください',
   textVerify: (value: any) => !!value || '必ず入力してください',
   debutYearVerify: (value: any) => !!value || '活動開始年を入力してください',
   debutMonthVerify: (value: any) => !!value || '活動開始月を入力してください',
+  max500: (v: any) => v.length <= 500 || '500文字以内で入力してください',
   chkVerify: (v: any) => v.length > 0 || '必ずチェックを入れてください',
 }
-
-// 画像のアップロード
-const input_image = ref(null);
-const uploadImageUrl = ref('');
 
 </script>
 
