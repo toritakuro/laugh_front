@@ -95,6 +95,7 @@
   </v-app>
 </template>
 
+
 <style>
 .app-bar-flex {
   display: flex;
@@ -120,6 +121,9 @@
 .menu-btn {
   margin: 20px;
   width: 120px;
+}
+.v-main {
+  background-color: #F8F9FA;
 }
 
 /* メニューリストをホバーしたときのCSS */
@@ -147,6 +151,17 @@
 </style>
 
 <script>
+import { ref } from 'vue'
+  import Message from '../components/MessageComponent.vue'
+  const cards = ['Today', 'Yesterday']
+  const links = [
+    ['mdi-account', 'マイページ', '/mypage'],
+    ['mdi-home', 'ホーム', '/home'],
+    ['mdi-bomb', 'デモ', '/demo'],
+    ['mdi-bomb', 'Top', '/top'],
+    ['mdi-bomb', 'Test', '/test'],
+  ]
+
 export default {
   data: () => ({
     itemsMatching: [
