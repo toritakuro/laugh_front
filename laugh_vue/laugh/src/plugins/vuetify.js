@@ -4,11 +4,6 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
-// import { createVuetify } from 'vuetify'
-
-// export const vuetifyColor = createVuetify({
-//   theme: { defaultTheme: 'light' },
-// })
 
 export const vuetify = createVuetify({
   components,

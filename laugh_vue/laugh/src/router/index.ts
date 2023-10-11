@@ -5,6 +5,7 @@ import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
+import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import UserDetail from '../views/UserDetail.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/oogiri/detail',
       name: 'oogiriDetail',
       component: OogiriDetail,
+    },
+    {
+      path: '/profile/register/:address(.*)',
+      name: 'profile',
+      component: ProfileRegister
     },
     {
       path: '/', redirect: '/top',component: Main,
