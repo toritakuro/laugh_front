@@ -50,6 +50,10 @@ const router = createRouter({
         {
           path: 'mypage',
           component: MyPage
+        },
+        {
+          path: '/posts-list',
+          component: MypageContent
         }
       ]
     },
@@ -68,11 +72,6 @@ const router = createRouter({
       name: 'registerInit',
       component: ProfileInit
     },
-    {
-      path: '/posts-list',
-      name: 'mypageContent',
-      component: MypageContent
-    }
   ]
 })
 

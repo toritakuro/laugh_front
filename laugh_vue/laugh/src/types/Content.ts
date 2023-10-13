@@ -1,4 +1,5 @@
 export default interface Content {
+  id: number | null;
   userId: number;
   title: string;
   detail: string;

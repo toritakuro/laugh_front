@@ -1,100 +1,128 @@
 <template>
     <v-container
       class="py-8 px-6"
-      style="width: 80%;"
+      style="width: 70%;"
       fluid
     >
-      <v-col cols="auto">
-        <v-btn density="default" icon="mdi-cloud-upload" @click="openModal"></v-btn>
+
+      <v-col>
+        <v-text-field
+          label="ファイル名"
+          density="compact"
+          bg-color="#fffffff"
+          @input="postName"
+          v-model="searchName"
+        ></v-text-field>
       </v-col>
 
-      <!-- <v-card>
-        <v-img :src="'https://c4claugh.s3.ap-northeast-1.amazonaws.com/1/s4McxRbLyOlOoQx2.jpg'"></v-img>
-      </v-card> -->
+      <v-col cols="auto" class="pb-16 text-end">
+        <v-btn density="default" icon="mdi-cloud-upload" @click="openUploadModal"></v-btn>
+      </v-col>
 
       <v-menu
         v-model="uplodadModalFlg"
         width="600"
         class="bordered-dialog"
+        
       >
-      <v-form>
-        <v-text-field
-          v-model="contentsReq.title"
-          label="タイトル"
-          class="ml-12 mt-8"
-        ></v-text-field>
-        <v-text-field
-          v-model="contentsReq.detail"
-          label="説明文"
-          class="ml-12 mt-4"
-        ></v-text-field>
-        <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
-          <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
-            <v-img
-              :aspect-ratio="1"
-              :src="src"
-            ></v-img>
-          </div>
-          <div v-if="cropImg !== ''" class="profilePhoto" @click.prevent="showFileChooser">
-            <v-img
-              :aspect-ratio="1"
-              :src="cropImg"
-              cover
-              class="rounded-lg"
-            ></v-img>
-          </div>
-        <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
-        <FileComponent @set-file="setFile"/>
-        <!-- <v-file-input
-              accept="image/*"
-              label="画像ファイルをアップロードしてください"
-            ></v-file-input> -->
+        <v-form @click.stop>
+          <v-text-field
+            v-model="contentsReq.title"
+            label="タイトル"
+            placeholder="ここにタイトルを入力"
+            class="ml-12 mt-8"
+          ></v-text-field>
+          <v-text-field
+            v-model="contentsReq.detail"
+            label="説明文"
+            class="ml-12 mt-4"
+          ></v-text-field>
+          <v-radio-group 
+              v-model="contentsReq.userType" 
+              inline
+              >
+              <v-radio
+                label="作家"
+                value="1"
+                color="orange"
+              ></v-radio>
+              <v-radio
+                label="芸人"
+                value="2"
+                color="orange"
+              ></v-radio>
+            </v-radio-group>
+          <FileComponent @set-file="setFile"/>
+          <!-- <v-file-input
+                accept="image/*"
+                label="画像ファイルをアップロードしてください"
+              ></v-file-input> -->
 
-        <v-btn 
-          block 
-          class="mt-2" 
-          color="orange" 
-          @click="uploadFile"
-        >送信</v-btn>
-      </v-form>
+          <v-btn 
+            block 
+            class="ml-12 mt-2" 
+            color="orange" 
+            @click="uploadFile"
+          >アップロード</v-btn>
+        </v-form>
       </v-menu>
 
 
       <v-row>
-      <v-col
-        v-for="(item, i) in contents"
-        :key = "i"
-        cols = "4"
-        class = "mb-4"
-      >
-        <v-card @click="downloadFile(item.contentPath)">
-          <v-list>
-              <v-img
-                :aspect-ratio="1.777"
-                :src="item.topImgPath"
-                cover
-                class="rounded-lg"
-                width="200px"
-            ></v-img>
-            <!-- <div class="d-flex align-center">
-              <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
-              <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
-            </div> -->
+        <v-col
+          v-for="(item, i) in contents"
+          :key = "i"
+          cols = "3"
+          class = "mb-4"
+        >
+          <v-card @click="downloadFile(item.contentPath)">
+            <v-card>
+            <v-img
+                  :aspect-ratio="1.777"
+                  :src="item.topImgPath"
+                  cover
+                  class="rounded-lg"
+                  width="100%"
+                  ></v-img></v-card>
+                  <!-- <div class="d-flex align-center">
+                <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
+                <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
+              </div> -->
+              
+            <v-list>
+              <div>
+                <v-card-title class="mt-4">{{ item.title.split('.')[0] }}</v-card-title>
+              </div>
+              <div>
+                <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
+              </div>
+              <div>
+                <v-card-subtitle class="mt-8 text-end">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
+              </div>
+            </v-list>
+          </v-card>
 
-            <div>
-              <v-card-title class="mt-4">{{ item.title.split('.')[0] }}</v-card-title>
-            </div>
-            <div>
-              <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
-            </div>
-            <div>
-              <v-card-subtitle class="mt-8 text-end">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
-            </div>
-
-          </v-list>
-        </v-card>
-      </v-col>
+          <v-row class="d-flex justify-end">
+            <!-- <v-col cols="auto">
+              <v-btn 
+              block 
+              class="mt-2" 
+              color="orange" 
+              @click="editFile(item)"
+              >編集</v-btn>
+            </v-col> -->
+            <v-col cols="auto">
+              <v-btn 
+              block 
+              class="mt-2" 
+              color="orange" 
+              @click="deleteFile(item.id)"
+              >削除</v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
       </v-row>
+
     </v-container>
 
 </template>
@@ -109,18 +137,52 @@ import http from "@/http-common";
 import ImageModalComponent from "../components/ImageModalComponent.vue"
 import FileComponent from "../components/FileComponent.vue"
 
+const searchName = ref('')
+  const searchKariName = ref('')
+  const postName = () => {
+    // スペースを削除
+    searchKariName.value = searchName.value.trim().replace(/\s/g,"")
+    // userSearch()
+  }
+
+// const editFile = (item: Content) => {
+//   contentsReq.value.title = item.title.split(".")[0];
+//   contentsReq.value.detail = item.detail;
+//   cropImg.value = item.topImgPath;
+//   contentsReq.value.topImgPath = item.topImgPath;
+//   contentsReq.value.content = item.content;
+//   uplodadModalFlg.value = true
+// }
+const deleteFile = (id: number) => {
+  if (window.confirm('削除しますか？')) {
+    http.post("/mypage/deleteFile", id)
+    .then(() => {
+      getContent();
+    })
+    .catch((error) => {
+      // エラー発生時の処理
+      console.log(error)
+    })
+    .finally(() => {
+      // 正常終了・エラー問わず必ず行う処理
+    });
+  }
+}
+
+
 const store = useStore()
 const router = useRouter()
 const userId = computed(() => store.state.user.userId)
 const laughs = ref<Laugh[]>([])
 const contents = ref<Content[]>([])
-const uplodadModalFlg = ref<boolean>(false);
+const uplodadModalFlg = ref<boolean>();
 
-const openModal = () => {
+const openUploadModal = () => {
   uplodadModalFlg.value = true
 }
 
 const contentsReq = ref<Content>({
+  id : null,
   userId : 3 ,
   title : '' ,
   detail : '' ,
@@ -132,11 +194,6 @@ const contentsReq = ref<Content>({
   UpdateAt : null
 })
 
-
-// マウント時にデータを取得し代入する
-onMounted(() => {
-  getContent();
-});
 
 // 画像登録用
 const modalFlg = ref(false)
@@ -253,9 +310,6 @@ const formatDate = (dateString: string) => {
 </script>
 
 <style scoped>
-.v-container {
-  background-color: #F8F9FA;
-}
 .status-icon { width:50px; }
 .img { width:100px; }
 .name { width:100px; }
@@ -290,6 +344,5 @@ const formatDate = (dateString: string) => {
   margin-left: 52px;
   margin-top: 8px;
 }
-
 
 </style>
