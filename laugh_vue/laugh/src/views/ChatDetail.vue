@@ -1,74 +1,80 @@
 <template>
-  <v-app id="inspire">
-
-      <v-container class="chat-detail-wrapper">
-        <v-row class="text-center">
-          <v-col cols="12">
-            <v-card
-              elevation="2"
-              color="white lighten-5"
-            >
-              <v-card-title 
-              style="background-color: #fb8c00;
-              color: white;
-              height: 64px;">{{ chatDetailData?.name }}</v-card-title>
-              <v-divider color=""></v-divider>
-              <v-card-text class="chat-detail">
-                <v-row>
-                  <v-col cols="12">
-                    <v-container>
-                      <v-row v-for="(item, index) in chatDetail?.chatList" :key="index">
-                        <v-col class="py-0">
-                          <div :class="{ 'balloon_l': !item.isMyMessage, 'balloon_r': item.isMyMessage }">
-                            <div v-if="!item.isMyMessage" class="face_icon">
-                              <v-avatar>
-                                <span class="white--text">
-                                  画像
-                                </span>
-                              </v-avatar>
-                            </div>
-                            <p class="says">
-                              {{ item.message }}
-                            </p>
+  <v-container class="chat-detail-wrapper mx-1 py-4 px-2 my-2">
+    <v-row class="text-center">
+      <v-col cols="12">
+        <v-card
+          elevation="2"
+          color="white lighten-5"
+        >
+          <v-card-title 
+          style="background-color: #fb8c00;
+          color: white;
+          height: 64px;">{{ chatDetailData?.name }}</v-card-title>
+          <v-divider color=""></v-divider>
+          <div class="chat-detail" ref="scrollContainer">
+            <v-card-text>
+              <v-row>
+                <v-col cols="12">
+                  <v-container class="chat-message-wrap">
+                    <v-row v-for="(item, index) in chatDetail?.chatList" :key="index">
+                      <v-col class="py-0">
+                        <div :class="{ 'balloon_l': !item.isMyMessage, 'balloon_r': item.isMyMessage }">
+                          <div v-if="!item.isMyMessage" class="face_icon">
+                            <v-avatar>
+                              <span class="white--text">
+                                画像
+                              </span>
+                            </v-avatar>
                           </div>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-col>
-                </v-row>
-                <v-card-text class="pt-0">
-                  <v-row>
-                    <v-col>
-                      <v-textarea
-                        v-model="newMessage"
-                        clearable
-                        style="margin-bottom: 5px;"
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-                <v-btn 
+                          <p class="says">
+                            {{ item.message }}
+                          </p>
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </div>
+        </v-card>
+      </v-col>
+      <v-card-text class="pt-0 d-flex">
+        <v-container>
+          <v-row>
+            <v-col cols="10">
+              <v-textarea
+                v-model="newMessage"
+                clearable
+                auto-grow
+                hide-details="false"
+                rows="2"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="2" align-self="end">
+              <v-btn
                 color="orange-darken-1"
                 style="margin-bottom: 5px;"
-                @Click="sendMessage"
+                @click="sendMessage"
                 :disabled="!isInputValid"
-                >
-                  <v-icon>mdi-play</v-icon>送信
-                </v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-  </v-app>
+              >
+              <v-icon>mdi-play</v-icon> 送信
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+    </v-row>
+  </v-container>
 </template>
 
 
 <script setup lang="ts">
-import { ref, onMounted, computed, defineProps, watchEffect, nextTick } from 'vue';
+import { ref, onMounted, computed, defineProps, watchEffect, onUpdated } from 'vue';
 import http from "@/http-common";
 import { useStore } from 'vuex'
 import type Chat from "@/types/Chat";
+import { nextTick } from 'vue';
 
 const store = useStore();
 const props = defineProps({
@@ -92,11 +98,18 @@ const getChatDetail = async () => {
     }
   })
   chatDetail.value = data.data;
+  scrollToBottom();
+}
+const scrollToBottom = () => {
   nextTick(() => {
-    scrollToLatestMessage();
+    const container = scrollContainer.value;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    } else {
+      console.error('スクロール対象の要素が見つかりません。');
+    }
   });
 }
-
 // 空文字チェック
 const isInputValid = computed(() => {
   return newMessage.value.trim() !== '';
@@ -121,11 +134,14 @@ watchEffect(() => {
   }
 });
 
-onMounted(() => {
-  console.log(scrollContainer.value);
+onMounted(async () => {
   if (props.chatDetailData && props.chatDetailData.chatRoomId) {
-    getChatDetail();
+    await getChatDetail();
   }
+});
+
+onUpdated(() => {
+  scrollToBottom();
 });
 
 defineExpose({
@@ -185,14 +201,21 @@ defineExpose({
   border-left: 22px solid #8ee7b6;
 }
 .chat-detail-wrapper {
-    position: relative;
-    width: 100%;
+  width: 100%;
 }
 .chat-detail {
-  min-height: 360px;
-  overflow-y: auto;
+  min-height: 10vh;
+  max-height: 50vh;
+  overflow-y: scroll;
 }
 .chat-detail::-webkit-scrollbar{
+  display: none;
+}
+
+.chat-message-wrap {
+  overflow-y: scroll;
+}
+.chat-message-wrap::-webkit-scrollbar {
   display: none;
 }
 </style>

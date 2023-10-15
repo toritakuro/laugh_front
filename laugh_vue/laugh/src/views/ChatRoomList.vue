@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex">
       <v-card
-      class="mx-0 py-4 px-2"
+      class="mx-1 py-4 px-2 my-2"
       width="40%"
       >
         <v-toolbar
@@ -14,7 +14,7 @@
           </v-btn>
         </v-toolbar>
   
-        <v-list class="room-list-wrap" lines="two" style="height: 90%">
+        <v-list class="room-list-wrap" lines="two" style="height: 70vh;">
             <div>
               <div v-for="(item, index) in chat" :key="index">
                 <div 
