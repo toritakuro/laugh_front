@@ -30,8 +30,8 @@
       <v-col cols="7" class="main">
         <v-row>
           <v-col cols="7" class="profile" >
-            <v-col v-for="item in dispUsers" :key="item" class="profile_paddingTop">
-              <v-card class="mx-auto pa-2 profile_card">
+            <v-col v-for="item in dispUsers" class="profile_paddingTop">
+              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails()">
                 <v-container fluid="true">
                   <v-row>
                     <v-col class="pa-0" lg="6" md="6" sm="12">
@@ -47,14 +47,14 @@
                       <v-card-subtitle v-if="item.gender == 1"><v-icon icon="mdi-gender-male-female" /> 男 </v-card-subtitle>
                       <v-card-subtitle v-if="item.gender == 2"><v-icon icon="mdi-gender-male-female" /> 女 </v-card-subtitle>
                       <v-card-subtitle v-if="item.gender == 3"><v-icon icon="mdi-gender-male-female" /> 男女 </v-card-subtitle>
-                      <v-card-subtitle v-if="item?.userType == 2"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 1"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ item.activityDt }}</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item.officeName }}</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item.areaName }}</v-card-subtitle>
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="profile_selfIntroduction" v-if="item?.userType === 1">
+                    <v-col class="profile_downside" v-if="item.userType === 2">
                       <v-card-subtitle class="mb-1 text-subtitle-1">得意分野</v-card-subtitle>
                       <v-chip
                         v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
@@ -74,7 +74,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="profile_selfIntroduction" v-if="item?.userType === 2">
+                    <v-col class="profile_downside" v-if="item.userType === 1">
                       <v-card-subtitle class="mb-1 text-subtitle-1">芸風</v-card-subtitle>
                       <v-chip
                         v-for="(itemName, i) in item.comedyStyleNameList" :key="i"
@@ -86,7 +86,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="profile_selfIntroduction">
+                    <v-col class="profile_downside">
                       <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" />自己紹介</v-card-subtitle>
                       <v-card-text class="text-subtitle-1">{{ item.selfIntroduction }}</v-card-text>
                     </v-col>
@@ -146,7 +146,7 @@
                 ></v-checkbox>
               </v-checkbox-group>
             </v-col>
-            <v-col v-if="dispUserType == 2">
+            <v-col v-if="dispUserType == 1">
               <v-card-subtitle class="font-weight-bold text-subtitle-1">活動形態</v-card-subtitle>
               <v-checkbox-group v-model="checkActivityNum">
                 <v-checkbox
@@ -194,8 +194,8 @@
               </v-checkbox-group>
             </v-col>
             <v-col>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 1">得意分野</v-card-subtitle>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 2">芸風</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 1">芸風</v-card-subtitle>
+              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 2">得意分野</v-card-subtitle>
               <v-checkbox-group v-model="checkComedyStyle">
                 <v-checkbox
                   v-for="select in optionComedyStyle"
@@ -210,7 +210,7 @@
                 ></v-checkbox>
               </v-checkbox-group>
             </v-col>
-            <v-col v-if="dispUserType == 1">
+            <v-col v-if="dispUserType == 2">
               <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">料金体系</v-card-subtitle>
               <v-select
                 v-model="selectFeeType"
@@ -224,7 +224,7 @@
                 @update:modelValue="postFeeType"
               ></v-select>
             </v-col>
-            <v-col v-if="dispUserType == 1">
+            <v-col v-if="dispUserType == 2">
             <v-card-subtitle class="font-weight-bold text-subtitle-1">金額</v-card-subtitle>
               <div class="d-flex flex-row">
                 <v-sheet class="py-2 w-100">
@@ -256,7 +256,7 @@
                 </v-sheet>
               </div>
             </v-col>
-            <v-col v-if="dispUserType == 1">
+            <v-col v-if="dispUserType == 2">
               <v-card-subtitle class="font-weight-bold text-subtitle-1">特殊スキル</v-card-subtitle>
               <v-checkbox-group v-model="checkSpecialSkill">
                 <v-checkbox
@@ -306,7 +306,7 @@
   <style scoped>
   .top {
     transform: scale(0.85) translate(0px, -180px);
-    background-color: #F8F9FA;
+    /* background-color: #F8F9FA; */
   }
 
   /* 上部分 */
@@ -369,7 +369,7 @@
     margin-left: 7px;
     margin-bottom: 20px;
   }
-  .profile_selfIntroduction {
+  .profile_downside {
     padding: 0.5rem 0rem;
   }
   .profile_specialSkill_text {
@@ -432,6 +432,7 @@
   </style>
   <script setup lang="ts">
   import { computed, ref, onMounted } from 'vue'
+  import { useRouter } from 'vue-router';
   import type User from "@/types/User";
   import http from "@/http-common"
   
@@ -444,12 +445,42 @@
   onMounted(() => {
     getData();
   })
-  
+
+  const router = useRouter()
+
+  // const redirectToDetails = (user:User) => {
+  //   router.push({ name: 'detail', params: { user: '123' }  })
+    // router.push({ path: 'detail/${user}'})
+  // }
+  // const redirectToDetails = async () => {
+  //   this.$router.push({ path: `/details/${this.itemId}` })
+  // }
+//   const laughs = ref([] as User[]);
+//   const redirectToDetails = async (user:User) => {
+//   const {data} = await http.get('/mypage/laugh',{
+//     params: {
+//       userId: user.userName
+//     }}
+//   )
+//   laughs.value = data.data;
+// }
+
+const redirectToDetails = async () => {
+  router.push({ name: 'detail', query: { user: '123' }  })
+  // const themeId = route.query.themeId;
+  // const {data} = await http.get('oogiri/detail',{
+  //   params: {
+  //     themeId: themeId
+  //   }}
+  // )
+  // oogiri.value = [data.data];
+}
+
   /** User一覧を取得する */
   const getData = async () => {
     const {data} = await http.get('/top/init',{
       params: {
-        userType: 1
+        userType: 2
       }}
     )
     dispUsers.value = data.data;

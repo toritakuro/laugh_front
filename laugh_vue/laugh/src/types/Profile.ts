@@ -10,10 +10,10 @@ export default interface Profile {
   memberNum: number | null;
   gender: number | null;
   officeId: number | null;
-  comedyStyleIdList: number[];
+  comedyStyleIdList: number[] | null;
   feeType: number | null;
   fee: number | null;
-  specialSkillIdList: number[];
+  specialSkillIdList: number[] | null;
   anotherSkill: string;
   areaId: number | null;
   selfIntroduction: string;

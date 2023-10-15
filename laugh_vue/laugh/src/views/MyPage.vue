@@ -18,7 +18,7 @@
               <v-card-title class="pt-0 pb-0 text-subtitle-2">{{ user?.activityDt }}</v-card-title>
               <v-card-subtitle class="pt-1"><v-icon icon="mdi-office-building" />{{ user?.officeName }}</v-card-subtitle>
               <v-card-subtitle class="pt-2 pb-5"><v-icon icon="mdi-map-marker" />{{ user?.areaName }}</v-card-subtitle>
-              <div v-if="user?.userType == 1" class="pl-card">
+              <div v-if="user?.userType == 2" class="pl-card">
                 <span>特殊スキル</span>
                 <v-divider></v-divider>
                 <v-chip
@@ -27,7 +27,7 @@
                     size="small"
                     >{{ item }}</v-chip>
               </div>
-              <div v-if="user?.userType === 2" class="pl-card">
+              <div v-if="user?.userType === 1" class="pl-card">
                 <span>芸風</span>
                 <v-divider></v-divider>
                 <v-chip

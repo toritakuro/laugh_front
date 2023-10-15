@@ -23,6 +23,9 @@
               label="メールアドレス"
               disabled
             ></v-text-field>
+            <!-- <div class="mail-box">
+              <p class="mail-text">jjjj@gmail.com</p>
+            </div> -->
             <v-text-field
               v-model="profileReq.password"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -41,11 +44,7 @@
               counter
               @click:append="show2 = !show2"
             ></v-text-field>
-            <v-radio-group 
-              v-model="profileReq.userType" 
-              inline
-              :rules="[rules.radioVerify]"
-              >
+            <v-radio-group v-model="profileReq.userType" inline :rules="[rules.radioVerify]">
               <v-radio
                 label="作家"
                 value="1"
@@ -67,22 +66,18 @@
               label="活動名（カナ） ※入力必須"
               :rules="[rules.textVerify]"
             ></v-text-field>
-            <v-col class="d-flex justify-start" cols="7" v-if="profileReq.userType == 2">
-              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear" :rules="[rules.debutYearVerify]" ></v-select>
-              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth" :rules="[rules.debutMonthVerify]" ></v-select>
+            <v-col class="d-flex justify-start" cols="6" v-if="profileReq.userType == 2">
+              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear" :rules="[rules.debutYearVerify]"></v-select>
+              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth" :rules="[rules.debutMonthVerify]"></v-select>
             </v-col>
-            <v-col class="d-flex justify-start" v-if="profileReq.userType == 2">
+            <v-col v-if="profileReq.userType == 2">
               <v-text-field
                 v-model="profileReq.memberNum"
                 label="活動人数"
                 :rules="[rules.textVerify]"
-              ></v-text-field> 
+              ></v-text-field>            
             </v-col>
-            <v-radio-group 
-              inline 
-              v-model="profileReq.gender"
-              :rules="[rules.radioVerify]"
-              >
+            <v-radio-group inline v-model="profileReq.gender" :rules="[rules.radioVerify]">
               <v-radio
                 label="回答なし"
                 value="0"
@@ -104,13 +99,9 @@
                 color="orange"
               ></v-radio>
             </v-radio-group>
-            <v-select 
-              :items="officeRef" 
-              item-title="name" 
-              item-value="id" 
-              label="所属事務所" 
-              v-model="profileReq.officeId"
-            ></v-select>
+            <!-- <v-select :items="office" item-text="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select> -->
+            <v-select :items="officeRef" item-title="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select>
+
             <v-list-item-tile>得意分野（芸風）</v-list-item-tile>
             <v-col class="d-flex justify-start first_row" >
               <div class="chkW">
@@ -181,12 +172,8 @@
                 ></v-checkbox>
               </div>
             </v-col>
-            <v-radio-group 
-              inline 
-              v-if="profileReq.userType == 1" 
-              v-model="profileReq.feeType"
-              :rules="[rules.radioVerify]"
-            >
+
+            <v-radio-group inline v-if="profileReq.userType == 1" v-model="profileReq.feeType" :rules="[rules.radioVerify]">
               <v-radio
                 label="時給"
                 value="1"
@@ -211,18 +198,21 @@
                 label="動画編集"
                 color="orange"
                 value="1"
+                hide-details
               ></v-checkbox>
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
                 label="イラスト"
                 color="orange"
                 value="2"
+                hide-details
               ></v-checkbox>
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
                 label="音源制作"
                 color="orange"
                 value="3"
+                hide-details
               ></v-checkbox>
               </v-col>
               <v-text-field
@@ -231,13 +221,8 @@
               ></v-text-field> 
             </v-col>
 
-            <v-select 
-              :items="areaRef" 
-              item-title="name" 
-              item-value="id" 
-              label="活動場所" 
-              v-model="profileReq.areaId"
-            ></v-select>
+            <!-- <v-select :items="tihou" label="活動場所" v-model="profileReq.areaId"></v-select> -->
+            <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId"></v-select>
 
             <v-textarea 
               v-model="profileReq.selfIntroduction" 
@@ -247,7 +232,7 @@
               label="自己紹介" 
               :rules="[rules.max500]"
             ></v-textarea>
-
+            <!-- 画像トリミング新規登録はここを見る -->
             <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
             <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
               <v-img
@@ -264,13 +249,17 @@
               ></v-img>
             </div>
             <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
-
-            <v-btn 
-              block 
-              class="mt-2" 
-              color="orange" 
-              @click="reg"
-            >送信</v-btn>
+            <!-- 画像トリミング -->
+            <v-col class="d-flex justify-center">
+              <v-col cols="5">
+                <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="orange" 
+                  @click="reg"
+                >登　録</v-btn>
+              </v-col>
+            </v-col>
           </v-form>
         </v-card-text>
       </v-card>
@@ -563,16 +552,5 @@ const rules = {
   font-weight: bold;
 }
 
-.default {
-  background-color: #efefef;
-}
-.default:hover {
-  cursor: pointer
-} 
-.profilePhoto {
-  width: 200px;
-  height: 100px;
-  border-radius: 8px;
-}
 
 </style>
