@@ -1,7 +1,7 @@
 <template>
-    <div class="d-flex">
+    <div class="d-flex px-12 py-2">
       <v-card
-      class="mx-1 py-4 px-2 my-2"
+      class="mx-1 py-2 px-2"
       width="40%"
       >
         <v-toolbar

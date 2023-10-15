@@ -1,5 +1,5 @@
 <template>
-  <v-container class="chat-detail-wrapper mx-1 py-4 px-2 my-2">
+  <v-container class="chat-detail-wrapper mx-1 py-2 px-12">
     <v-row class="text-center">
       <v-col cols="12">
         <v-card
