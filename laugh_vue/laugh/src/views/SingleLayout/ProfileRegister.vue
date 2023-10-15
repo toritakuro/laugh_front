@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="bakColor">
     <v-row justify="center" align-content="center">
       <ul class="step-box">
         <li class="step-1 done"><div class="step-num">１</div><div class="step-desc">アドレス登録</div></li>
@@ -9,15 +9,50 @@
     </v-row>
     <v-row>
       <v-card
-        class="mx-auto profileRegWrap"
+      class="mx-auto profileRegWrap"
         prepend-icon="mdi-home"
-      >
+        >
         <template v-slot:title>
           新規登録
         </template>
-
+        
         <v-card-text>
           <v-form>
+            <v-radio-group v-model="profileReq.userType" inline :rules="[rules.radioVerify]">
+              <v-radio
+                label="作家"
+                value="1"
+                color="orange"
+              ></v-radio>
+              <v-radio
+                label="芸人"
+                value="2"
+                color="orange"
+              ></v-radio>
+            </v-radio-group>
+            <!-- 画像トリミング新規登録はここを見る -->
+            <v-list-item-tile>プロフィール画像</v-list-item-tile>
+            <v-col class="d-flex justify-center">
+              <v-col cols="6">
+                <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
+                <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
+                  <v-img
+                    :aspect-ratio="1"
+                    :src="src"
+                    ></v-img>
+                </div>
+                <div v-if="cropImg !== ''" class="profilePhoto" @click.prevent="showFileChooser">
+                  <v-img
+                    :aspect-ratio="1"
+                    :src="cropImg"
+                    cover
+                    class="rounded-lg"
+                  ></v-img>
+                </div>
+                <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
+              </v-col>
+            </v-col>
+            <!-- 画像トリミング -->
             <v-text-field
               v-model="profileReq.userAddress"
               label="メールアドレス"
@@ -44,18 +79,6 @@
               counter
               @click:append="show2 = !show2"
             ></v-text-field>
-            <v-radio-group v-model="profileReq.userType" inline :rules="[rules.radioVerify]">
-              <v-radio
-                label="作家"
-                value="1"
-                color="orange"
-              ></v-radio>
-              <v-radio
-                label="芸人"
-                value="2"
-                color="orange"
-              ></v-radio>
-            </v-radio-group>
             <v-text-field
               v-model="profileReq.userName"
               label="活動名 ※入力必須"
@@ -232,24 +255,6 @@
               label="自己紹介" 
               :rules="[rules.max500]"
             ></v-textarea>
-            <!-- 画像トリミング新規登録はここを見る -->
-            <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
-            <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
-              <v-img
-                :aspect-ratio="1"
-                :src="src"
-              ></v-img>
-            </div>
-            <div v-if="cropImg !== ''" class="profilePhoto" @click.prevent="showFileChooser">
-              <v-img
-                :aspect-ratio="1"
-                :src="cropImg"
-                cover
-                class="rounded-lg"
-              ></v-img>
-            </div>
-            <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
-            <!-- 画像トリミング -->
             <v-col class="d-flex justify-center">
               <v-col cols="5">
                 <v-btn 
@@ -451,6 +456,10 @@ const rules = {
 </script>
 
 <style scoped>
+
+.bakColor {
+  background-color: #F8F9FA; 
+}
 
 .chkW {
   width: 206px;
