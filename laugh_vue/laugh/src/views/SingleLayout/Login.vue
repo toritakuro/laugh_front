@@ -93,9 +93,12 @@ const getUser = async () => {
         alert(`ようこそ！`);
         const idToken = response.data.data.idToken;
         const refreshToken = response.data.data.refreshToken;
+        const userId = response.data.data.id;
+        const userType = response.data.data.userType;
         store.commit('token/saveIdToken', idToken);
         store.commit('token/saveRefreshToken', refreshToken);
-        console.log(response);
+        store.commit('user/saveUserId', userId);
+        store.commit('user/saveUserType', userType);
         router.push({ name: 'demo' });
     } else {
       // ログイン失敗
