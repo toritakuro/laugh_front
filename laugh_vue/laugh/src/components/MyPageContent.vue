@@ -5,6 +5,7 @@
       fluid
     >
 
+    <v-row>
       <v-col>
         <v-text-field
           label="ファイル名"
@@ -18,6 +19,7 @@
       <v-col cols="auto" class="pb-16 text-end">
         <v-btn density="default" icon="mdi-cloud-upload" @click="openUploadModal"></v-btn>
       </v-col>
+    </v-row>
 
       <v-menu
         v-model="uplodadModalFlg"
@@ -38,16 +40,17 @@
             class="ml-12 mt-4"
           ></v-text-field>
           <v-radio-group 
-              v-model="contentsReq.userType" 
+              v-model="contentsReq.fileType" 
               inline
+              class="ml-12 mt-4"
               >
               <v-radio
-                label="作家"
+                label="動画"
                 value="1"
                 color="orange"
               ></v-radio>
               <v-radio
-                label="芸人"
+                label="PDF"
                 value="2"
                 color="orange"
               ></v-radio>
@@ -67,31 +70,31 @@
         </v-form>
       </v-menu>
 
-
+      <v-icon size="48">mdi-movie-play</v-icon>
+      <v-sheet class="rounded-lg  card-row">
       <v-row>
         <v-col
-          v-for="(item, i) in contents"
-          :key = "i"
-          cols = "3"
-          class = "mb-4"
+        v-for="(item, i) in mpContents"
+        :key = "i"
+        cols = "3"
+        class = "mb-4"
         >
-          <v-card @click="downloadFile(item.contentPath)">
-            <v-card>
-            <v-img
+          
+          <v-card class="pb-2">
+            <!-- <v-img
                   :aspect-ratio="1.777"
                   :src="item.topImgPath"
                   cover
                   class="rounded-lg"
                   width="100%"
-                  ></v-img></v-card>
+                  ></v-img></v-card> -->
                   <!-- <div class="d-flex align-center">
                 <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
                 <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
               </div> -->
-              
             <v-list>
               <div>
-                <v-card-title class="mt-4">{{ item.title.split('.')[0] }}</v-card-title>
+                <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
               </div>
               <div>
                 <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
@@ -100,28 +103,75 @@
                 <v-card-subtitle class="mt-8 text-end">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
               </div>
             </v-list>
+            <v-row class="d-flex justify-end pr-2">
+              <v-col cols="auto">
+                <v-btn 
+                block 
+                class="mt-2" 
+                color="orange" 
+                @click="downloadFile(item.contentPath)"
+                >ダウンロード</v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn 
+                block 
+                class="mt-2" 
+                color="orange" 
+                @click="deleteFile(item)"
+                >削除</v-btn>
+              </v-col>
+            </v-row>
           </v-card>
 
-          <v-row class="d-flex justify-end">
-            <!-- <v-col cols="auto">
-              <v-btn 
-              block 
-              class="mt-2" 
-              color="orange" 
-              @click="editFile(item)"
-              >編集</v-btn>
-            </v-col> -->
-            <v-col cols="auto">
-              <v-btn 
-              block 
-              class="mt-2" 
-              color="orange" 
-              @click="deleteFile(item.id)"
-              >削除</v-btn>
-            </v-col>
-          </v-row>
         </v-col>
       </v-row>
+    </v-sheet>
+
+    <v-icon size="48" class="mt-12 mb-4">mdi-file-pdf-box</v-icon>
+    <v-sheet class="rounded-lg  card-row">
+      <v-row>
+        <v-col
+        v-for="(item, i) in pdfContents"
+        :key = "i"
+        cols = "3"
+        class = "mb-4"
+        >
+          
+          <v-card class="pb-2">
+            <v-list>
+              <div>
+                <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
+              </div>
+              <div>
+                <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
+              </div>
+              <div>
+                <v-card-subtitle class="mt-8 text-end">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
+              </div>
+            </v-list>
+            <v-row class="d-flex justify-end pr-2">
+              <v-col cols="auto">
+                  <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="orange" 
+                  @click="downloadFile(item.contentPath)"
+                  >ダウンロード</v-btn>
+                </v-col>
+                <v-col cols="auto">
+                  <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="orange" 
+                  @click="deleteFile(item)"
+                  >削除</v-btn>
+                </v-col>
+            </v-row>
+          </v-card>
+
+        </v-col>
+      </v-row>
+    </v-sheet>
 
     </v-container>
 
@@ -137,13 +187,33 @@ import http from "@/http-common";
 import ImageModalComponent from "../components/ImageModalComponent.vue"
 import FileComponent from "../components/FileComponent.vue"
 
+const mpContents = computed(() => {
+  return contents.value.filter(contents => contents.fileType == 1)
+})
+const pdfContents = computed(() => {
+  return contents.value.filter(contents => contents.fileType == 2)
+})
+
 const searchName = ref('')
-  const searchKariName = ref('')
-  const postName = () => {
-    // スペースを削除
-    searchKariName.value = searchName.value.trim().replace(/\s/g,"")
-    // userSearch()
-  }
+const searchKariName = ref('')
+const dispContents = ref<Content[]>([])
+
+const postName = () => {
+  // スペースを削除
+  searchKariName.value = searchName.value.trim().replace(/\s/g,"")
+  fileSearch()
+}
+const fileSearch = () => {
+  const content = ref([] as Content[]);
+  console.log(searchKariName.value)
+  if(searchName.value != '') {
+    contents.value = dispContents.value.filter((a) => { return a.title.indexOf(searchKariName.value) != -1})
+    console.log(contents.value)
+    } else {
+      contents.value = dispContents.value;
+    }
+
+}
 
 // const editFile = (item: Content) => {
 //   contentsReq.value.title = item.title.split(".")[0];
@@ -153,9 +223,14 @@ const searchName = ref('')
 //   contentsReq.value.content = item.content;
 //   uplodadModalFlg.value = true
 // }
-const deleteFile = (id: number) => {
-  if (window.confirm('削除しますか？')) {
-    http.post("/mypage/deleteFile", id)
+const deleteFile = (item: Content) => {
+  if (window.confirm(item.id+'削除しますか？')) {
+    const delItem = ref<Content>(item)
+    const delItem2 = contentsReq
+    console.log(delItem.value)
+    console.log(item)
+    delItem2.value.id = item.id
+    http.post("/mypage/deleteFile",delItem2.value )
     .then(() => {
       getContent();
     })
@@ -172,7 +247,7 @@ const deleteFile = (id: number) => {
 
 const store = useStore()
 const router = useRouter()
-const userId = computed(() => store.state.user.userId)
+//const userId = computed(() => store.state.user.userId)
 const laughs = ref<Laugh[]>([])
 const contents = ref<Content[]>([])
 const uplodadModalFlg = ref<boolean>();
@@ -186,8 +261,9 @@ const contentsReq = ref<Content>({
   userId : 3 ,
   title : '' ,
   detail : '' ,
-  topImg : '' ,
-  topImgPath : '' ,
+  fileType : 1 ,
+  // topImg : '' ,
+  // topImgPath : '' ,
   content : '' ,
   contentPath : '',
   createAt : null,
@@ -195,59 +271,7 @@ const contentsReq = ref<Content>({
 })
 
 
-// 画像登録用
-const modalFlg = ref(false)
 
-/** base64に変換 */
-const imgSrc = ref('');
-const cropImg = ref('');
-const file = ref();
-const src = ref("/img/man.svg");
-const setImage = (e: any) => {
-  const file = e.target.files[0];
-  if (!file.type.includes('image/')) {
-    alert('画像ファイルを選んでください');
-    return;
-  }
-  if (typeof FileReader === 'function') {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target != null) {
-        imgSrc.value = event.target.result as string;
-        // 画像の変更にはreplaceが必要らしい
-        //cropper.value.replace(event.target.result);
-      }
-    };
-    reader.readAsDataURL(file);
-  } else {
-    alert('FileReader APIがサポートされていません');
-  }
-  // 時差が必要みたい
-  setTimeout(() => {
-    console.log(11);
-    modalFlg.value = true;
-  }, 200);
-};
-/** emitで受けるメソッド */
-const setModelValue = (value:Boolean) => {
-  modalFlg.value = false;
-  file.value.value ='' // 初期化
-} 
-const setImg = (img:string) => {
-  cropImg.value = img;
-} 
-const showFileChooser = () => {
-  file.value.click();
-};
-watch(cropImg, (newValue) => {
-  contentsReq.value.topImg = newValue;
-  //contentsReq.value.content = newValue;
-  // if (newValue !== '') {
-  //   let parts = newValue.split(',');
-  //   contentsReq.value.topImg = parts[1];
-  //   contentsReq.value.content = parts[1];
-  // }
-})
 
 const fileExtension = ref('');
 const setFile = (base64:string, extension:string) => {
@@ -289,6 +313,7 @@ const getContent = async () => {
     )
   // data.data.title.value = data.data.title.split(".")[0]
   contents.value = data.data
+  dispContents.value = data.data
   // contents.value.title = contents.value.title.split(".")[0]
   console.log(contents.value)
 }
@@ -343,6 +368,12 @@ const formatDate = (dateString: string) => {
   border-radius: 8px;
   margin-left: 52px;
   margin-top: 8px;
+}
+
+.card-row {
+  border: 1px solid #4344464f; /* 外枠のスタイルを定義します */
+  padding: 16px; /* 必要に応じて余白を追加します */
+  background-color: #F8F9FA;
 }
 
 </style>

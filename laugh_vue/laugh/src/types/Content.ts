@@ -3,8 +3,9 @@ export default interface Content {
   userId: number;
   title: string;
   detail: string;
-  topImg: string;
-  topImgPath: string;
+  // topImg: string;
+  // topImgPath: string;
+  fileType: number;
   content: string;
   contentPath: string;
   createAt: Date | null;
