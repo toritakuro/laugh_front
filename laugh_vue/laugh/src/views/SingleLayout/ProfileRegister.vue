@@ -33,7 +33,7 @@
             <!-- 画像トリミング新規登録はここを見る -->
             <v-list-item-tile>プロフィール画像</v-list-item-tile>
             <v-col class="d-flex justify-center">
-              <v-col cols="6">
+              <v-col class="profBox" cols="6">
                 <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
                 <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
                   <v-img
@@ -457,6 +457,10 @@ const rules = {
 
 <style scoped>
 
+.profBox {
+  border: solid 3px #cccccc;
+  border-radius: 10px;
+}
 .bakColor {
   background-color: #F8F9FA; 
 }
