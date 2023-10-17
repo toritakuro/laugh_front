@@ -91,11 +91,10 @@ const getUser = async () => {
     if (response.status === 200) {
       // ログイン成功
         alert(`ようこそ！`);
-        const idToken = response.data.data.idToken;
-        const refreshToken = response.data.data.refreshToken;
-        store.commit('token/saveIdToken', idToken);
-        store.commit('token/saveRefreshToken', refreshToken);
-        console.log(response);
+        store.commit('token/saveIdToken', response.data.data.idToken);
+        store.commit('token/saveRefreshToken', response.data.data.refreshToken);
+        store.commit('user/saveUserId', response.data.data.id);
+        store.commit('user/saveUserType', response.data.data.userType);
         router.push({ name: 'demo' });
     } else {
       // ログイン失敗
