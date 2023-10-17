@@ -8,7 +8,7 @@
     :show-size="1000"
               label="ファイルをアップロードしてください"
               @change="handleFileSelect"
-              class="ml-12 mt-8"
+              class="ml-8 mt-4"
             ></v-file-input>
     <!-- <input type="file" @change="handleFileSelect" /> -->
     <!-- <img v-if="targetImage" :src="targetImage" alt="選択された画像" class="image"> -->

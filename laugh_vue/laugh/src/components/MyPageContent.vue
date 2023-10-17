@@ -6,43 +6,34 @@
     >
 
     <v-row>
-      <v-col>
+      <v-col >
         <v-text-field
-          label="ファイル名"
+          prepend-inner-icon="mdi-magnify"
+          label="タイトル検索"
           density="compact"
-          bg-color="#fffffff"
+          bg-color="white"
           @input="postName"
           v-model="searchName"
+          style="width: 80%; margin:0 auto; "
+          variant="outlined"
         ></v-text-field>
       </v-col>
 
       <v-col cols="auto" class="pb-16 text-end">
-        <v-btn density="default" icon="mdi-cloud-upload" @click="openUploadModal"></v-btn>
+        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openUploadModal"></v-btn>
       </v-col>
     </v-row>
 
       <v-menu
         v-model="uplodadModalFlg"
-        width="600"
         class="bordered-dialog"
-        
+        @click.stop
       >
-        <v-form @click.stop>
-          <v-text-field
-            v-model="contentsReq.title"
-            label="タイトル"
-            placeholder="ここにタイトルを入力"
-            class="ml-12 mt-8"
-          ></v-text-field>
-          <v-text-field
-            v-model="contentsReq.detail"
-            label="説明文"
-            class="ml-12 mt-4"
-          ></v-text-field>
+        <v-form @click.stop class="form-container">
           <v-radio-group 
               v-model="contentsReq.fileType" 
               inline
-              class="ml-12 mt-4"
+              class="ml-8 mt-8"
               >
               <v-radio
                 label="動画"
@@ -55,6 +46,18 @@
                 color="orange"
               ></v-radio>
             </v-radio-group>
+          <v-text-field
+            v-model="contentsReq.title"
+            label="タイトル"
+            placeholder="ここにタイトルを入力"
+            class="ml-8"
+          ></v-text-field>
+          <v-textarea
+            v-model="contentsReq.detail"
+            label="説明文"
+            class="ml-8 mt-4"
+          ></v-textarea>
+          
           <FileComponent @set-file="setFile"/>
           <!-- <v-file-input
                 accept="image/*"
@@ -62,16 +65,16 @@
               ></v-file-input> -->
 
           <v-btn 
-            block 
-            class="ml-12 mt-2" 
-            color="orange" 
+            class="ml-8 mt-8"
+            style="width:80%;"
+            color="orange-darken-1" 
             @click="uploadFile"
           >アップロード</v-btn>
         </v-form>
       </v-menu>
 
       <v-icon size="48">mdi-movie-play</v-icon>
-      <v-sheet class="rounded-lg  card-row">
+      <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
       <v-row>
         <v-col
         v-for="(item, i) in mpContents"
@@ -97,28 +100,28 @@
                 <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
               </div>
               <div>
-                <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
+                <div class="detail-text" v-html="formatDetail(item.detail)"></div>
               </div>
               <div>
-                <v-card-subtitle class="mt-8 text-end">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
+                <v-card-subtitle class="mt-8">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
               </div>
             </v-list>
-            <v-row class="d-flex justify-end pr-2">
+            <v-row class="d-flex pl-4">
               <v-col cols="auto">
                 <v-btn 
                 block 
                 class="mt-2" 
-                color="orange" 
+                color="orange-darken-1" 
                 @click="downloadFile(item.contentPath)"
-                >ダウンロード</v-btn>
+                ><v-icon>mdi-download</v-icon></v-btn>
               </v-col>
               <v-col cols="auto">
                 <v-btn 
                 block 
                 class="mt-2" 
-                color="orange" 
+                color="red-darken-1" 
                 @click="deleteFile(item)"
-                >削除</v-btn>
+                ><v-icon>mdi-delete</v-icon></v-btn>
               </v-col>
             </v-row>
           </v-card>
@@ -127,8 +130,8 @@
       </v-row>
     </v-sheet>
 
-    <v-icon size="48" class="mt-12 mb-4">mdi-file-pdf-box</v-icon>
-    <v-sheet class="rounded-lg  card-row">
+    <v-icon size="48" class="mt-12 mb-4">mdi-file-outline</v-icon>
+    <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
       <v-row>
         <v-col
         v-for="(item, i) in pdfContents"
@@ -143,28 +146,28 @@
                 <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
               </div>
               <div>
-                <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
+                <v-card-subtitle v-html="formatDetail(item.detail)"></v-card-subtitle>
               </div>
               <div>
-                <v-card-subtitle class="mt-8 text-end">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
+                <v-card-subtitle class="mt-8">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
               </div>
             </v-list>
-            <v-row class="d-flex justify-end pr-2">
+            <v-row class="d-flex pl-4">
               <v-col cols="auto">
                   <v-btn 
                   block 
                   class="mt-2" 
                   color="orange" 
                   @click="downloadFile(item.contentPath)"
-                  >ダウンロード</v-btn>
+                  ><v-icon>mdi-download</v-icon></v-btn>
                 </v-col>
                 <v-col cols="auto">
                   <v-btn 
                   block 
                   class="mt-2" 
-                  color="orange" 
+                  color="red-darken-1" 
                   @click="deleteFile(item)"
-                  >削除</v-btn>
+                  ><v-icon>mdi-delete</v-icon></v-btn>
                 </v-col>
             </v-row>
           </v-card>
@@ -213,6 +216,10 @@ const fileSearch = () => {
       contents.value = dispContents.value;
     }
 
+}
+
+const formatDetail = (detail: string) => {
+  return detail.replace(/\r\n|\r|\n/g, "<br>");
 }
 
 // const editFile = (item: Content) => {
@@ -343,10 +350,12 @@ const formatDate = (dateString: string) => {
     background-color: rgba(255, 255, 255, 1)!important;  /* 0.3 の透明度で設定。この値を小さくすることで、背景の暗さを減少させることができます。 */
 }
 .bordered-dialog {
-  width: 800px;
-  height: 600px;
-  border: 1px solid ;
+  width: 600px;
+  border: 1px solid #000000;
+  border-radius: 8px;
   background-color: rgba(255, 255, 255, 1);
+  position: fixed;
+  text-align: center;
   margin: 100px auto;
 }
 
@@ -371,9 +380,29 @@ const formatDate = (dateString: string) => {
 }
 
 .card-row {
-  border: 1px solid #4344464f; /* 外枠のスタイルを定義します */
-  padding: 16px; /* 必要に応じて余白を追加します */
+  border: 1px solid #4344464f; 
+  padding: 16px; 
   background-color: #F8F9FA;
+}
+
+.fixed_btn {
+  position: fixed;
+  bottom: 12%;
+  right: 6%;
+  background-color: orange;
+  border: 2px solid 4344464f;
+}
+
+.form-container {
+  width: 570px; 
+}
+
+.detail-text {
+  margin-left: 16px;
+  margin-right: 8px;
+  font-size: 12px;
+  height: 60px;
+  overflow-y: auto;
 }
 
 </style>
