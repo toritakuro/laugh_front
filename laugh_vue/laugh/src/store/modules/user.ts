@@ -14,8 +14,12 @@ const mutations = {
 const getters = {
   getUserId(state) {
     return state.userId;
+  },
+  getUserType(state) {
+    return state.userType;
   }
 };
+
 
 export default {
   namespaced: true,
