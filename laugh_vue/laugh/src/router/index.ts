@@ -19,11 +19,6 @@ const router = createRouter({
       component: LoginView
     },
     {
-      path: '/oogiri/detail',
-      name: 'oogiriDetail',
-      component: OogiriDetail,
-    },
-    {
       path: '/profile/register/:address(.*)',
       name: 'profile',
       component: ProfileRegister
@@ -57,7 +52,12 @@ const router = createRouter({
         {
           path: 'mypage/laugh',
           component: MyPageLaugh
-        }
+        },
+        {
+          path: '/oogiri/detail',
+          name: 'oogiriDetail',
+          component: OogiriDetail,
+        },
       ]
     }
   ]
