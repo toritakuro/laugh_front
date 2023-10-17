@@ -4,27 +4,26 @@
       <v-row align="center" justify="center">
         <v-col>
           <v-img class="mx-auto" max-width="1800" height="180" :src="imgUrl" alt="Laugh Login"></v-img>
-          <v-form id="login-form" class="mt-5" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
+          <v-form id="lgn-form" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
             <v-text-field v-model="email" label="メールアドレス" required></v-text-field>
-            <v-text-field class="password-input" v-model="password" label="パスワード" type="password" required></v-text-field>
+            <v-text-field class="pwd-inp" v-model="password" label="パスワード" type="password" required></v-text-field>
             <v-btn color="orange-darken-1" @click="getUser" width="320" height="56">
-              <!-- #ff9933 orange-accent-3 rounded-xl 　　orange-darken-1 → #FB8C00 -->
-
-
               <span style="font-size: 16px;">ログイン</span>
             </v-btn>
-            <div class="password-link">
-              <a href="#" class="forgot-password-link" @mouseover="changeColor" @mouseout="resetColor">
+            
+            <div class="pwd-link">
+              <router-link to="/" class="forgot-pwd-link" @mouseover="changeColor" @mouseout="resetColor">
                 パスワードをお忘れの方
-              </a>
-            </div>
+              </router-link>
+            </div>          
             <v-alert v-model="error" type="error" dismissible>{{ errorMessage }}</v-alert>
           </v-form>
+
           <div class="mem-regist mt-5 text-center">
             <span>まだ会員登録していない方は</span>
-            <a href="#" class="forgot-password-link" @mouseover="changeColor" @mouseout="resetColor">
+            <router-link to="/" class="forgot-pwd-link" @mouseover="changeColor" @mouseout="resetColor">
               こちらから登録
-            </a>
+            </router-link>
             <span>(無料)お願いします</span>
           </div>
         </v-col>
@@ -33,25 +32,27 @@
 	</v-app>
 </template>
 
-<style>
-#login-form {
+<style scoped>
+#lgn-form {
   width: 320px;
   margin-left: auto;
   margin-right: auto;
 }
-.password-input {
+.pwd-inp {
   margin-bottom: 20px;
 }
-.password-link {
+.pwd-link {
   margin-top: 4px;
 }
-.forgot-password-link {
+.forgot-pwd-link {
   color: #6495ed; /* リンクの初期色 */
+  text-decoration-color:#6495ed; /* 下線部の色 */
   transition: color 0.1s; /* リンクの色の変化を滑らかに */
   font-size: 16px;
 }
-.forgot-password-link:hover {
-  color: #ff9933; /* ホバー時の色 */
+.forgot-pwd-link:hover {
+  color: #FB8C00; /* ホバー時の色 */
+  text-decoration-color:#FB8C00; /* 下線部の色 */
 }
 </style>
 
@@ -101,5 +102,4 @@ const getUser = async () => {
     error.value = true;
   }
 };
-
 </script>
