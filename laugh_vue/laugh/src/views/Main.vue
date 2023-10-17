@@ -82,7 +82,18 @@
     </v-app-bar>
 
     <v-main>
-      <RouterView />
+      <v-container fluid>
+        <v-row>
+          <v-col cols="10" offset="1" class="pa-0">
+            <Message></Message>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="10" offset="1" class="pa-0">
+            <RouterView />
+          </v-col>
+        </v-row>
+      </v-container>
       <!-- ここにメインコンテンツが入ってくる -->
     </v-main>
 
@@ -150,9 +161,8 @@
 }
 </style>
 
-<script>
-import { ref } from 'vue'
-  import Message from '../components/MessageComponent.vue'
+<script lang="ts">
+  import { ref } from 'vue'
   const cards = ['Today', 'Yesterday']
   const links = [
     ['mdi-account', 'マイページ', '/mypage'],
@@ -168,7 +178,7 @@ export default {
       { title: 'ユーザー一覧', link: '/user-list' },
       { title: 'チャット', link: '/chat' },
     ],
-
+    isMessageVisible: true,
     itemsOgiri: [
       { title: '大喜利一覧', link: '/oogiri-list' },
       { title: 'お題投稿', link: '/oogiri-post' },
@@ -206,4 +216,7 @@ export default {
   //     // ここにログアウト処理を記述
   //   }
   // }
+</script>
+<script setup lang="ts">
+  import Message from '../components/MessageComponent.vue'
 </script>
