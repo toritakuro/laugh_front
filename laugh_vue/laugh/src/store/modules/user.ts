@@ -1,5 +1,6 @@
 const state = {
-  userId: ""
+  userId: "",
+  userType: ""
 };
 
 const mutations = {
@@ -8,6 +9,12 @@ const mutations = {
   },
   removeUserId(state) {
     state.userId = "";
+  },
+  saveUserType(state, userType: string) {
+    state.userType = userType;
+  },
+  removeUserType(state) {
+    state.userType = "";
   }
 };
 

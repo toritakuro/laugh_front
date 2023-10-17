@@ -190,7 +190,7 @@
                   <div class="label-color mb-3" ><span>金額</span></div>
                 </v-col>
               </v-row>
-              <v-row dense="true">
+              <v-row dense="true" v-show="isComposer">
                 <v-col class="pa-0" lg="4">
                   <v-radio-group inline hide-details v-model="userRef.feeType">
                     <v-radio
@@ -207,7 +207,7 @@
                   </v-radio-group>
                 </v-col>
               </v-row>
-              <v-row dense="true">
+              <v-row dense="true" v-show="isComposer">
                 <v-col class="pa-0" lg="3">
                   <v-text-field
                     class="input-number ml-4 mt-1"
@@ -325,14 +325,17 @@
 
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref } from 'vue';
 import http from "@/http-common";
 import type Master from "@/types/Master";
-import type User from '@/types/User'
+import type User from '@/types/User';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const userRef = ref<User>({});
 const office = ref<Master[]>([]);
 const area = ref<Master[]>([]);
+
 
 const isComedian = computed(() => userRef.value.userType == 1);
 const isComposer = computed(() => userRef.value.userType == 2);
@@ -350,8 +353,8 @@ const getProfile = async () => {
 
   const {data } = await http.get('/mypage',{
       params: {
-        userId: 5,
-        userType:2
+        userId: store.state.user.userId,
+        userType: store.state.user.userType
       }}
     );
     userRef.value = data.data;

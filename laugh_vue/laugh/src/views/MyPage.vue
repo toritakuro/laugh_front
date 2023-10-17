@@ -81,23 +81,25 @@
 <script setup lang="ts">
   import { computed, ref, onMounted } from 'vue';
   import http from "@/http-common";
+  import { useStore } from 'vuex'
 
   import MyPageProfile from '@/components/MyPageProfile.vue';
   import MyPageLaugh from '@/components/MyPageLaugh.vue'
   import type User from '@/types/User'
+
+  const store = useStore();
   const user = ref<User>({});
   const profileRef = ref();
   const laughRef = ref();
   /** dom読み込み時の実行メソッド */
   onMounted(() => { getData(); });
 
-
   /** 初期処理 */
   const getData = async () => {
     const {data } = await http.get('/mypage',{
       params: {
-        userId: 1,
-        userType:1
+        userId: store.state.user.userId,
+        userType: store.state.user.userType
       }}
     );
     user.value = data.data;

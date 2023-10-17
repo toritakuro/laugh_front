@@ -75,10 +75,24 @@
         ヘルプ
       </v-btn>
 
-      <v-btn text @click="logout">
+      <v-btn text @click="openLogoutDialog">
         <v-icon>mdi-logout</v-icon>
         ログアウト
       </v-btn>
+      <v-dialog
+        v-model="dialog"
+        width="auto"
+      >
+      <v-card>
+        <v-card-text style="background-color: #f57c00; color: white;">
+          ログアウトします。よろしいですか？
+        </v-card-text>
+        <v-card-actions class="justify-center d-flex">
+          <v-btn color="'#F5F5F5'" @click="dialog = false">閉じる</v-btn>
+          <v-btn color="orange" @click=logout>はい</v-btn>
+        </v-card-actions>
+      </v-card>
+      </v-dialog>
     </v-app-bar>
 
     <v-main>
@@ -161,8 +175,10 @@
 }
 </style>
 
-<script lang="ts">
+<script>
+  import Message from '../components/MessageComponent.vue'
   import { ref } from 'vue'
+  import store from "@/store"
   const cards = ['Today', 'Yesterday']
   const links = [
     ['mdi-account', 'マイページ', '/mypage'],
@@ -178,7 +194,7 @@ export default {
       { title: 'ユーザー一覧', link: '/user-list' },
       { title: 'チャット', link: '/chat' },
     ],
-    isMessageVisible: true,
+
     itemsOgiri: [
       { title: '大喜利一覧', link: '/oogiri-list' },
       { title: 'お題投稿', link: '/oogiri-post' },
@@ -191,10 +207,12 @@ export default {
       { title: '投稿一覧', link: '/posts-list' },
       { title: '退会(アカウント削除)', link: '/quit' },
     ],
+    dialog: false,
   }),
-}
-
-  // methods: {
+  components: {
+    Message
+  },
+  methods: {
   //   goToMyPage() {
   //     // マイページへの遷移処理
   //     this.$router.push({ name: 'MyPage' });
@@ -211,12 +229,17 @@ export default {
   //     // ヘルプページへ遷移
   //     this.$router.push({ name: 'Help' });
   //   },
-  //   logout() {
-  //     // ログアウト処理
-  //     // ここにログアウト処理を記述
-  //   }
-  // }
+    openLogoutDialog() {
+      this.dialog = true;
+    },
+    logout() {
+      store.commit('token/removeToken');
+      this.$router.push({ name: 'login' });
+    }
+  }
+}
 </script>
-<script setup lang="ts">
+
+<!-- <script setup lang="ts">
   import Message from '../components/MessageComponent.vue'
-</script>
+</script> -->
