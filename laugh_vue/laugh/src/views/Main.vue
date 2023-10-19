@@ -96,7 +96,18 @@
     </v-app-bar>
 
     <v-main>
-      <RouterView />
+      <v-container fluid>
+        <v-row>
+          <v-col cols="10" offset="1" class="pa-0">
+            <Message></Message>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="10" offset="1" class="pa-0">
+            <RouterView />
+          </v-col>
+        </v-row>
+      </v-container>
       <!-- ここにメインコンテンツが入ってくる -->
     </v-main>
 
@@ -165,9 +176,9 @@
 </style>
 
 <script>
-import { ref } from 'vue'
-import store from "@/store"
   import Message from '../components/MessageComponent.vue'
+  import { ref } from 'vue'
+  import store from "@/store"
   const cards = ['Today', 'Yesterday']
   const links = [
     ['mdi-account', 'マイページ', '/mypage'],
@@ -198,6 +209,9 @@ export default {
     ],
     dialog: false,
   }),
+  components: {
+    Message
+  },
   methods: {
   //   goToMyPage() {
   //     // マイページへの遷移処理
@@ -224,5 +238,8 @@ export default {
     }
   }
 }
-
 </script>
+
+<!-- <script setup lang="ts">
+  import Message from '../components/MessageComponent.vue'
+</script> -->

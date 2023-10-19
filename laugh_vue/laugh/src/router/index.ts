@@ -9,6 +9,7 @@ import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import UserDetail from '../views/UserDetail.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
+import store from "@/store"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,7 @@ const router = createRouter({
         },
         {
           path: 'home',
+          name: 'home',
           component: HomeView
         },
         {
@@ -63,4 +65,8 @@ const router = createRouter({
   ]
 })
 
+router.beforeResolve((to, from, next) => {
+  if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
+  else next()
+})
 export default router
