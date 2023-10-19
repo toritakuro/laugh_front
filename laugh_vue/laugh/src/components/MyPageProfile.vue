@@ -27,7 +27,7 @@
               <!-- 結成 -->
               <v-row>
                 <v-col class="pt-0 pb-0 pl-0">
-                  <div class="label-color mb-3"><span>結成</span></div>
+                  <div class="label-color mb-3">デビュー</div>
                 </v-col>
               </v-row>
               <v-row>
@@ -87,6 +87,7 @@
                 </v-col>
               </v-row>
               <v-row class="pl-1"  dense="true">
+                <!-- 一組目 -->
                 <v-col lg="3" md="12">
                   <v-row dense="true">
                     <v-col lg="6" md="12" class="pa-0" >
@@ -111,9 +112,11 @@
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col lg="3" class="pl-1">
+
+                <!-- 二組目 -->
+                <v-col lg="3" md="12" class="pl-1">
                   <v-row dense="true">
-                    <v-col lg="6" class="pa-0">
+                    <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="コント"
@@ -123,7 +126,7 @@
                         hide-details
                       ></v-checkbox>
                     </v-col>
-                    <v-col lg="6" class="pa-0">
+                    <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="ギャグ"
@@ -135,9 +138,11 @@
                     </v-col>
                   </v-row>
                 </v-col>
+
+                <!-- 三組目 -->
                 <v-col lg="3" class="pl-1">
-                  <v-row dense="true">
-                    <v-col lg="6" class="pa-0 ml-2">
+                  <v-row dense="true"><!--   -->
+                    <v-col lg="6" sm="12" class="pa-0 ml-2">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="歌ネタ"
@@ -146,8 +151,8 @@
                         :value="6"
                         hide-details
                       ></v-checkbox>
-                    </v-col>
-                    <v-col lg="5" class="pa-0 ml-1">
+                    </v-col><!--   -->
+                    <v-col lg="5" sm="12" class="pa-0 ml-1">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="漫談"
@@ -158,9 +163,9 @@
                     </v-col>
                   </v-row>       
                 </v-col>
-                <v-col lg="3" class="pl-1">
+                <v-col lg="3" md="12" class="pl-1">
                   <v-row dense="true">
-                    <v-col lg="7" offset="1" class="pa-0">
+                    <v-col lg="7" offset-lg="1" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="モノマネ"
@@ -171,9 +176,9 @@
                     </v-col>
                   </v-row>                  
                 </v-col>
-                <v-col lg="3" class="pl-1">
+                <v-col lg="3" sm="12" class="pl-1" >
                   <v-row dense="true" class="dense1">
-                    <v-col lg="11" class="pa-0">
+                    <v-col lg="11" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="リズムネタ"
@@ -354,7 +359,7 @@ const getProfile = async () => {
   const {data } = await http.get('/mypage',{
       params: {
         userId: store.state.user.userId,
-        userType: store.state.user.userType
+        userType: store.state.user.userType 
       }}
     );
     userRef.value = data.data;
