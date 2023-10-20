@@ -11,7 +11,7 @@ const mutations = {
     state.refreshToken = refreshToken;
   },
   removeToken(state) {
-    state.token = "";
+    state.idToken = "";
   }
 };
 
