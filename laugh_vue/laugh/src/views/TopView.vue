@@ -31,7 +31,7 @@
         <v-row>
           <v-col cols="7" class="profile" >
             <v-col v-for="item in dispUsers" class="profile_paddingTop">
-              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails()">
+              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails(item, 1)">
                 <v-container fluid="true">
                   <v-row>
                     <v-col class="pa-0" lg="6" md="6" sm="12">
@@ -448,25 +448,8 @@
 
   const router = useRouter()
 
-  // const redirectToDetails = (user:User) => {
-  //   router.push({ name: 'detail', params: { user: '123' }  })
-    // router.push({ path: 'detail/${user}'})
-  // }
-  // const redirectToDetails = async () => {
-  //   this.$router.push({ path: `/details/${this.itemId}` })
-  // }
-//   const laughs = ref([] as User[]);
-//   const redirectToDetails = async (user:User) => {
-//   const {data} = await http.get('/mypage/laugh',{
-//     params: {
-//       userId: user.userName
-//     }}
-//   )
-//   laughs.value = data.data;
-// }
-
-const redirectToDetails = async () => {
-  router.push({ name: 'detail', query: { user: '123' }  })
+const redirectToDetails = async (item: User, myId: number) => {
+  router.push({ name: 'detail', query: { userId: item.id, userType: item.userType, myId: myId }  })
   // const themeId = route.query.themeId;
   // const {data} = await http.get('oogiri/detail',{
   //   params: {
