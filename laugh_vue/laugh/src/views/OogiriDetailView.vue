@@ -87,10 +87,13 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import type Oogiri from "@/types/Oogiri";
 import http from "@/http-common";
+import { useStore } from 'vuex'
 
 const oogiri = ref<Oogiri[]>([]);
 const newAnswer = ref('');
 const route = useRoute();
+const store = useStore();
+const userId = store.getters['user/getUserId']; 
 
 // 大喜利詳細取得
 const getOogiriDetail = async () => {
@@ -112,7 +115,7 @@ oogiri.value.forEach(item => {
 
 // ユーザーの回答かどうかを判定する
 const isUserAnswer = (answer) => {
-    return answer.answerUserId === 1; // TODO：ログインユーザーのIDと比較する
+    return answer.answerUserId === userId;
 }
 
 // 回答を削除する
@@ -138,7 +141,7 @@ const countReactionsWithStatus = (reactions, status) => {
 // リアクション済みかどうかを判定する
 const isReacted = (answer) => {
     for (const reaction of answer.reactions) {
-      if (reaction.reactionUserId === 1 && reaction.reactionStatus === 11) { // TODO：ログインユーザーのIDと比較する
+      if (reaction.reactionUserId === userId && reaction.reactionStatus === 11) {
         return true; // リアクションしている場合
       }
     }
@@ -153,11 +156,11 @@ const reaction = async (answer) => {
   var reactionedId;
   
   for (const reaction of answer.reactions) {
-    if (reaction.reactionUserId == 1 && reaction.reactionStatus == 11) { // リアクション済み且つステータスが11
+    if (reaction.reactionUserId == userId && reaction.reactionStatus == 11) { // リアクション済み且つステータスが11
       reacFlg = true;
       reactionedId = reaction.reactionId;
     }
-    if (reaction.reactionUserId == 1 && reaction.reactionStatus == 99) { // リアクション済み且つステータスが99(削除済み)
+    if (reaction.reactionUserId == userId && reaction.reactionStatus == 99) { // リアクション済み且つステータスが99(削除済み)
       reacFlg = true;
       reacDelFlg = true;
       reactionedId = reaction.reactionId;
@@ -166,7 +169,7 @@ const reaction = async (answer) => {
   // 登録用オブジェクト
   const regReaction = {
     answerId: answer.answerId,
-    userId: 1, // TODO：ログインユーザーのIDを入れる
+    userId: userId, // TODO：ログインユーザーのIDを入れる
     reactionStatus: 11
   }
 
@@ -200,7 +203,7 @@ const reaction = async (answer) => {
 const regAnswer = async() => {
   const answerData = {
     themeId: route.query.themeId,
-    userId: 1, // TODO：ログインユーザーのIDを入れる
+    userId: userId,
     answerContent: newAnswer.value
   }
   await http.post('oogiri/answer', answerData);

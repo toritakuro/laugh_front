@@ -53,7 +53,8 @@ const laughs = ref<Laugh[]>([])
 const getLaugh = async () => {
   const {data} = await http.get('/mypage/laugh',{
     params: {
-      userId: 3
+      userId: 5,
+      userType: 1,
     }}
   )
   laughs.value = data.data;
