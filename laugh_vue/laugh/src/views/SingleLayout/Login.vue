@@ -4,7 +4,7 @@
       <MessageComponent></MessageComponent>
       <v-row justify="center" class="mb-4"><p class="font-weight-bold">ようこそ! Laughへ</p></v-row>
       <v-row justify="space-around">
-        <v-avatar size="60" color="#FFEBEE" :class="{ shake: disabled }" class="img" @click="warnDisabled">
+        <v-avatar size="80" color="#FFEBEE" :class="{ shake: disabled }" class="img" @click="warnDisabled">
           <v-img height="100px" :src="imgUrl" alt="Laugh Login"></v-img>
         </v-avatar>
       </v-row>
