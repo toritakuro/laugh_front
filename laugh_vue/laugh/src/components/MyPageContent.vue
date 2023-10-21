@@ -1,7 +1,7 @@
 <template>
     <v-container
       class="py-8 px-6"
-      style="width: 70%;"
+      style="width: 90%;"
       fluid
     >
 
@@ -240,6 +240,12 @@ import http from "@/http-common";
 import ImageModalComponent from "../components/ImageModalComponent.vue"
 import FileComponent from "../components/FileComponent.vue"
 
+const store = useStore()
+const router = useRouter()
+const laughs = ref<Laugh[]>([])
+const contents = ref<Content[]>([])
+const uplodadModalFlg = ref<boolean>();
+
 const existFlg = ref(false);
 
 const editModalFlg = ref(false);
@@ -261,7 +267,7 @@ const openEdit = (item: Content) => {
 }
 const contentsEditReq = ref<Content>({
   id : null,
-  userId : 4 ,
+  userId : store.state.user.userId ,
   title : '' ,
   detail : '' ,
   fileType : 1 ,
@@ -339,12 +345,7 @@ const deleteFile = (item: Content) => {
 }
 
 
-const store = useStore()
-const router = useRouter()
-//const userId = computed(() => store.state.user.userId)
-const laughs = ref<Laugh[]>([])
-const contents = ref<Content[]>([])
-const uplodadModalFlg = ref<boolean>();
+
 
 const openUploadModal = () => {
   uplodadModalFlg.value = true
@@ -352,7 +353,7 @@ const openUploadModal = () => {
 
 const contentsReq = ref<Content>({
   id : null,
-  userId : 3 ,
+  userId : store.state.user.userId ,
   title : '' ,
   detail : '' ,
   fileType : 1 ,
@@ -402,7 +403,7 @@ onMounted(() => {
 const getContent = async () => {
   const {data} = await http.get('/mypage/getFile',{
     params: {
-      userId: 3
+      userId: store.state.user.userId
     }}
     )
   // data.data.title.value = data.data.title.split(".")[0]
