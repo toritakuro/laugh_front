@@ -73,8 +73,38 @@
         </v-form>
       </v-menu>
 
-      <v-icon size="48">mdi-movie-play</v-icon>
-      <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
+      <v-menu
+        v-model="editModalFlg"
+        class="bordered-dialog"
+        @click.stop
+        close-on-content-click
+        disable-keys
+      >
+        <v-form @click.stop class="form-container">
+          <v-text-field
+            v-model="contentsEditReq.title"
+            label="タイトル"
+            placeholder="ここにタイトルを入力"
+            class="ml-8 mt-8"
+          ></v-text-field>
+          <v-textarea
+            v-model="contentsEditReq.detail"
+            label="説明文"
+            class="ml-8 mt-4"
+            rows="11"
+          ></v-textarea>
+
+          <v-btn 
+            class="ml-8 mt-8"
+            style="width:80%;"
+            color="orange-darken-1" 
+            @click="editFile"
+          >編集</v-btn>
+        </v-form>
+      </v-menu>
+
+      <v-icon size="48" v-if="existFlg">mdi-movie-play</v-icon>
+    <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;" v-if="existFlg">
       <v-row>
         <v-col
         v-for="(item, i) in mpContents"
@@ -84,23 +114,16 @@
         >
           
           <v-card class="pb-2">
-            <!-- <v-img
-                  :aspect-ratio="1.777"
-                  :src="item.topImgPath"
-                  cover
-                  class="rounded-lg"
-                  width="100%"
-                  ></v-img></v-card> -->
-                  <!-- <div class="d-flex align-center">
-                <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
-                <v-card-subtitle>{{ item.detail }}</v-card-subtitle>
-              </div> -->
             <v-list>
               <div>
-                <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
+                <v-card-title>{{ item.title }}</v-card-title>
               </div>
               <div>
-                <div class="detail-text" v-html="formatDetail(item.detail)"></div>
+                <div v-if="formatDetail(item.detail).split('<br>').length > 2" class="detail-text">
+                  <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                  <span @click="openEdit(item)" class="show-more">もっと見る</span>
+                </div>
+                <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
               </div>
               <div>
                 <v-card-subtitle class="mt-8">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
@@ -111,7 +134,7 @@
                 <v-btn 
                 block 
                 class="mt-2" 
-                color="orange-darken-1" 
+                color="grey-lighten-1" 
                 @click="downloadFile(item.contentPath)"
                 ><v-icon>mdi-download</v-icon></v-btn>
               </v-col>
@@ -119,7 +142,15 @@
                 <v-btn 
                 block 
                 class="mt-2" 
-                color="red-darken-1" 
+                color="teal-lighten-1" 
+                @click="openEdit(item)"
+                ><v-icon>mdi-pencil</v-icon></v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn 
+                block 
+                class="mt-2" 
+                color="red-lighten-1" 
                 @click="deleteFile(item)"
                 ><v-icon>mdi-delete</v-icon></v-btn>
               </v-col>
@@ -130,8 +161,8 @@
       </v-row>
     </v-sheet>
 
-    <v-icon size="48" class="mt-12 mb-4">mdi-file-outline</v-icon>
-    <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
+    <v-icon size="48" class="mt-12 mb-4" v-if="existFlg">mdi-file-outline</v-icon>
+    <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;" v-if="existFlg">
       <v-row>
         <v-col
         v-for="(item, i) in pdfContents"
@@ -143,10 +174,15 @@
           <v-card class="pb-2">
             <v-list>
               <div>
-                <v-card-title>{{ item.title.split('.')[0] }}</v-card-title>
+                <v-card-title>{{ item.title }}</v-card-title>
               </div>
               <div>
-                <v-card-subtitle v-html="formatDetail(item.detail)"></v-card-subtitle>
+                <div v-if="formatDetail(item.detail).split('<br>').length > 2" class="detail-text">
+                  <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                  <span @click="openEdit(item)" class="show-more">もっと見る</span>
+                </div>
+                <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
+
               </div>
               <div>
                 <v-card-subtitle class="mt-8">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
@@ -154,29 +190,43 @@
             </v-list>
             <v-row class="d-flex pl-4">
               <v-col cols="auto">
-                  <v-btn 
-                  block 
-                  class="mt-2" 
-                  color="orange" 
-                  @click="downloadFile(item.contentPath)"
-                  ><v-icon>mdi-download</v-icon></v-btn>
-                </v-col>
-                <v-col cols="auto">
-                  <v-btn 
-                  block 
-                  class="mt-2" 
-                  color="red-darken-1" 
-                  @click="deleteFile(item)"
-                  ><v-icon>mdi-delete</v-icon></v-btn>
-                </v-col>
+                <v-btn 
+                block 
+                class="mt-2" 
+                color="grey-lighten-1" 
+                @click="downloadFile(item.contentPath)"
+                ><v-icon>mdi-download</v-icon></v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn 
+                block 
+                class="mt-2" 
+                color="teal-lighten-1" 
+                @click="openEdit(item)"
+                ><v-icon>mdi-pencil</v-icon></v-btn>
+              </v-col>
+              <v-col cols="auto">
+                <v-btn 
+                block 
+                class="mt-2" 
+                color="red-lighten-1" 
+                @click="deleteFile(item)"
+                ><v-icon>mdi-delete</v-icon></v-btn>
+              </v-col>
             </v-row>
           </v-card>
 
+          
         </v-col>
       </v-row>
     </v-sheet>
-
+    <v-card width="40%" style="margin:0 auto; text-align: center;" v-if="!existFlg">
+      <v-col >
+        <span>表示できるコンテンツはありません。</span>
+      </v-col>
+    </v-card>
     </v-container>
+
 
 </template>
 
@@ -189,6 +239,51 @@ import type Content from "@/types/Content";
 import http from "@/http-common";
 import ImageModalComponent from "../components/ImageModalComponent.vue"
 import FileComponent from "../components/FileComponent.vue"
+
+const existFlg = ref(false);
+
+const editModalFlg = ref(false);
+// const limitedDetail = (detail: string) => {
+//   return detail.split('<br>').slice(0, 2).join('<br>');
+// }
+const limitedDetail = (detail: string) => {
+  const splitDetails = detail.split('<br>');
+  if (splitDetails.length <= 2) {
+    return detail;
+  }
+  return splitDetails.slice(0, 2).join('<br>') + '...';
+}
+const openEdit = (item: Content) => {
+  editModalFlg.value = true;
+  contentsEditReq.value.id = item.id;
+  contentsEditReq.value.title = item.title;
+  contentsEditReq.value.detail = item.detail;
+}
+const contentsEditReq = ref<Content>({
+  id : null,
+  userId : 4 ,
+  title : '' ,
+  detail : '' ,
+  fileType : 1 ,
+  content : '' ,
+  contentPath : '',
+  createAt : null,
+  UpdateAt : null
+})
+const editFile = async () => {
+  http.post("/mypage/editFile",contentsEditReq.value )
+    .then(() => {
+      getContent();
+    })
+    .catch((error) => {
+      // エラー発生時の処理
+      console.log(error)
+    })
+    .finally(() => {
+      // 正常終了・エラー問わず必ず行う処理
+    });
+}
+
 
 const mpContents = computed(() => {
   return contents.value.filter(contents => contents.fileType == 1)
@@ -222,14 +317,6 @@ const formatDetail = (detail: string) => {
   return detail.replace(/\r\n|\r|\n/g, "<br>");
 }
 
-// const editFile = (item: Content) => {
-//   contentsReq.value.title = item.title.split(".")[0];
-//   contentsReq.value.detail = item.detail;
-//   cropImg.value = item.topImgPath;
-//   contentsReq.value.topImgPath = item.topImgPath;
-//   contentsReq.value.content = item.content;
-//   uplodadModalFlg.value = true
-// }
 const deleteFile = (item: Content) => {
   if (window.confirm(item.id+'削除しますか？')) {
     const delItem = ref<Content>(item)
@@ -269,8 +356,6 @@ const contentsReq = ref<Content>({
   title : '' ,
   detail : '' ,
   fileType : 1 ,
-  // topImg : '' ,
-  // topImgPath : '' ,
   content : '' ,
   contentPath : '',
   createAt : null,
@@ -292,17 +377,19 @@ const uploadFile = async () => {
   contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value
   console.log(contentsReq.value)
  
-  http.post("/mypage/uploadFile", contentsReq.value)
+  http.post("/mypage/uploadContent", contentsReq.value)
   .then(() => {
-    uplodadModalFlg.value = false;
-    getContent();
+    console.log('成功');
+    contentsReq.value.title = '';
+    contentsReq.value.detail = '';
   })
   .catch((error) => {
-    // エラー発生時の処理
-    console.log(error)
+    contentsReq.value.title = contentsReq.value.title.split('.')[0];
+    console.log(error);
   })
   .finally(() => {
-    // 正常終了・エラー問わず必ず行う処理
+    uplodadModalFlg.value = false;
+    getContent();
   });
 }
 
@@ -321,6 +408,12 @@ const getContent = async () => {
   // data.data.title.value = data.data.title.split(".")[0]
   contents.value = data.data
   dispContents.value = data.data
+  if(dispContents.value.length > 0) {
+    existFlg.value = true;
+  }
+  if(dispContents.value.length <= 0) {
+    existFlg.value = false;
+  }
   // contents.value.title = contents.value.title.split(".")[0]
   console.log(contents.value)
 }
@@ -329,7 +422,10 @@ const downloadFile = (path: string) => {
   window.open(path, '_blank');
 }
 
-const formatDate = (dateString: string) => {
+const formatDate = (dateString: any) => {
+  if(dateString == null) {
+    return;
+  }
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-11の範囲なので+1
@@ -405,4 +501,9 @@ const formatDate = (dateString: string) => {
   overflow-y: auto;
 }
 
+.show-more {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
 </style>
