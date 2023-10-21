@@ -9,12 +9,13 @@
     </v-app-bar>
 
     <v-app-bar id="app-bar" height="80" app>
-      <v-toolbar-title style="min-width: 170px;">
-        <router-link to="/">
-          <div class="hdr-logo">
+      <v-toolbar-title style="min-width: 160px; max-width: 250px;">
+        <div class="hdr-logo">
+          <router-link to="/">
             <img class="logo-img" src="/img/laugh-logo.png" alt="Laugh Header">
-          </div>
-        </router-link>
+          </router-link>
+        </div>
+
       </v-toolbar-title>
 
       <div class="hdr-menu-mth">
@@ -86,7 +87,7 @@
       </v-btn>
 
       <!-- ログアウトアイコン -->
-      <v-btn class="mr-10" icon @click="logout">
+      <v-btn class="mr-10" icon @click="openLogoutDialog">
         <v-icon :size="35" color="#FAA20E">mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
