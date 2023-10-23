@@ -6,6 +6,8 @@ export default interface Chat {
   message: String;
   sendAt: String;
   sendTime: String;
+  unreadCount: number;
   isMyMessage: boolean;
+  targetUserId: number;
   chatList: Chat[];
 }

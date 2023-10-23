@@ -6,10 +6,7 @@
           elevation="2"
           color="white lighten-5"
         >
-          <v-card-title 
-          style="background-color: #fb8c00;
-          color: white;
-          height: 64px;">{{ chatDetailData?.name }}</v-card-title>
+          <v-card-title class="chat-user-name">{{ chatDetailData?.name }}</v-card-title>
           <v-divider color=""></v-divider>
           <div class="chat-detail" ref="scrollContainer">
             <v-card-text>
@@ -26,9 +23,7 @@
                               </span>
                             </v-avatar>
                           </div>
-                          <p class="says">
-                            {{ item.message }}
-                          </p>
+                          <p class="says">{{ item.message }}</p>
                         </div>
                       </v-col>
                     </v-row>
@@ -52,9 +47,8 @@
               ></v-textarea>
             </v-col>
             <v-col cols="2" align-self="end">
-              <v-btn
+              <v-btn class="send-btn"
                 color="orange-darken-1"
-                style="margin-bottom: 5px;"
                 @click="sendMessage"
                 :disabled="!isInputValid"
               >
@@ -89,6 +83,7 @@ const userId = store.getters['user/getUserId'];
 const userType = store.getters['user/getUserType'];
 const scrollContainer = ref<HTMLElement | null>(null);
 
+// チャット詳細を取得
 const getChatDetail = async () => {
   const roomId = props.chatDetailData.chatRoomId;
   const {data} = await http.get('chat/detail', {
@@ -100,13 +95,13 @@ const getChatDetail = async () => {
   chatDetail.value = data.data;
   scrollToBottom();
 }
+
+// 詳細描画時にメッセージ最下部までスクロール
 const scrollToBottom = () => {
   nextTick(() => {
     const container = scrollContainer.value;
     if (container) {
       container.scrollTop = container.scrollHeight;
-    } else {
-      console.error('スクロール対象の要素が見つかりません。');
     }
   });
 }
@@ -114,13 +109,15 @@ const scrollToBottom = () => {
 const isInputValid = computed(() => {
   return newMessage.value.trim() !== '';
 })
+// メッセージを送信
 const sendMessage = async() => {
   const roomId = props.chatDetailData.chatRoomId;
+  const targetUserId = props.chatDetailData.targetUserId;
   const messageData = {
     chatRoomId: roomId,
     userType: userType,
     userId: userId,
-    targetUserId: 10,
+    targetUserId: targetUserId,
     chatMessage: newMessage.value
   }
   await http.post('chat', messageData);
@@ -134,22 +131,35 @@ watchEffect(() => {
   }
 });
 
-onMounted(async () => {
-  if (props.chatDetailData && props.chatDetailData.chatRoomId) {
-    await getChatDetail();
-  }
-});
-
-onUpdated(() => {
-  scrollToBottom();
-});
-
 defineExpose({
   getChatDetail,
 })
 </script>
 
 <style scoped>
+.chat-detail-wrapper {
+  width: 100%;
+}
+.chat-detail {
+  min-height: 10vh;
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+.chat-detail::-webkit-scrollbar{
+  display: none;
+}
+
+.chat-message-wrap {
+  overflow-y: scroll;
+}
+.chat-message-wrap::-webkit-scrollbar {
+  display: none;
+}
+.chat-user-name {
+  background-color: #fb8c00;
+  color: white;
+  height: 64px;
+}
 .balloon_l,
 .balloon_r {
   margin: 10px 0;
@@ -200,22 +210,7 @@ defineExpose({
   right: -26px;
   border-left: 22px solid #8ee7b6;
 }
-.chat-detail-wrapper {
-  width: 100%;
-}
-.chat-detail {
-  min-height: 10vh;
-  max-height: 50vh;
-  overflow-y: scroll;
-}
-.chat-detail::-webkit-scrollbar{
-  display: none;
-}
-
-.chat-message-wrap {
-  overflow-y: scroll;
-}
-.chat-message-wrap::-webkit-scrollbar {
-  display: none;
+.send-btn {
+  margin-bottom: 5px;
 }
 </style>
