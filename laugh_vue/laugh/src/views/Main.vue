@@ -91,15 +91,15 @@
       </v-btn>
       <v-dialog
         v-model="dialog"
-        width="auto"
+        width="30%"
       >
       <v-card>
-        <v-card-text style="background-color: #f57c00; color: white;">
+        <v-card-text class="logout-message">
           ログアウトします。よろしいですか？
         </v-card-text>
-        <v-card-actions class="justify-center d-flex">
-          <v-btn color="'#F5F5F5'" @click="dialog = false">閉じる</v-btn>
-          <v-btn color="orange" @click=logout>はい</v-btn>
+        <v-card-actions class="logout-btn-wrap justify-space-around d-flex">
+          <v-btn color="orange" @click=logout size="large">はい</v-btn>
+          <v-btn color="'#F5F5F5'" @click="dialog = false" size="large">いいえ</v-btn>
         </v-card-actions>
       </v-card>
       </v-dialog>
@@ -190,6 +190,14 @@
 .hdr-item .v-list-item-title:hover::after {
   width: 100%;
   left: 0;
+}
+.logout-message {
+  background-color: #f57c00;
+  color: white;
+  text-align: center;
+}
+.logout-btn-wrap {
+  margin: 24px 0;
 }
 </style>
 
