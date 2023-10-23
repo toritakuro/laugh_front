@@ -3,8 +3,7 @@
 
     <v-main>
       <v-container
-        class="py-8 px-6"
-        style="width: 80%;"
+        class="oogiri-detail-wrap py-8 px-6"
         fluid
       >
         <v-row>
@@ -14,7 +13,7 @@
             cols="12"
           >
             <v-card>
-              <v-list style="padding: 0;" lines="two">
+              <v-list class="p-0" lines="two">
                 <!-- お題 -->
                 <v-tabs bg-color="orange-darken-2">
                   <div class="d-flex align-center">
@@ -31,8 +30,14 @@
                       </template>
                       <!-- 回答情報 -->
                       <div class="d-flex align-center justify-space-between mb-1">
-                        <v-list-item-title style="white-space: unset">{{ answer.answerContent }}</v-list-item-title>
-                        <v-btn class="ma-1" :disabled="isUserAnswer(answer)" size="x-small" icon @click="reaction(answer)">
+                        <v-list-item-title class="answer-content">{{ answer.answerContent }}</v-list-item-title>
+                        <v-btn
+                          class="ma-1"
+                          :disabled="isUserAnswer(answer)"
+                          size="x-small"
+                          icon
+                          @click="reaction(answer)"
+                        >
                           <v-icon :color="isReacted(answer) ? 'orange' : 'grey'" size="large">mdi-emoticon-lol-outline</v-icon>
                           <p>{{ countReactionsWithStatus(answer.reactions, 11) }}</p>
                         </v-btn>
@@ -41,7 +46,13 @@
                         <v-list-item-subtitle>{{ answer.answerUserName }}</v-list-item-subtitle>
                       </div>
                       <div class="d-flex align-center justify-end">
-                        <v-btn class="deleteBtn align-center justify-space-end ma-2" :color="'#F5F5F5'" v-if="isUserAnswer(answer)" @click="answer.dialog = true" size="x-small">削除</v-btn>
+                        <v-btn
+                          v-if="isUserAnswer(answer)"
+                          class="deleteBtn align-center justify-space-end ma-2"
+                          :color="'#F5F5F5'"
+                          @click="answer.dialog = true"
+                          size="x-small"
+                        >削除</v-btn>
                       </div>
                   </v-list-item>
                   <v-divider thickness="2px" color="orange-darken-1" class="mr-2"
@@ -55,12 +66,12 @@
                     width="auto"
                   >
                   <v-card>
-                    <v-card-text style="background-color: #f57c00; color: white;">
+                    <v-card-text class="delete-message">
                       この回答を削除します。よろしいですか？
                     </v-card-text>
-                    <v-card-actions class="justify-center d-flex">
-                      <v-btn color="'#F5F5F5'" @click="answer.dialog = false">閉じる</v-btn>
-                      <v-btn color="orange" @click=deleteAnswer(answer)>削除する</v-btn>
+                    <v-card-actions class=" justify-space-around d-flex">
+                      <v-btn color="orange" @click=deleteAnswer(answer)>はい</v-btn>
+                      <v-btn color="'#F5F5F5'" @click="answer.dialog = false">いいえ</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -93,7 +104,11 @@ const oogiri = ref<Oogiri[]>([]);
 const newAnswer = ref('');
 const route = useRoute();
 const store = useStore();
-const userId = store.getters['user/getUserId']; 
+const userId = store.getters['user/getUserId'];
+
+// 大喜利ステータス
+const reactionedNumber = 11;
+const deletedNumber = 99;
 
 // 大喜利詳細取得
 const getOogiriDetail = async () => {
@@ -135,17 +150,17 @@ const isInputValid = computed(() => {
 
 // ステータスごとのリアクション数を集計する
 const countReactionsWithStatus = (reactions, status) => {
-      return reactions.filter(reaction => reaction.reactionStatus === status).length;
+  return reactions.filter(reaction => reaction.reactionStatus === status).length;
 }
 
 // リアクション済みかどうかを判定する
 const isReacted = (answer) => {
-    for (const reaction of answer.reactions) {
-      if (reaction.reactionUserId === userId && reaction.reactionStatus === 11) {
-        return true; // リアクションしている場合
-      }
+  for (const reaction of answer.reactions) {
+    if (reaction.reactionUserId === userId && reaction.reactionStatus === reactionedNumber) {
+      return true; // リアクションしている場合
     }
-    return false; // リアクションしていない場合
+  }
+  return false; // リアクションしていない場合
 }
 
 // リアクションボタン押下時
@@ -156,11 +171,11 @@ const reaction = async (answer) => {
   var reactionedId;
   
   for (const reaction of answer.reactions) {
-    if (reaction.reactionUserId == userId && reaction.reactionStatus == 11) { // リアクション済み且つステータスが11
+    if (reaction.reactionUserId == userId && reaction.reactionStatus == reactionedNumber) { // リアクション済み且つステータスが11
       reacFlg = true;
       reactionedId = reaction.reactionId;
     }
-    if (reaction.reactionUserId == userId && reaction.reactionStatus == 99) { // リアクション済み且つステータスが99(削除済み)
+    if (reaction.reactionUserId == userId && reaction.reactionStatus == deletedNumber) { // リアクション済み且つステータスが99(削除済み)
       reacFlg = true;
       reacDelFlg = true;
       reactionedId = reaction.reactionId;
@@ -170,19 +185,19 @@ const reaction = async (answer) => {
   const regReaction = {
     answerId: answer.answerId,
     userId: userId, // TODO：ログインユーザーのIDを入れる
-    reactionStatus: 11
+    reactionStatus: reactionedNumber
   }
 
   // 再リアクション用オブジェクト
   const editReaction = {
     reactionId: reactionedId,
-    reactionStatus: 11
+    reactionStatus: reactionedNumber
   }
 
   // リアクション削除用オブジェクト
   const editDelReaction = {
     reactionId: reactionedId,
-    reactionStatus: 99
+    reactionStatus: deletedNumber
   }
 
   if (reacFlg && !reacDelFlg) {
@@ -216,3 +231,17 @@ onMounted(() => {
   getOogiriDetail();
 });
 </script>
+
+<style scoped>
+.oogiri-detail-wrap {
+  width: 90%;
+}
+.answer-content {
+  white-space: unset;
+}
+.delete-message {
+  background-color: #f57c00;
+  color: white;
+  text-align: center;
+}
+</style>
