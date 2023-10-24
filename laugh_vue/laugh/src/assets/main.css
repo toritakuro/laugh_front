@@ -5,3 +5,17 @@
 .ds-none { display: none; }
 
 .tr-hover td { background-color: var(--blue-grey-lighten-5);}
+
+/** vuetifyの上書き用 */
+.cropper-bg { background-repeat: repeat; }
+.cropper-container,
+.cropper-wrap-box, .cropper-modal, .cropper-wrap-box img { border-radius: 8px;}
+
+.label-color {
+  border-left: 5px solid #FB8C00;
+  padding-left: 5px;
+  font-size: 1rem !important;
+}
+.label-color span {
+  opacity: var(--v-medium-emphasis-opacity);
+}
