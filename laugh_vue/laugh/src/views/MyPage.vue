@@ -9,7 +9,7 @@
             <v-col class="pa-0" lg="6" md="6" sm="12">
               <v-img
                 :aspect-ratio="1"
-                src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
+                :src="user.profileImgPath"
                 cover
                 class="rounded-lg"
               ></v-img>
