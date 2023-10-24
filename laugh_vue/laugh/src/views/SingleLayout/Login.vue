@@ -11,7 +11,7 @@
       <v-row justify="center">
         <v-col lg="4">
           <v-card >
-            <v-form id="login-form" class="mt-5" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
+            <v-form id="login-form" class="mt-2" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
             <v-card-text class="pa-7">
               <v-text-field class="mb-8" autocomplete="off"  density="compact" v-model="email" label="メールアドレス" hide-details required></v-text-field>
               <div>
