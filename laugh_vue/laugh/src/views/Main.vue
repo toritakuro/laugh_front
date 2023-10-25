@@ -112,7 +112,7 @@
             <Message></Message>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row class="mainWrap">
           <v-col cols="10" offset="1" class="pa-0">
             <RouterView />
           </v-col>
@@ -198,6 +198,10 @@
 }
 .logout-btn-wrap {
   margin: 24px 0;
+}
+.mainWrap {
+  max-height: calc(100vh - 180px);
+  overflow-y: scroll;
 }
 </style>
 
