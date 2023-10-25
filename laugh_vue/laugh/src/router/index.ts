@@ -7,6 +7,9 @@ import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
+import OogiriList from '../views/OogiriListView.vue'
+import OogiriPost from '../views/OogiriPostView.vue'
+import OogiriEdit from '../views/OogiriEditView.vue'
 import UserDetail from '../views/UserDetail.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
 import store from "@/store"
@@ -59,6 +62,21 @@ const router = createRouter({
           path: '/oogiri/detail',
           name: 'oogiriDetail',
           component: OogiriDetail,
+        },
+        {
+          path: '/oogiri/list',
+          name: 'OogiriList',
+          component: OogiriList,
+        },
+        {
+          path: '/oogiri/post',
+          name: 'OogiriPost',
+          component: OogiriPost,
+        },
+        {
+          path: '/oogiri/edit',
+          name: 'OogiriEdit',
+          component: OogiriEdit,
         },
       ]
     }

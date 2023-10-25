@@ -6,6 +6,7 @@ export default interface Oogiri {
   themeCreatedAt: string;
   themeUpdatedAt: string | null;
   answers: Answer[];
+  answerCount: number;
 }
 
 interface Answer {
