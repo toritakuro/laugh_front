@@ -448,8 +448,8 @@
 
   const router = useRouter()
 
-const redirectToDetails = async (item: User, myId: number) => {
-  router.push({ name: 'detail', query: { userId: item.id, userType: item.userType, myId: myId }  })
+const redirectToDetails = async (item: User, sendUserId: number) => {
+  router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: sendUserId }  })
   // const themeId = route.query.themeId;
   // const {data} = await http.get('oogiri/detail',{
   //   params: {

@@ -8,6 +8,7 @@ import Main from '../views/Main.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import UserDetail from '../views/UserDetail.vue'
+import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
 import store from "@/store"
 
@@ -54,6 +55,10 @@ const router = createRouter({
         {
           path: 'mypage/laugh',
           component: MyPageLaugh
+        },
+        {
+          path: 'userDetail/oogiriAnswer',
+          component: UserDetailOogiri
         },
         {
           path: '/oogiri/detail',

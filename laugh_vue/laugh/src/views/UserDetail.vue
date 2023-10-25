@@ -77,13 +77,13 @@
                     </v-col>
                     <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
                       <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ user?.userName }}</v-card-title>
-                      <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" /> 男 </v-card-subtitle>
-                      <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" /> 女 </v-card-subtitle>
-                      <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" /> 男女 </v-card-subtitle>
-                      <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" /> {{ user?.memberNum }} 人</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ user?.activityDt }}</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ user?.officeName }}</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ user?.areaName }}</v-card-subtitle>
+                      <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" /> 性別： 男 </v-card-subtitle>
+                      <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" /> 性別： 女 </v-card-subtitle>
+                      <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" /> 性別： 男女 </v-card-subtitle>
+                      <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" /> メンバー： {{ user?.memberNum }} 人</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> 活動歴： {{ user?.activityDt }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-office-building" /> 事務所： {{ user?.officeName }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-map-marker" /> 活動地域： {{ user?.areaName }}</v-card-subtitle>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -133,27 +133,33 @@
 
 
 
+          
       <v-col cols="6">
-        
       <v-card>
-        <v-tabs
-          v-model="tab"
-          color="orange-darken-2"
-        >
-          <v-tab value="contents" @click="getLugh">投稿一覧</v-tab>
-          <v-tab value="oogiri" @click="getLugh">大喜利の投稿履歴</v-tab>
-        </v-tabs>
-        <v-card-text>
-        <v-window v-model="tab">
-          <v-window-item value="profile">
-            <MyPageProfile ref="profileRef"></MyPageProfile>
-          </v-window-item>
-          <v-window-item value="laugh">
-            <MyPageLaugh ref="laughRef"></MyPageLaugh>
-          </v-window-item>
-        </v-window>
-      </v-card-text>
-      </v-card>
+      <v-tabs
+        v-model="tab"
+        color="orange-darken-2"
+      >
+        <v-tab value="profile" @click="getOogiri">
+          <v-icon middle size="x-large" icon="mdi-account" />
+          投稿一覧
+        </v-tab>
+        <v-tab value="oogiri" @click="getOogiri">
+          <v-icon middle size="x-large" icon="mdi-handshake" />
+          大喜利の投稿履歴
+        </v-tab>
+      </v-tabs>
+      <v-card-text>
+      <v-window v-model="tab">
+        <v-window-item value="profile">
+          <UserDetailOogiri ref="profileRef"></UserDetailOogiri>
+        </v-window-item>
+        <v-window-item value="oogiri">
+          <UserDetailOogiri ref="oogiriRef"></UserDetailOogiri>
+        </v-window-item>
+      </v-window>
+    </v-card-text>
+    </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -197,16 +203,30 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import MyPageProfile from '@/components/MyPageProfile.vue';
+import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import http from "@/http-common"
 import type User from "@/types/User";
 
-const route = useRoute()
-onMounted(() => {
-    console.log(route.query.myId)
-    console.log(route.query.userType)
-    getData();
-  })
+onMounted(() => { getData(); });
 
+const route = useRoute()
+// onMounted(() => {
+//     console.log(route.query.myId)
+//     console.log(route.query.userType)
+//     userId.value = route.query.userId
+//     console.log("userId",userId.value)
+//     getData();
+//     // getLaugh();
+//     // getProfile();
+//   })
+  const userId = ref()
+
+  const oogiriRef = ref();
+  const getOogiri = () => {
+    oogiriRef.value.getOogiri();
+  }
+  const tab = ref(null);
   const user = ref<User>();
 
   const dispUsers = ref([] as User[]);
@@ -214,15 +234,13 @@ onMounted(() => {
   const getData = async () => {
     const {data} = await http.get('/userDetail/init',{
       params: {
-        userId: route.query.userId,
+        receiveUserId: route.query.receiveUserId,
+        sendUserId: route.query.sendUserId,
         userType: route.query.userType
       }}
     )
     user.value = data.data;
-    console.log(user.value)
-    // usersOrigin.value = data.data;
-    // dispUserType.value = usersOrigin.value[0].userType
-    // countUsers()
-    // postSort()
+    console.log("user",user.value)
+    getOogiri();
   }
 </script>
