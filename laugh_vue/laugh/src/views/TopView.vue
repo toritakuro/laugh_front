@@ -522,7 +522,7 @@ const redirectToDetails = async (item: User, sendUserId: number) => {
   }
   /** User一覧を取得する */
   const getData = async () => {
-    const {data} = await http.get('/top/init',{
+    const {data} = await http.get('/top',{
       params: {
         userType: 2
       }}
