@@ -7,4 +7,5 @@ export default interface Laugh {
   activeTermYear: number;
   activeTermMonth: number;
   mySendLough: boolean;
+  imgPath: string;
 }

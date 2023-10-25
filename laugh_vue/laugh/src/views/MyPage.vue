@@ -9,7 +9,7 @@
             <v-col class="pa-0" lg="6" md="6" sm="12">
               <v-img
                 :aspect-ratio="1"
-                src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
+                :src="user.profileImgPath"
                 cover
                 class="rounded-lg"
               ></v-img>
@@ -91,6 +91,7 @@
   const user = ref<User>({});
   const profileRef = ref();
   const laughRef = ref();
+  const tab = ref("profile");
   /** dom読み込み時の実行メソッド */
   onMounted(() => { getData(); });
 
@@ -106,14 +107,23 @@
     getProfile();
   }
 
-  /** Laugh取得(子どもコンポーネント) */
+  /** Laugh取得 */
   const getLugh = () => {
+    // タブのため初期表示の場合
+    if (laughRef.value == undefined) {
+      setTimeout(_getLugh, 200);
+    } else {
+      _getLugh;
+    }
+  }
+  /** Laugh取得(子どもコンポーネント) */
+  const _getLugh = () => {
     laughRef.value.getLaugh();
   }
   const getProfile = () => {
     profileRef.value.getProfile();
   }
-  const tab = ref(null);
+
 </script>
 
 <style scoped>

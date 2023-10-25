@@ -7,6 +7,8 @@ import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
+import ChatRoom from '../views/ChatRoomList.vue'
+import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
 import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
@@ -65,6 +67,23 @@ const router = createRouter({
           name: 'oogiriDetail',
           component: OogiriDetail,
         },
+      ]
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: Main,
+      children: [
+        {
+          path: '',
+          name: 'chat',
+          component: ChatRoom,
+        },
+        {
+          path: 'detail',
+          name: 'chatDetail',
+          component: ChatDetail,
+        }
       ]
     }
   ]

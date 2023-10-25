@@ -1,5 +1,4 @@
 <template>
-  <!-- <v-form v-model="valid"> -->
     <v-container fluid>
       <v-row class="topWrap">
         <v-col class="regWrap overflow-auto rounded">

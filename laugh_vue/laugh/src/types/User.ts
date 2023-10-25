@@ -20,6 +20,7 @@ export default interface User {
     updateAtInt?: number;
     memberNum?: number;
     feeType?: number;
+    profileImgPath?: string;
     fee?: number;
     comedyStyleIdList?: Array<number>;
     comedyStyleNameList?: Array<string>;

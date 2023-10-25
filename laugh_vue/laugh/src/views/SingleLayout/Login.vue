@@ -4,14 +4,14 @@
       <MessageComponent></MessageComponent>
       <v-row justify="center" class="mb-4"><p class="font-weight-bold">ようこそ! Laughへ</p></v-row>
       <v-row justify="space-around">
-        <v-avatar size="60" color="#FFEBEE" :class="{ shake: disabled }" class="img" @click="warnDisabled">
+        <v-avatar size="80" color="#FFEBEE" :class="{ shake: disabled }" class="img" @click="warnDisabled">
           <v-img height="100px" :src="imgUrl" alt="Laugh Login"></v-img>
         </v-avatar>
       </v-row>
       <v-row justify="center">
         <v-col lg="4">
           <v-card >
-            <v-form id="login-form" class="mt-5" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
+            <v-form id="login-form" class="mt-2" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
             <v-card-text class="pa-7">
               <v-text-field class="mb-8" autocomplete="off"  density="compact" v-model="email" label="メールアドレス" hide-details required></v-text-field>
               <div>
