@@ -102,6 +102,7 @@
   const user = ref<User>({});
   const profileRef = ref();
   const laughRef = ref();
+  const tab = ref("profile");
   /** dom読み込み時の実行メソッド */
   onMounted(() => { getData(); });
 
@@ -117,14 +118,22 @@
     getProfile();
   }
 
-  /** Laugh取得(子どもコンポーネント) */
+  /** Laugh取得 */
   const getLugh = () => {
+    // タブのため初期表示の場合
+    if (laughRef.value == undefined) {
+      setTimeout(_getLugh, 200);
+    } else {
+      _getLugh;
+    }
+  }
+  /** Laugh取得(子どもコンポーネント) */
+  const _getLugh = () => {
     laughRef.value.getLaugh();
   }
   const getProfile = () => {
     profileRef.value.getProfile();
   }
-  const tab = ref(null);
 
   const modalFlg = ref(false)
   const imgSrc = ref('');
@@ -164,6 +173,7 @@ const setImg = async (img:string) => {
 const showFileChooser = () => {
   file.value.click();
 };
+
 </script>
 
 <style scoped>
