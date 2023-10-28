@@ -20,20 +20,20 @@
           <v-form>
             <v-radio-group v-model="profileReq.userType" inline :rules="[rules.radioVerify]">
               <v-radio
-                label="作家"
-                value="1"
+                label="芸人"
+                value="2"
                 color="orange"
               ></v-radio>
               <v-radio
-                label="芸人"
-                value="2"
+                label="作家"
+                value="1"
                 color="orange"
               ></v-radio>
             </v-radio-group>
             <!-- 画像トリミング新規登録はここを見る -->
             <v-list-item-tile>プロフィール画像</v-list-item-tile>
             <v-col class="d-flex justify-center">
-              <v-col class="profBox" cols="6">
+              <v-col class="profBox" cols="3">
                 <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
                 <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
                   <v-img
@@ -57,6 +57,7 @@
               v-model="profileReq.userAddress"
               label="メールアドレス"
               disabled
+              density="compact"
             ></v-text-field>
             <!-- <div class="mail-box">
               <p class="mail-text">jjjj@gmail.com</p>
@@ -69,6 +70,7 @@
               label="パスワード ※入力必須"
               counter
               @click:append="show1 = !show1"
+              density="compact"
             ></v-text-field>
             <v-text-field
               v-model="password2"
@@ -78,28 +80,34 @@
               label="【確認用】パスワード ※入力必須"
               counter
               @click:append="show2 = !show2"
+              density="compact"
             ></v-text-field>
             <v-text-field
               v-model="profileReq.userName"
               label="活動名 ※入力必須"
               :rules="[rules.textVerify]"
+              density="compact"
             ></v-text-field>
             <v-text-field
               v-model="profileReq.userNameKana"
               label="活動名（カナ） ※入力必須"
               :rules="[rules.textVerify]"
+              density="compact"
             ></v-text-field>
             <v-col class="d-flex justify-start" cols="6" v-if="profileReq.userType == 2">
-              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear" :rules="[rules.debutYearVerify]"></v-select>
-              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth" :rules="[rules.debutMonthVerify]"></v-select>
+              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear" :rules="[rules.debutYearVerify]" density="compact"></v-select>
+              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth" :rules="[rules.debutMonthVerify]" density="compact"></v-select>
             </v-col>
-            <v-col v-if="profileReq.userType == 2">
+            <v-col v-if="profileReq.userType == 2" class="d-flex justify-start">
               <v-text-field
                 v-model="profileReq.memberNum"
                 label="活動人数"
                 :rules="[rules.textVerify]"
+                density="compact"
               ></v-text-field>            
             </v-col>
+
+            <v-list-item-tile>性別</v-list-item-tile>
             <v-radio-group inline v-model="profileReq.gender" :rules="[rules.radioVerify]">
               <v-radio
                 label="回答なし"
@@ -123,9 +131,10 @@
               ></v-radio>
             </v-radio-group>
             <!-- <v-select :items="office" item-text="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select> -->
-            <v-select :items="officeRef" item-title="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select>
+            <v-select :items="officeRef" item-title="name" item-value="id" label="所属事務所" v-model="profileReq.officeId" density="compact"></v-select>
 
-            <v-list-item-tile>得意分野（芸風）</v-list-item-tile>
+            <v-list-item-tile v-if="profileReq.userType == 1">得意分野</v-list-item-tile>
+            <v-list-item-tile v-if="profileReq.userType == 2">芸風</v-list-item-tile>
             <v-col class="d-flex justify-start first_row" >
               <div class="chkW">
                 <v-checkbox
@@ -133,6 +142,7 @@
                   label="漫才"
                   color="orange"
                   value="1"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -141,6 +151,7 @@
                   label="ピン"
                   color="orange"
                   value="2"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -149,6 +160,7 @@
                   label="コント"
                   color="orange"
                   value="3"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -157,10 +169,11 @@
                   label="ギャグ"
                   color="orange"
                   value="4"
+                  density="compact"
                 ></v-checkbox>
               </div>
             </v-col>
-            <v-col class="d-flex justify-start second_row" >
+            <v-col class="d-flex justify-start second_row" density="compact">
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
@@ -168,6 +181,7 @@
                   color="orange"
                   value="5"
                   :rules="[rules.chkVerify]"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -176,6 +190,7 @@
                   label="歌ネタ"
                   color="orange"
                   value="6"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -184,37 +199,43 @@
                   label="リズムネタ"
                   color="orange"
                   value="7"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="その他"
+                  label="漫才"
                   color="orange"
                   value="8"
+                  density="compact"
                 ></v-checkbox>
               </div>
             </v-col>
 
-            <v-radio-group inline v-if="profileReq.userType == 1" v-model="profileReq.feeType" :rules="[rules.radioVerify]">
-              <v-radio
-                label="時給"
-                value="1"
-                color="orange"
-              ></v-radio>
-              <v-radio
-                label="成果物による"
-                value="2"
-                color="orange"
-              ></v-radio>
-            </v-radio-group>
+            <v-col class="radio-box">
+              <v-list-item-tile v-if="profileReq.userType == 1">料金体系</v-list-item-tile>
+              <v-radio-group inline v-if="profileReq.userType == 1" v-model="profileReq.feeType" :rules="[rules.radioVerify]">
+                <v-radio
+                  label="時給"
+                  value="1"
+                  color="orange"
+                ></v-radio>
+                <v-radio
+                  label="成果物による"
+                  value="2"
+                  color="orange"
+                ></v-radio>
+              </v-radio-group>
+            </v-col>
 
-            <v-col class="d-flex justify-start" cols="6">
-              <v-text-field v-model="profileReq.fee" label="金額" suffix="円/時間" v-if="profileReq.userType == 1 && profileReq.feeType == 1" :rules="[rules.textVerify]"></v-text-field>
-              <v-text-field v-model="profileReq.fee" label="金額" suffix="円" v-if="profileReq.userType == 1 && profileReq.feeType == 2" :rules="[rules.textVerify]"></v-text-field>
+            <v-col class="d-flex justify-start inp-box" cols="6">
+              <v-text-field v-model="profileReq.fee" label="金額" class="right-input" suffix="円/時間" v-if="profileReq.userType == 1 && profileReq.feeType == 1" :rules="[rules.textVerify]" density="compact"></v-text-field>
+              <v-text-field v-model="profileReq.fee" label="金額" class="right-input" suffix="円" v-if="profileReq.userType == 1 && profileReq.feeType == 2" :rules="[rules.textVerify]" density="compact"></v-text-field>
             </v-col>
             
-            <v-col class="d-flex justify-start" v-if="profileReq.userType == 1">
+            <v-list-item-tile v-if="profileReq.userType == 1">特技</v-list-item-tile>
+            <v-col class="d-flex justify-start tokugi-box" v-if="profileReq.userType == 1">
               <v-col class="d-flex justify-start" cols="6">
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
@@ -241,11 +262,14 @@
               <v-text-field
                 v-model="profileReq.anotherSkill"
                 label="その他の場合はここに入力"
+                density="compact"
               ></v-text-field> 
             </v-col>
 
             <!-- <v-select :items="tihou" label="活動場所" v-model="profileReq.areaId"></v-select> -->
-            <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId"></v-select>
+            <v-col class="sec-box" >
+              <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId" density="compact"></v-select>
+            </v-col>
 
             <v-textarea 
               v-model="profileReq.selfIntroduction" 
@@ -457,6 +481,10 @@ const rules = {
 
 <style scoped>
 
+.right-input input {
+  text-align: right;
+}
+
 .profBox {
   border: solid 3px #cccccc;
   border-radius: 10px;
@@ -474,10 +502,34 @@ const rules = {
   font-weight: bold;
 }
 
+.first_row {
+  margin-top: 0px;
+}
+
 .second_row {
   margin-top: -40px;
 }
 
+.inp-box {
+  margin-top: -20px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
+
+.sec-box {
+  margin-top: -5px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
+
+.tokugi-box {
+  margin-top: -10px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
 .profileRegWrap {
   width: 900px;
 }
@@ -490,6 +542,13 @@ const rules = {
 
 .mail-box {
   margin-bottom: 22px;
+}
+
+.radio-box {
+  margin-top: -10px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
 }
 
 .mail-text {
