@@ -87,12 +87,7 @@ const userType = store.getters['user/getUserType'];
 const src = ref("/img/man.svg");
 const scrollContainer = ref<HTMLElement | null>(null);
 const router = useRouter();
-var targetUserType = 0;
-if(userType == 1) {
-  targetUserType = 2;
-} else {
-  targetUserType = 1;
-}
+const targetUserType = userType == 1 ? 2 : 1;
 
 
 // チャット詳細を取得
