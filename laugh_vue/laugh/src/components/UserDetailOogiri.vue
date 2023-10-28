@@ -6,7 +6,7 @@
   
   <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import { useRouter } from 'vue-router';
+  import { useRouter , useRoute} from 'vue-router';
   import { useStore } from 'vuex'
   import type Laugh from "@/types/Laugh";
   import http from "@/http-common";
@@ -15,21 +15,15 @@
   const router = useRouter()
   const userId = computed(() => store.state.user.userId)
   const oogiri = ref<any[]>([])
-//   type Props = {
-//     userId: any
-//   }
-//   defineProps<Props>()
-  
-  /** Laugh一覧を取得する */
-  const getOogiri = async () => {
+  const route = useRoute()
+  /** 大喜利回答一覧を取得する */
+  const getOogiri = async (userId: number) => {
     const {data} = await http.get('/userDetail/oogiriAnswer',{
       params: {
-        userId: 1
+        userId: userId
       }}
     )
     oogiri.value = data.data;
-    console.log(userId.value)
-    console.log(oogiri.value)
   }
   
   /** ユーザ詳細へ遷移 */

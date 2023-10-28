@@ -307,13 +307,13 @@
         <v-card-text class="aaaa">
           <div class="text-h５ text--primary title"><p class="font-weight-bold" style="display: inline-block;vertical-align: middle;">お知らせ</p></div>
           <div class="text--primary">
-              <template v-for="n in eee">
+              <template v-for="n in notice">
               <v-hover v-slot="{ isHovering, props }">
               <div 
                 :class="{ 'div-hover': isHovering }"
                 class="noticeRow">
                 <div
-                  @click="moveMessage(n.id)"
+                  @click="readMessage(n)"
                   v-bind="props">
                   {{ n.message }}
                 </div>
@@ -491,17 +491,21 @@
   import { computed, ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router';
   import type User from "@/types/User";
+  import type Notice from '@/types/Notice';
   import http from "@/http-common"
-  
+  import { useStore } from 'vuex';
+
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
+  const notice = ref([] as Notice[]);
   const dispUserType = ref();
   const dispUserCount = ref(0);
-
+  const store = useStore();
   const eee = ref([{id:1, type:"1", message:"メッセージ1"},{id:2, type:"2",message:"メッセージ２"}]);
 
   onMounted(() => {
     getData();
+    getNotice();
   })
 
   const router = useRouter()
@@ -517,14 +521,26 @@ const redirectToDetails = async (item: User, sendUserId: number) => {
   // oogiri.value = [data.data];
 }
 
-  const moveMessage = (id: number) => {
-    alert(id)
+  /** お知らせ取得 */
+  const getNotice = async () => {
+    const {data} = await http.get('/notice',{
+      params: {
+        userId: store.state.user.userId
+      }}
+    );
+    notice.value = data.data;
+  }
+
+  // メッセージ既読
+  const readMessage = (notice: Notice) => {
+    http.post('/notice',{id: notice.id });
+    // notice.targetTypeを見て、notice.targetIdで振り分け :TODO
   }
   /** User一覧を取得する */
   const getData = async () => {
     const {data} = await http.get('/top',{
       params: {
-        userType: 2
+        userType: store.state.user.userType
       }}
     )
     dispUsers.value = data.data;
