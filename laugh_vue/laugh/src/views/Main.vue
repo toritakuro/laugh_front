@@ -81,9 +81,11 @@
       <v-spacer></v-spacer>
 
       <!-- ヘルプアイコン -->
-      <v-btn class="mr-6" icon text @click="showHelp">
-        <v-icon :size="35" color="#FAA20E">mdi-help-circle</v-icon>
-      </v-btn>
+      <router-link to="/help">
+        <v-btn class="mr-6" icon text @click="showHelp">
+          <v-icon :size="35" color="#FAA20E">mdi-help-circle</v-icon>
+        </v-btn>
+      </router-link>
 
       <!-- ログアウトアイコン -->
       <v-btn class="mr-10" icon @click="openLogoutDialog">
