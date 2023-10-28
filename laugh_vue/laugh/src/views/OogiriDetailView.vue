@@ -15,7 +15,7 @@
             <v-card>
               <v-list class="p-0" lines="two">
                 <!-- お題 -->
-                <v-tabs bg-color="orange-darken-2">
+                <v-tabs bg-color="orange-darken-1">
                   <div class="d-flex align-center">
                     <v-card-title>{{ item.themeContent }}</v-card-title>
                     <v-card-subtitle>{{ item.themeUserName }}</v-card-subtitle>
@@ -26,7 +26,34 @@
                   <v-list-item>
                     <!-- アイコン -->
                       <template v-slot:prepend>
-                        <v-avatar color="grey-darken-1">aaa</v-avatar>
+                        <v-avatar v-if="!isSameType(answer)" class="profile-icon" @click="redirectToDetails(answer)">
+                          <v-img v-if="answer.img != null"
+                              :aspect-ratio="1"
+                              :src="answer.img"
+                              cover
+                              class="rounded-lg profile_img"
+                          ></v-img>
+                          <v-img v-if="answer.img == null"
+                              :aspect-ratio="1"
+                              :src="src"
+                              cover
+                              class="rounded-lg"
+                          ></v-img>
+                        </v-avatar>
+                        <v-avatar v-if="isSameType(answer)">
+                          <v-img v-if="answer.img != null"
+                              :aspect-ratio="1"
+                              :src="answer.img"
+                              cover
+                              class="rounded-lg profile_img"
+                          ></v-img>
+                          <v-img v-if="answer.img == null"
+                              :aspect-ratio="1"
+                              :src="src"
+                              cover
+                              class="rounded-lg"
+                            ></v-img>
+                        </v-avatar>
                       </template>
                       <!-- 回答情報 -->
                       <div class="d-flex align-center justify-space-between mb-1">
@@ -96,6 +123,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import type Oogiri from "@/types/Oogiri";
 import http from "@/http-common";
 import { useStore } from 'vuex'
@@ -105,6 +133,9 @@ const newAnswer = ref('');
 const route = useRoute();
 const store = useStore();
 const userId = store.getters['user/getUserId'];
+const userType = store.getters['user/getUserType'];
+const src = ref("/img/man.svg");
+const router = useRouter();
 
 // 大喜利ステータス
 const reactionedNumber = 11;
@@ -213,7 +244,6 @@ const reaction = async (answer) => {
   getOogiriDetail();
 }
 
-
 // 回答投稿
 const regAnswer = async() => {
   const answerData = {
@@ -224,6 +254,19 @@ const regAnswer = async() => {
   await http.post('oogiri/answer', answerData);
   newAnswer.value = '';
   getOogiriDetail();
+}
+
+// 同じユーザータイプか判定
+const isSameType = (answer) => {
+  return userType == answer.userType;
+}
+
+// ユーザー詳細へ遷移
+const redirectToDetails = (answer) => {
+  router.push({ 
+    name: 'detail',
+    query: { receiveUserId: answer.answerUserId, userType: answer.userType, sendUserId: userId }
+  })
 }
 
 // マウント時にデータを取得し代入する
@@ -243,5 +286,8 @@ onMounted(() => {
   background-color: #f57c00;
   color: white;
   text-align: center;
+}
+.profile-icon {
+  cursor: pointer;
 }
 </style>

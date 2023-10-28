@@ -17,11 +17,20 @@
                       <v-col class="py-0">
                         <div :class="{ 'balloon_l': !item.isMyMessage, 'balloon_r': item.isMyMessage }">
                           <div v-if="!item.isMyMessage" class="face_icon">
-                            <v-avatar>
-                              <span class="white--text">
-                                画像
-                              </span>
-                            </v-avatar>
+                            <v-avatar class="profile-icon" @click="redirectToDetails()">
+                              <v-img v-if="chatDetailData.img != null"
+                                  :aspect-ratio="1"
+                                  :src="chatDetailData.img"
+                                  cover
+                                  class="rounded-lg profile_img"
+                              ></v-img>
+                              <v-img v-if="chatDetailData.img == null"
+                                  :aspect-ratio="1"
+                                  :src="src"
+                                  cover
+                                  class="rounded-lg"
+                              ></v-img>
+                        </v-avatar>
                           </div>
                           <p class="says">{{ item.message }}</p>
                         </div>
@@ -67,6 +76,7 @@
 import { ref, onMounted, computed, defineProps, watchEffect, onUpdated } from 'vue';
 import http from "@/http-common";
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router';
 import type Chat from "@/types/Chat";
 import { nextTick } from 'vue';
 
@@ -81,7 +91,16 @@ const chatDetail = ref<Chat>();
 const newMessage = ref('');
 const userId = store.getters['user/getUserId'];
 const userType = store.getters['user/getUserType'];
+const src = ref("/img/man.svg");
 const scrollContainer = ref<HTMLElement | null>(null);
+const router = useRouter();
+var targetUserType = 0;
+if(userType == 1) {
+  targetUserType = 2;
+} else {
+  targetUserType = 1;
+}
+
 
 // チャット詳細を取得
 const getChatDetail = async () => {
@@ -123,6 +142,18 @@ const sendMessage = async() => {
   await http.post('chat', messageData);
   newMessage.value = '';
   getChatDetail();
+}
+
+// ユーザー詳細へ遷移
+const redirectToDetails = () => {
+  router.push({ 
+    name: 'detail',
+    query: { 
+      receiveUserId: props.chatDetailData.targetUserId,
+      userType: targetUserType,
+      sendUserId: userId
+    }
+  })
 }
 
 watchEffect(() => {
@@ -182,6 +213,9 @@ defineExpose({
 }
 .balloon_r .face_icon {
   order: 2 !important;
+}
+.profile-icon {
+  cursor: pointer;
 }
 .says {
   max-width: 300px;
