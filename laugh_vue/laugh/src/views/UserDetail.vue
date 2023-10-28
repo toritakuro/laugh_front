@@ -78,7 +78,7 @@
                 投稿一覧
             </v-tab>
             <v-tab value="oogiri" @click="getOogiri">
-              <v-icon middle size="x-large" icon="mdi-handshake" />
+              <v-icon middle size="x-large" icon="mdi-brush" />
                 大喜利の投稿履歴
             </v-tab>
           </v-tabs>
@@ -192,9 +192,18 @@ const route = useRoute()
   const userId = ref()
 
   const oogiriRef = ref();
+
+  /** 大喜利取得 */
   const getOogiri = () => {
-    oogiriRef.value.getOogiri();
+    if (oogiriRef.value == undefined) {
+      setTimeout(_getOogiri, 200);
+    } else {
+      _getOogiri;
+    }
   }
+  /** 大喜利取得(実行用) */
+  const _getOogiri = () => { oogiriRef.value.getOogiri(route.query.receiveUserId); }
+
   const tab = ref(null);
   const user = ref<User>();
 

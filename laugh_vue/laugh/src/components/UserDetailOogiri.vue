@@ -1,7 +1,10 @@
 <template>
-   <h1>{{ oogiri }}</h1>
-   <h1>aaa</h1>
-   <h1>aaa</h1>
+  <div class="outline">
+    <p v-for="item in oogiri" class="oogiriWrap">
+      <h3 class="title">{{ item.themeContent }}</h3>
+      <div class="answer" v-for="answer in item.answers">{{ answer.answerContent }}</div>
+    </p>
+  </div>
 </template>
   
   <script setup lang="ts">
@@ -17,11 +20,10 @@
   const oogiri = ref<any[]>([])
   const route = useRoute()
   /** 大喜利回答一覧を取得する */
-  const getOogiri = async (userId: number) => {
+  const getOogiri = async (userId: string) => {
     const {data} = await http.get('/userDetail/oogiriAnswer',{
-      params: {
-        userId: userId
-      }}
+      params: {userId: userId}
+      }
     )
     oogiri.value = data.data;
   }
@@ -37,6 +39,39 @@
   </script>
   
   <style scoped>
+  .outline {
+    border: 1px solid #efefef;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .oogiriWrap {
+    margin-top: 20px;
+  }
+  h3 {
+    border-bottom: 1px solid #efefef;
+    position: relative;
+    padding-bottom: 7px;
+    margin-bottom: 12px;
+  }
+  h3::after {
+    content: ".";
+    line-height: 0;
+    display: block;
+    overflow: hidden;
+    position: absolute;
+    bottom: -1px;
+    width: 30%;
+    border-bottom: 1px solid #FB8C00;
+  }
+  .answer {
+    font-weight: bold;
+    margin-left: 12px;
+    margin-bottom: 13px;
+    padding-bottom: 1px;
+    padding-left: 3px;
+    border-bottom: 1px solid #efefef;
+  }
+
   .status-icon { width:50px; }
   .img { width:100px; }
   .name { width:100px; }
