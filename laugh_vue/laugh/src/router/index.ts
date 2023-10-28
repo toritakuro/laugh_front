@@ -12,6 +12,7 @@ import ChatRoom from '../views/ChatRoomList.vue'
 import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
+import HelpView from '../views/HelpView.vue'
 import store from "@/store"
 
 const router = createRouter({
@@ -83,6 +84,10 @@ const router = createRouter({
           path: 'detail',
           name: 'chatDetail',
           component: ChatDetail,
+        },
+        {
+          path: '/help',
+          component: HelpView,
         }
       ]
     }
