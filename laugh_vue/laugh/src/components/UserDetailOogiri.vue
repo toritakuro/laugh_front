@@ -52,6 +52,7 @@
     position: relative;
     padding-bottom: 7px;
     margin-bottom: 12px;
+    font-weight: bold;
   }
   h3::after {
     content: ".";
