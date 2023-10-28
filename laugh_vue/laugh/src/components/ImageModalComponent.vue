@@ -67,8 +67,9 @@ const closeModal = () => { modalFlg.value = false; }
 /** 画像送信 */
 const updProfileImg = () => {
   // store.state.user.userId;
+  // TODO: このメソッドは必要？確認
   userRef.id = 5;
-  userRef.profileImg = cropper.value.getCroppedCanvas().toDataURL();
+  userRef.profileImgPath = cropper.value.getCroppedCanvas().toDataURL();
   http.post('/demo/updProfileImg', userRef);
 }
 </script>
