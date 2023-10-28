@@ -7,9 +7,9 @@
       @drop.prevent="drop"
       :class="['fileWrap ', {enter: enterFlg}]"
     >
-      ファイルの場所
+      ここに画像ファイルをドラッグ＆ドロップ
     </div>
-    <!-- <img :src="targetImage" alt="選択された画像" class="image"> -->
+    <img v-if="targetImage" :src="targetImage" alt="選択された画像" class="image">
     <canvas class="ds-none" ref="canvas"></canvas>
   </div>
 </template>
@@ -48,6 +48,7 @@
       }
 
       const resizedBase64 = await resizeImage64withCanvase(imgDateBase64, canvas.value);
+      targetImage.value = resizedBase64;
       emit('setFile', resizedBase64);
     } catch (error) {
       console.error(error);
@@ -118,7 +119,6 @@
       // 描画処理
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
-      ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
       ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvasWidth, canvasHeight);
 
       return Promise.resolve(canvas.toDataURL(mineType));
@@ -127,9 +127,10 @@
 </script>
 
 <style scoped>
+
   div.fileWrap {
-    width: 100px;
-    height: 100px;
+    width: 400px;
+    height: 50px;
     background-color: aqua;
   }
   .enter {

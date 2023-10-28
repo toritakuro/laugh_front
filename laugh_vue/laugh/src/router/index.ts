@@ -5,6 +5,7 @@ import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
+import MypageContent from '../views/MypageContent.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import ChatRoom from '../views/ChatRoomList.vue'
@@ -46,6 +47,10 @@ const router = createRouter({
         {
           path: 'mypage',
           component: MyPage
+        },
+        {
+          path: '/posts-list',
+          component: MypageContent
         },
         {
           path: 'detail',
