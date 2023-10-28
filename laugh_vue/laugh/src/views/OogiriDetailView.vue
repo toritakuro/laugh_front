@@ -26,32 +26,14 @@
                   <v-list-item>
                     <!-- アイコン -->
                       <template v-slot:prepend>
-                        <v-avatar v-if="!isSameType(answer)" class="profile-icon" @click="redirectToDetails(answer)">
-                          <v-img v-if="answer.img != null"
+                        <v-avatar
+                          :class="['profile-icon', isSameType(answer) ? 'pointer-events-none' : '']"
+                          @click="isSameType(answer) ? undefined : redirectToDetails(answer)"
+                        >
+                          <v-img
                             :aspect-ratio="1"
-                            :src="answer.img"
+                            :src="answer.img || src"
                             cover
-                            class="rounded-lg profile_img"
-                          ></v-img>
-                          <v-img v-if="answer.img == null"
-                            :aspect-ratio="1"
-                            :src="src"
-                            cover
-                            class="rounded-lg"
-                          ></v-img>
-                        </v-avatar>
-                        <v-avatar v-if="isSameType(answer)">
-                          <v-img v-if="answer.img != null"
-                            :aspect-ratio="1"
-                            :src="answer.img"
-                            cover
-                            class="rounded-lg profile_img"
-                          ></v-img>
-                          <v-img v-if="answer.img == null"
-                            :aspect-ratio="1"
-                            :src="src"
-                            cover
-                            class="rounded-lg"
                           ></v-img>
                         </v-avatar>
                       </template>
@@ -289,5 +271,8 @@ onMounted(() => {
 }
 .profile-icon {
   cursor: pointer;
+}
+.pointer-events-none {
+  pointer-events: none;
 }
 </style>

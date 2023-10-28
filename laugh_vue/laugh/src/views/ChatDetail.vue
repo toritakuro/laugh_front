@@ -18,17 +18,10 @@
                         <div :class="{ 'balloon_l': !item.isMyMessage, 'balloon_r': item.isMyMessage }">
                           <div v-if="!item.isMyMessage" class="face_icon">
                             <v-avatar class="profile-icon" @click="redirectToDetails()">
-                              <v-img v-if="chatDetailData.img != null"
+                              <v-img
                                 :aspect-ratio="1"
-                                :src="chatDetailData.img"
+                                :src="chatDetailData.img || src"
                                 cover
-                                class="rounded-lg profile_img"
-                              ></v-img>
-                              <v-img v-if="chatDetailData.img == null"
-                                :aspect-ratio="1"
-                                :src="src"
-                                cover
-                                class="rounded-lg"
                               ></v-img>
                             </v-avatar>
                           </div>
