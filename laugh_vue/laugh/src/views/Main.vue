@@ -201,7 +201,7 @@
 }
 .mainWrap {
   max-height: calc(100vh - 180px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>
 
