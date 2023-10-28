@@ -28,30 +28,30 @@
                       <template v-slot:prepend>
                         <v-avatar v-if="!isSameType(answer)" class="profile-icon" @click="redirectToDetails(answer)">
                           <v-img v-if="answer.img != null"
-                              :aspect-ratio="1"
-                              :src="answer.img"
-                              cover
-                              class="rounded-lg profile_img"
+                            :aspect-ratio="1"
+                            :src="answer.img"
+                            cover
+                            class="rounded-lg profile_img"
                           ></v-img>
                           <v-img v-if="answer.img == null"
-                              :aspect-ratio="1"
-                              :src="src"
-                              cover
-                              class="rounded-lg"
+                            :aspect-ratio="1"
+                            :src="src"
+                            cover
+                            class="rounded-lg"
                           ></v-img>
                         </v-avatar>
                         <v-avatar v-if="isSameType(answer)">
                           <v-img v-if="answer.img != null"
-                              :aspect-ratio="1"
-                              :src="answer.img"
-                              cover
-                              class="rounded-lg profile_img"
+                            :aspect-ratio="1"
+                            :src="answer.img"
+                            cover
+                            class="rounded-lg profile_img"
                           ></v-img>
                           <v-img v-if="answer.img == null"
-                              :aspect-ratio="1"
-                              :src="src"
-                              cover
-                              class="rounded-lg"
+                            :aspect-ratio="1"
+                            :src="src"
+                            cover
+                            class="rounded-lg"
                             ></v-img>
                         </v-avatar>
                       </template>

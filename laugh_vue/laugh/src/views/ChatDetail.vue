@@ -19,18 +19,18 @@
                           <div v-if="!item.isMyMessage" class="face_icon">
                             <v-avatar class="profile-icon" @click="redirectToDetails()">
                               <v-img v-if="chatDetailData.img != null"
-                                  :aspect-ratio="1"
-                                  :src="chatDetailData.img"
-                                  cover
-                                  class="rounded-lg profile_img"
+                                :aspect-ratio="1"
+                                :src="chatDetailData.img"
+                                cover
+                                class="rounded-lg profile_img"
                               ></v-img>
                               <v-img v-if="chatDetailData.img == null"
-                                  :aspect-ratio="1"
-                                  :src="src"
-                                  cover
-                                  class="rounded-lg"
+                                :aspect-ratio="1"
+                                :src="src"
+                                cover
+                                class="rounded-lg"
                               ></v-img>
-                        </v-avatar>
+                            </v-avatar>
                           </div>
                           <p class="says">{{ item.message }}</p>
                         </div>

@@ -19,17 +19,17 @@
                 >
                   <v-avatar>
                     <v-img v-if="item.img != null"
-                        :aspect-ratio="1"
-                        :src="item.img"
-                        cover
-                        class="rounded-lg profile_img"
+                      :aspect-ratio="1"
+                      :src="item.img"
+                      cover
+                      class="rounded-lg profile_img"
                     ></v-img>
                     <v-img v-if="item.img == null"
-                        :aspect-ratio="1"
-                        :src="src"
-                        cover
-                        class="rounded-lg"
-                      ></v-img>
+                      :aspect-ratio="1"
+                      :src="src"
+                      cover
+                      class="rounded-lg"
+                    ></v-img>
                   </v-avatar>
                   <div class="pa-4">
                     <v-list-item-title class="user-name">{{ item.name }}</v-list-item-title>
