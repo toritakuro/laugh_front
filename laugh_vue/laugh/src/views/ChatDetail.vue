@@ -73,7 +73,7 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, computed, defineProps, watchEffect, onUpdated } from 'vue';
+import { ref, computed, defineProps, watchEffect } from 'vue';
 import http from "@/http-common";
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router';

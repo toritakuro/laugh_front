@@ -52,7 +52,7 @@
                             :src="src"
                             cover
                             class="rounded-lg"
-                            ></v-img>
+                          ></v-img>
                         </v-avatar>
                       </template>
                       <!-- 回答情報 -->
