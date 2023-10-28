@@ -5,7 +5,7 @@ export default interface Profile {
   userNameKana: string;
   userType: number | null;
   password: string;
-  debutYear: number | null;
+  debutDtStr: string;
   debutMonth: number | null;
   memberNum: number | null;
   gender: number | null;
