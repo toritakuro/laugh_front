@@ -23,7 +23,10 @@
                 </v-tabs>
 
                 <template v-for="(answer, i) in item.answers" :key="answer.answerId">
-                  <v-list-item>
+                  <v-list-item v-if="answer.answerId == 0">
+                    まだ回答がありません
+                  </v-list-item>
+                  <v-list-item v-if="answer.answerId != 0">
                     <!-- アイコン -->
                       <template v-slot:prepend>
                         <v-avatar
