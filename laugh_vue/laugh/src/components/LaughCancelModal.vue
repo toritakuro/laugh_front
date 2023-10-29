@@ -51,7 +51,7 @@
   }
   
   .modal__btn {
-    padding-top: 30px;
+    padding-top: 50px;
     font-size: 15px;
     font-weight: bold;
   }

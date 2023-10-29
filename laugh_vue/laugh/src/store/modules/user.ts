@@ -1,6 +1,7 @@
 const state = {
   userId: "",
-  userType: ""
+  userType: "",
+  userName: ""
 };
 
 const mutations = {
@@ -15,6 +16,12 @@ const mutations = {
   },
   removeUserType(state) {
     state.userType = "";
+  },
+  saveUserName(state, userName: string) {
+    state.userName = userName;
+  },
+  removeUserName(state) {
+    state.userName = "";
   }
 };
 
@@ -24,9 +31,11 @@ const getters = {
   },
   getUserType(state) {
     return state.userType;
+  },
+  getUserName(state) {
+    return state.userName;
   }
 };
-
 
 export default {
   namespaced: true,

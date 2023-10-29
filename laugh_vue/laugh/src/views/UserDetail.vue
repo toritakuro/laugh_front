@@ -73,19 +73,19 @@
             v-model="tab"
             color="orange-darken-2"
           >
-            <v-tab value="profile" @click="getOogiri">
-              <v-icon middle size="x-large" icon="mdi-account" />
+            <v-tab value="content" @click="getContet">
+              <v-icon middle size="x-large" icon="mdi-toolbox" />
                 投稿一覧
             </v-tab>
             <v-tab value="oogiri" @click="getOogiri">
-              <v-icon middle size="x-large" icon="mdi-handshake" />
-                大喜利の投稿履歴
+              <v-icon middle size="x-large" icon="mdi-brush" />
+                大喜利回答
             </v-tab>
           </v-tabs>
           <v-card-text>
             <v-window v-model="tab">
-              <v-window-item value="profile">
-                <UserDetailOogiri ref="profileRef"></UserDetailOogiri>
+              <v-window-item value="content">
+                <UserDetailContent ref="contentRef"></UserDetailContent>
               </v-window-item>
               <v-window-item value="oogiri">
                 <UserDetailOogiri ref="oogiriRef"></UserDetailOogiri>
@@ -200,6 +200,7 @@ import { computed, ref, onMounted, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import MyPageProfile from '@/components/MyPageProfile.vue';
+import UserDetailContent from '@/components/UserDetailContent.vue';
 import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import LaughModal from "@/components/LaughModal.vue";
 import LaughApprovalModal from "@/components/LaughApprovalModal.vue";
@@ -209,6 +210,8 @@ import type User from "@/types/User";
 
 onMounted(() => { getData(); });
 
+const oogiriRef = ref();
+const contentRef = ref();
 const route = useRoute()
 // onMounted(() => {
 //     console.log(route.query.myId)
@@ -223,10 +226,29 @@ const route = useRoute()
   const userId = store.getters['user/getUserId'];
   const userType = store.getters['user/getUserType'];
 
-  const oogiriRef = ref();
+  
+  /** 大喜利取得 */
   const getOogiri = () => {
-    oogiriRef.value.getOogiri();
+    if (oogiriRef.value == undefined) {
+      setTimeout(_getOogiri, 200);
+    } else {
+      _getOogiri;
+    }
   }
+  /** 大喜利取得(実行用) */
+  const _getOogiri = () => { oogiriRef.value.getOogiri(route.query.receiveUserId); }
+
+  /** 投稿取得 */
+  const getContet = () => {
+    console.log(111)
+    if (contentRef.value == undefined) {
+      setTimeout(_getContet, 200);
+    } else {
+      contentRef.value.getContent(route.query.receiveUserId);
+    }
+  }
+  const _getContet = () => { contentRef.value.getContent(route.query.receiveUserId); }
+
   const tab = ref(null);
   const user = ref<User>();
 
@@ -242,7 +264,7 @@ const route = useRoute()
     )
     user.value = data.data;
     console.log("user",user.value)
-    getOogiri();
+    getContet();
   }
 
 const sendMsg = "どちらを送りますか？";

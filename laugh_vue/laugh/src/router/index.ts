@@ -5,6 +5,7 @@ import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
+import MypageContent from '../views/MypageContent.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import ChatRoom from '../views/ChatRoomList.vue'
@@ -12,6 +13,7 @@ import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
 import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
+import HelpView from '../views/HelpView.vue'
 import store from "@/store"
 
 const router = createRouter({
@@ -49,6 +51,10 @@ const router = createRouter({
           component: MyPage
         },
         {
+          path: '/posts-list',
+          component: MypageContent
+        },
+        {
           path: 'detail',
           name: 'detail',
           component: UserDetail,
@@ -83,6 +89,10 @@ const router = createRouter({
           path: 'detail',
           name: 'chatDetail',
           component: ChatDetail,
+        },
+        {
+          path: '/help',
+          component: HelpView,
         }
       ]
     }

@@ -7,12 +7,22 @@
         <v-container fluid="true">
           <v-row>
             <v-col class="pa-0" lg="6" md="6" sm="12">
-              <v-img
-                :aspect-ratio="1"
-                :src="user.profileImgPath"
-                cover
-                class="rounded-lg"
-              ></v-img>
+              <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
+              <div v-if="user.profileImgPath" @click.prevent="showFileChooser">
+                <v-img
+                  :aspect-ratio="1"
+                  :src="user.profileImgPath"
+                  cover
+                  class="rounded-lg"
+                ></v-img>
+              </div>
+              <div v-if="!user.profileImgPath" @click.prevent="showFileChooser">
+                <v-img
+                  :aspect-ratio="1"
+                  :src="src"
+                ></v-img>
+              </div>
+              <ImageModalComponent :userId="store.state.user.userId" :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
             </v-col>
             <v-col class="pa-0" lg="6" md="6" sm="12">
               <v-card-title class="font-weight-black pt-0 pb-0">{{ user.userName }}</v-card-title>
@@ -86,6 +96,7 @@
   import MyPageProfile from '@/components/MyPageProfile.vue';
   import MyPageLaugh from '@/components/MyPageLaugh.vue'
   import type User from '@/types/User'
+  import ImageModalComponent from "../components/ImageModalComponent.vue"
 
   const store = useStore();
   const user = ref<User>({});
@@ -123,6 +134,45 @@
   const getProfile = () => {
     profileRef.value.getProfile();
   }
+
+  const modalFlg = ref(false)
+  const imgSrc = ref('');
+  const file = ref();
+  const src = ref("/img/man.svg");
+  const setImage = (e: any) => {
+  const file = e.target.files[0];
+  if (!file.type.includes('image/')) {
+    alert('画像ファイルを選んでください');
+    return;
+  }
+  if (typeof FileReader === 'function') {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target != null) {
+        imgSrc.value = event.target.result as string;
+      }
+    };
+    reader.readAsDataURL(file);
+  } else {
+    alert('FileReader APIがサポートされていません');
+  }
+  setTimeout(() => {
+    console.log(11);
+    modalFlg.value = true;
+  }, 200);
+};
+/** emitで受けるメソッド */
+const setModelValue = (value:Boolean) => {
+  modalFlg.value = false;
+  file.value.value ='' // 初期化
+} 
+const setImg = async (img:string) => {
+  user.value.profileImgPath = img;
+  await http.post("/profile/editImg", user.value)
+} 
+const showFileChooser = () => {
+  file.value.click();
+};
 
 </script>
 
