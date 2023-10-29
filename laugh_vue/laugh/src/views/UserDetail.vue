@@ -1,8 +1,7 @@
 <template>
-  <v-container fluid="true">
+  <v-container fluid="true" class="content">
     <v-row>
       <v-col cols="6" >
-        <v-col>
           <v-card class="mx-auto pa-2 detail_card">
             <v-container fluid="true">
               <v-row>
@@ -66,7 +65,6 @@
             </v-container>
           </v-card>
         </v-col>
-      </v-col>   
       <v-col cols="6">
         <v-card>
           <v-tabs
@@ -126,6 +124,10 @@
   </template>
 
 <style>
+  .content {
+    margin-top:10px;
+  }
+
   .profile {
     /* height: 550px; */
   }
@@ -167,31 +169,55 @@
   height: 120px;
   width: 120px;
   font-weight: bold;
-  color: white;
-  background-color: #FB8C00;
+  font-size: large;
+  color: #FB8C00;
+  border: 2px solid #FB8C00;
+  background-color: #FFFF;
   border-radius: 50%;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-	transition: background-color 1s;
+	transition: background-color 0.5s;
+}
+.laugh-btn:hover{
+  color: #FFFF;
+  background-color: #FB8C00;
 }
 .approval-btn{
   height: 120px;
   width: 120px;
   font-weight: bold;
-  color: white;
-  background-color: #86cff6;
+  font-size: large;
+  /* color: #FB8C00;
+  border: 2px solid #FB8C00; */
+  color: #86cff6;
+  border: 2px solid #86cff6;
+  background-color: #FFFF;
   border-radius: 50%;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-	transition: background-color 1s;
+	transition: background-color 0.5s;
+}
+.approval-btn:hover{
+  color: #FFFF;
+  border: 2px solid #86cff6;
+  background-color: #86cff6;
 }
 .cancel-btn{
   height: 120px;
   width: 120px;
   font-weight: bold;
-  color: white;
-  background-color: #f68a8a;
+  font-size: large;
+  /* color: #FB8C00;
+  border: 2px solid #FB8C00; */
+  color: #f68a8a;
+  border: 2px solid #f68a8a;
+  background-color: #FFFF;
   border-radius: 50%;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-	transition: background-color 1s;
+	transition: background-color 0.5s;
+}
+.cancel-btn:hover{
+  color: #FFFF;
+  border: 2px solid #f68a8a;
+  background-color: #f68a8a;
 }
 </style>
 
