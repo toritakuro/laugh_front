@@ -140,7 +140,7 @@
 
             <v-list-item-tile v-if="profileReq.userType == 1">芸風</v-list-item-tile>
             <v-list-item-tile v-if="profileReq.userType == 2">得意分野</v-list-item-tile>
-            <v-col class="d-flex justify-start first_row" >
+            <v-col class="d-flex justify-start first_row" v-if="profileReq.userType == 1 || profileReq.userType == 2">
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
@@ -178,7 +178,7 @@
                 ></v-checkbox>
               </div>
             </v-col>
-            <v-col class="d-flex justify-start second_row" density="compact">
+            <v-col class="d-flex justify-start second_row" v-if="profileReq.userType == 1 || profileReq.userType == 2" density="compact">
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
@@ -271,8 +271,7 @@
               ></v-text-field> 
             </v-col>
 
-            <!-- <v-select :items="tihou" label="活動場所" v-model="profileReq.areaId"></v-select> -->
-            <v-col class="sec-box" >
+            <v-col class="sec-box">
               <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId" density="compact"></v-select>
             </v-col>
 
@@ -518,7 +517,6 @@ const rules = {
 }
 
 .sec-box {
-  margin-top: -5px;
   padding-left: 0px;
   padding-top: 0px;
   padding-right: 0px;
