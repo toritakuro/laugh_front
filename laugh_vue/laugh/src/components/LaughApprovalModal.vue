@@ -1,12 +1,10 @@
 <template>
     <div id="modal">
       <div id="modal-content" class="modal">
-        <button @click="close()">X</button>
+        <button class="modal__close" @click="close()"><v-icon icon="mdi-close-circle-outline"/></button>
         <p id="modal-message" class="modal__message">{{ message }}</p>
-        <span id="modal-cansel" class="modal__cancel" @click="refuse()">
-          いいえ
-        </span>
-        <button class="modal__btn" @click="approval()">はい</button>
+        <button id="modal-cansel" class="modal__btn modal__btn_left" @click="refuse()"><v-icon class="action_icon" icon="mdi-hand-wave-outline"/><br>いいえ</button>
+        <button class="modal__btn modal__btn_right" @click="approval()"><v-icon class="action_icon" icon="mdi-handshake-outline"/><br>はい</button>
       </div>
       <div id="modal-overlay"></div>
     </div>
@@ -30,8 +28,7 @@
   }
 
   </script>
-  <style scoped>
-  .modal {
+  <style scoped>  .modal {
     padding: 10px 20px;
     border: 2px solid #FB8C00;
     background: #FFFF;
@@ -43,44 +40,35 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 10px;
+    height: 40%;
+    width: 30%;
   }
   
   .modal__message {
-    margin-top: 10px;
-  }
-  
-  .modal__cancel {
-    margin-right: 30px;
-    font-size: 15px;
-  }
-  
-  .modal__cancel:hover {
-    cursor: pointer;
-    color: #FB8C00;
-    font-weight: bold;
+    margin-top: 30px;
+    font-size: 20px;
   }
   
   .modal__btn {
-    display: inline-block;
-    margin: 30px auto;
-    text-decoration: none;
-    width: 100px;
-    height: 30px;
-    text-decoration: none;
-    color: #000000;
-    border: solid 2px #FB8C00;
-    border-radius: 3px;
-    transition: 0.4s;
-    text-align: center;
-    vertical-align: middle;
+    padding-top: 50px;
     font-size: 15px;
-    background-color: #faebd7;
+    font-weight: bold;
+  }
+  .modal__btn_right {
+    margin-left: 50px;
+  }
+  .action_icon {
+    font-size: 80px;
+  }
+  .modal__close {
+    display: block;
+    margin-left: auto;
   }
   
   .modal__btn:hover {
-    background: #FB8C00;
-    color: white;
     cursor: pointer;
+    color: #FB8C00;
+    font-weight: bold;
   }
   
   #modal-overlay {

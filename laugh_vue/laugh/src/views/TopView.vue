@@ -231,7 +231,7 @@
           
           <v-col offset="2" cols="8" class="profile" >
             <v-col v-for="item in dispUsers" class="profile_paddingTop">
-              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails(item, 1)">
+              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails(item)">
                 <v-container fluid="true">
                   <v-row>
                     <v-col class="pa-0" lg="6" md="6" sm="12">
@@ -305,7 +305,7 @@
           max-width="344"
         >
         <v-card-text class="aaaa">
-          <div class="text-h５ text--primary title"><p class="font-weight-bold" style="display: inline-block;vertical-align: middle;">お知らせ</p></div>
+          <div class="text-h5 text--primary title"><p class="font-weight-bold" style="display: inline-block;vertical-align: middle;">お知らせ</p></div>
           <div class="text--primary">
               <template v-for="n in eee">
               <v-hover v-slot="{ isHovering, props }">
@@ -490,6 +490,7 @@
   <script setup lang="ts">
   import { computed, ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router';
+  import { useStore } from 'vuex'
   import type User from "@/types/User";
   import http from "@/http-common"
   
@@ -497,6 +498,9 @@
   const usersOrigin = ref([] as User[]);
   const dispUserType = ref();
   const dispUserCount = ref(0);
+  const store = useStore();
+  const userId = store.getters['user/getUserId'];
+  const userType = store.getters['user/getUserType'];
 
   const eee = ref([{id:1, type:"1", message:"メッセージ1"},{id:2, type:"2",message:"メッセージ２"}]);
 
@@ -505,17 +509,18 @@
   })
 
   const router = useRouter()
-
-const redirectToDetails = async (item: User, sendUserId: number) => {
-  router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: sendUserId }  })
-  // const themeId = route.query.themeId;
-  // const {data} = await http.get('oogiri/detail',{
-  //   params: {
-  //     themeId: themeId
-  //   }}
-  // )
-  // oogiri.value = [data.data];
-}
+ 
+  const redirectToDetails = async (item: User) => {
+    console.log("usertype",item.userType)
+    router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: userId }  })
+    // const themeId = route.query.themeId;
+    // const {data} = await http.get('oogiri/detail',{
+    //   params: {
+    //     themeId: themeId
+    //   }}
+    // )
+    // oogiri.value = [data.data];
+  }
 
   const moveMessage = (id: number) => {
     alert(id)
@@ -524,7 +529,7 @@ const redirectToDetails = async (item: User, sendUserId: number) => {
   const getData = async () => {
     const {data} = await http.get('/top',{
       params: {
-        userType: 2
+        userType: userType
       }}
     )
     dispUsers.value = data.data;

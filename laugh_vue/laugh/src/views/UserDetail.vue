@@ -96,8 +96,8 @@
       </v-col>
     </v-row>
     <div class="float-btn">
-      <div v-if="user?.matchStatus === undefined">
-        <v-btn color="orange-darken-1" size="default" @click="showModal()">match!!</v-btn>
+      <div v-if="user?.matchStatus === null">
+        <button class="laugh-btn" @click="showModal()">Laugh</button>
         <LaughModal
         :message="sendMsg"
         v-show="modal"
@@ -105,7 +105,7 @@
         ></LaughModal>
       </div>
       <div v-if="user?.matchStatus === 0">
-        <v-btn color="orange-darken-1" size="default" @click="showModal()">承認!!</v-btn>
+        <button class="approval-btn" @click="showModal()">承認</button>
         <LaughApprovalModal
         :message="recieveMsg"
         v-show="modal"
@@ -113,7 +113,7 @@
         ></LaughApprovalModal>
       </div>
       <div v-if="user?.matchStatus === 10 || user?.matchStatus === 11">
-        <v-btn color="orange-darken-1" size="default" @click="showModal()">match解消</v-btn>
+        <button class="cancel-btn" @click="showModal()">match解消</button>
         <LaughCancelModal
         :message="cancelMsg"
         v-show="modal"
@@ -159,16 +159,46 @@
 
   .float-btn {
   position: absolute;
-  top: 250px;
-  right: 20px;
+  top: 150px;
+  right: 30px;
   z-index: 100;
 }
-
+ .laugh-btn{
+  height: 120px;
+  width: 120px;
+  font-weight: bold;
+  color: white;
+  background-color: #FB8C00;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+	transition: background-color 1s;
+}
+.approval-btn{
+  height: 120px;
+  width: 120px;
+  font-weight: bold;
+  color: white;
+  background-color: #86cff6;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+	transition: background-color 1s;
+}
+.cancel-btn{
+  height: 120px;
+  width: 120px;
+  font-weight: bold;
+  color: white;
+  background-color: #f68a8a;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+	transition: background-color 1s;
+}
 </style>
 
 <script setup lang="ts">
 import { computed, ref, onMounted, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import MyPageProfile from '@/components/MyPageProfile.vue';
 import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import LaughModal from "@/components/LaughModal.vue";
@@ -189,7 +219,9 @@ const route = useRoute()
 //     // getLaugh();
 //     // getProfile();
 //   })
-  const userId = ref()
+  const store = useStore();
+  const userId = store.getters['user/getUserId'];
+  const userType = store.getters['user/getUserType'];
 
   const oogiriRef = ref();
   const getOogiri = () => {
@@ -204,7 +236,7 @@ const route = useRoute()
     const {data} = await http.get('/userDetail/init',{
       params: {
         receiveUserId: route.query.receiveUserId,
-        sendUserId: route.query.sendUserId,
+        sendUserId: userId,
         userType: route.query.userType
       }}
     )
@@ -214,7 +246,7 @@ const route = useRoute()
   }
 
 const sendMsg = "どちらを送りますか？";
-const recieveMsg = "マッチングしますか？";
+const recieveMsg = "Laughを承認しますか？";
 const cancelMsg = "マッチングを解消しますか？";
 const modal = ref(false);
 
@@ -228,11 +260,10 @@ const postMatch = async (matchStatus: number) => {
   // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
   console.log("aaa")
   modal.value = false;
-  const sendUserId = 2
+  const sendUserId = userId
   const receiveUserId = route.query.receiveUserId
-  const userType = 2
   if (matchStatus != null) {
-    await http.post('/userDetail/regMatch', { matchStatus, sendUserId, receiveUserId, userType })
+    await http.post('/userDetail/match', { matchStatus, sendUserId, receiveUserId, userType })
   }
 };
 </script>
