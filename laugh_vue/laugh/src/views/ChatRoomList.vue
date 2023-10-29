@@ -18,13 +18,23 @@
                 @click="getChatDetail(item)"
                 >
                   <v-avatar>
-                    <span>
-                      画像
-                    </span>
+                    <v-img v-if="item.img != null"
+                      :aspect-ratio="1"
+                      :src="item.img"
+                      cover
+                      class="rounded-lg profile_img"
+                    ></v-img>
+                    <v-img v-if="item.img == null"
+                      :aspect-ratio="1"
+                      :src="src"
+                      cover
+                      class="rounded-lg"
+                    ></v-img>
                   </v-avatar>
                   <div class="pa-4">
                     <v-list-item-title class="user-name">{{ item.name }}</v-list-item-title>
-                    <v-list-item-subtitle class="last-message">{{ item.message }}</v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="item.message != null" class="last-message">{{ item.message }}</v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="item.message == null" class="last-message">まだやり取りがありません</v-list-item-subtitle>
                   </div>
                   <v-btn v-if="item.unreadCount != 0"
                     class="unread-icon ma-1 small"
@@ -61,6 +71,7 @@ const chat = ref<Chat[]>([]);
 const userId = store.getters['user/getUserId'];
 const userType = store.getters['user/getUserType'];
 const chatDetailRef = ref<Chat>();
+const src = ref("/img/man.svg");
 
 // チャットリスト取得
 const getChatRoom = async () => {
