@@ -1,67 +1,60 @@
 <template>
-  <v-container v-if="initStatus == 1"></v-container>
-  <ul class="step-box">
-    <li class="step-1 done"><div class="step-num">１</div><div class="step-desc">アドレス登録</div></li>
-    <li class="step-2"><div class="step-num">２</div><div class="step-desc">本人情報の入力</div></li>
-    <li class="step-3"><div class="step-num">３</div><div class="step-desc">登録完了</div></li>
-  </ul>
+  <v-container class="mt-12">
+    <ul class="step-box">
+      <li class="step-1 done"><div class="step-num">１</div><div class="step-desc">アドレス登録</div></li>
+      <li class="step-2"><div class="step-num">２</div><div class="step-desc">本人情報の入力</div></li>
+      <li class="step-3"><div class="step-num">３</div><div class="step-desc">登録完了</div></li>
+    </ul>
+  </v-container>
+
   <v-container v-if="initStatus == 1">
-    <v-row justify="center" align-content="center">
-    </v-row>
     <v-row justify="center">
     <v-col class="mt-16" cols="5">
       
       <v-card-title class=" mb-4">
-        <v-icon left>mdi-email</v-icon> <!-- アイコンを追加 -->
-        メールアドレス登録 <!-- タイトルテキストを追加 -->
+        <v-icon left>mdi-email</v-icon> 
+        メールアドレス登録 
       </v-card-title>
       
       <v-card>
-      <v-card-text class="pt-8 ">
-        <v-form>
-          <v-col lg="12" >
-            <v-text-field
-              v-model="email"
-              label="メールアドレス"
-              :rules="[rules.required]"
-            ></v-text-field>
-            <v-btn 
-              block 
-              class="mt-4" 
-              color="orange" 
-              @click="send"
-            >会員登録する</v-btn>
-          </v-col>
-        </v-form>
-        <v-col>すでに会員の方は<router-link to="/login">こちらからログイン</router-link>してください</v-col>
-      </v-card-text>
-
+        <v-card-text class="pt-8 ">
+          <v-form>
+            <v-col lg="12" >
+              <v-text-field
+                v-model="email"
+                label="メールアドレス"
+                :rules="[rules.required]"
+              ></v-text-field>
+              <v-btn 
+                block 
+                class="mt-4" 
+                color="orange" 
+                @click="send"
+              >会員登録する</v-btn>
+            </v-col>
+          </v-form>
+          <v-col>すでに会員の方は<router-link to="/login">こちらからログイン</router-link>してください</v-col>
+        </v-card-text>
       </v-card>
     </v-col>
     </v-row>
   </v-container>
 
   <v-container v-if="initStatus == 2">
-    <v-card>
-
-    </v-card>
-
-    <v-row justify="center" align-content="center">
-      <!-- <ul class="step-box">
-        <li class="step-1 done"><div class="step-num">１</div><div class="step-desc">アドレス登録</div></li>
-        <li class="step-2"><div class="step-num">２</div><div class="step-desc">本人情報の入力</div></li>
-        <li class="step-3"><div class="step-num">３</div><div class="step-desc">登録完了</div></li>
-      </ul> -->
-    </v-row>
-    <h2 class="title-sub">登録用メールを送信しました</h2>
-    <div class="cen-box">
-      <dl class="mail-inp-box">
-        <dt>あなたのメールアドレス</dt>
-        <dd>{{ email }}</dd>
-      </dl>
-      <p class="text-supplement">メール本文に記載されている「メールアドレス認証」を<br>クリックして会員登録を完了してください</p>
-      <p class="text-supplement"><span>※まだ会員登録は完了していません</span></p>
-    </div>
+    <v-row justify="center" >
+      <v-col class="mt-16" cols="5">
+        <v-card>
+          <v-card-title style="text-align: center;">
+            メールアドレス登録完了
+          </v-card-title>
+          <v-card-text class="text-container">
+            <div class="text-center">あなたのメールアドレス：<span class="email-orange">{{ email }}</span></div>
+            <div class="description-text">※まだ会員登録は完了していません</div>
+            <div class="description-text">メール本文に記載されているURLをクリックして<br>会員登録を完了してください</div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      </v-row>
   </v-container>
   
   <v-dialog v-model="showModal" max-width="500px">
@@ -277,6 +270,28 @@ main {
 }
 
 .step-box > li.done > .step-desc {
+  color: orange;
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-container {
+  text-align: left;
+}
+
+.text-container p {
+  margin: 0.5em 0; /* 上下のマージンを調整 */
+}
+
+.description-text {
+  text-align: center;
+  font-size: 12px;
+}
+
+.email-orange {
   color: orange;
   font-weight: bold;
 }
