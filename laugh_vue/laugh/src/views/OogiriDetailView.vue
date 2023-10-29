@@ -166,11 +166,18 @@ const isInputValid = computed(() => {
 
 // ステータスごとのリアクション数を集計する
 const countReactionsWithStatus = (reactions, status) => {
+  if (!reactions) {
+    return 0;
+  }
   return reactions.filter(reaction => reaction.reactionStatus === status).length;
 }
 
 // リアクション済みかどうかを判定する
 const isReacted = (answer) => {
+  if (!answer.reactions || !Array.isArray(answer.reactions)) {
+    // リアクションがまだない場合、処理を中断してfalseを返す
+    return false;
+  }
   for (const reaction of answer.reactions) {
     if (reaction.reactionUserId === userId && reaction.reactionStatus === reactionedNumber) {
       return true; // リアクションしている場合
@@ -185,16 +192,17 @@ const reaction = async (answer) => {
   var reacFlg = false;
   var reacDelFlg = false;
   var reactionedId;
-  
-  for (const reaction of answer.reactions) {
-    if (reaction.reactionUserId == userId && reaction.reactionStatus == reactionedNumber) { // リアクション済み且つステータスが11
-      reacFlg = true;
-      reactionedId = reaction.reactionId;
-    }
-    if (reaction.reactionUserId == userId && reaction.reactionStatus == deletedNumber) { // リアクション済み且つステータスが99(削除済み)
-      reacFlg = true;
-      reacDelFlg = true;
-      reactionedId = reaction.reactionId;
+  if (answer.reactions || Array.isArray(answer.reactions)) {
+    for (const reaction of answer.reactions) {
+      if (reaction.reactionUserId == userId && reaction.reactionStatus == reactionedNumber) { // リアクション済み且つステータスが11
+        reacFlg = true;
+        reactionedId = reaction.reactionId;
+      }
+      if (reaction.reactionUserId == userId && reaction.reactionStatus == deletedNumber) { // リアクション済み且つステータスが99(削除済み)
+        reacFlg = true;
+        reacDelFlg = true;
+        reactionedId = reaction.reactionId;
+      }
     }
   }
   // 登録用オブジェクト
