@@ -494,20 +494,17 @@
   import type User from "@/types/User";
   import type Notice from '@/types/Notice';
   import http from "@/http-common"
-  import { useStore } from 'vuex';
-
+  
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
   const notice = ref([] as Notice[]);
   const dispUserType = ref();
   const dispUserCount = ref(0);
   const store = useStore();
-<<<<<<< HEAD
+
   const userId = store.getters['user/getUserId'];
   const userType = store.getters['user/getUserType'];
 
-=======
->>>>>>> feture/user_detail_matu
   const eee = ref([{id:1, type:"1", message:"メッセージ1"},{id:2, type:"2",message:"メッセージ２"}]);
 
   onMounted(() => {
@@ -548,11 +545,8 @@
   const getData = async () => {
     const {data} = await http.get('/top',{
       params: {
-<<<<<<< HEAD
         userType: userType
-=======
-        userType: store.state.user.userType
->>>>>>> feture/user_detail_matu
+        // userType: store.state.user.userType
       }}
     )
     dispUsers.value = data.data;
