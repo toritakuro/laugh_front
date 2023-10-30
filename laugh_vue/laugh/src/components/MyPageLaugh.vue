@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 import type Laugh from "@/types/Laugh";
@@ -60,7 +60,7 @@ const getLaugh = async () => {
 
 /** ユーザ詳細へ遷移 */
 const displayUser = (laugh:Laugh) => {
-  router.push({ path: '/home', query: { userId: laugh.targetUserId }  })
+  router.push({ name: 'detail', query: { userId: laugh.targetUserId }  })
 }
 
 defineExpose({

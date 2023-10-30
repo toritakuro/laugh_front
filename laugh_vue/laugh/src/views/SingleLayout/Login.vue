@@ -9,7 +9,7 @@
         </v-avatar>
       </v-row>
       <v-row justify="center">
-        <v-col lg="4">
+        <v-col lg="4" md="6" sm="8">
           <v-card >
             <v-form id="login-form" class="mt-2" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
             <v-card-text class="pa-7">

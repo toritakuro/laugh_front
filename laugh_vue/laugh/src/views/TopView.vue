@@ -512,13 +512,6 @@
 
 const redirectToDetails = async (item: User, sendUserId: number) => {
   router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: sendUserId }  })
-  // const themeId = route.query.themeId;
-  // const {data} = await http.get('oogiri/detail',{
-  //   params: {
-  //     themeId: themeId
-  //   }}
-  // )
-  // oogiri.value = [data.data];
 }
 
   /** お知らせ取得 */
@@ -534,7 +527,19 @@ const redirectToDetails = async (item: User, sendUserId: number) => {
   // メッセージ既読
   const readMessage = (notice: Notice) => {
     http.post('/notice',{id: notice.id });
-    // notice.targetTypeを見て、notice.targetIdで振り分け :TODO
+    
+    // メッセージの場合はチャットルームへ
+    if(notice.targetType) {
+      router.push({ name: 'chat', query: { 
+        userId: store.state.user.userId,
+        userType: store.state.user.userType
+        }
+      })
+    } 
+    // Laughの場合は各ユーザへ飛ぶ
+    else {
+      router.push({ name: 'detail', query: { receiveUserId: store.state.user.userId, userType: store.state.user.userType, sendUserId: notice.targetId }  })
+    }
   }
   /** User一覧を取得する */
   const getData = async () => {
