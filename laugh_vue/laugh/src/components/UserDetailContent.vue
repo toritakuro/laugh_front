@@ -20,7 +20,7 @@
                 <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
               </div>
               <div>
-                <v-card-subtitle class="mt-8 postTime">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
+                <v-card-subtitle class="mt-8 postTime"><v-icon icon="mdi-cloud-upload-outline"/>:{{ formatDate(item.createAt) }}</v-card-subtitle>
               </div>
             </v-list>
             <v-row class="d-flex pl-4">
@@ -41,7 +41,7 @@
 
     <!-- PDFファイル一覧 -->
     <v-icon size="30" class="mt-12 mb-4 fileIcon">mdi-file-outline</v-icon>
-    <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
+    <v-sheet class="rounded-lg  card-row" style="border:3px solid orange;">
       <v-row>
         <v-col
         v-for="(item, i) in fileContents"
@@ -61,7 +61,7 @@
                 <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
               </div>
               <div class="postTime">
-                <v-card-subtitle class="mt-8 postTime">投稿日時:{{ formatDate(item.createAt) }}</v-card-subtitle>
+                <v-card-subtitle class="mt-8 postTime"><v-icon icon="mdi-cloud-upload-outline"/>:{{ formatDate(item.createAt) }}</v-card-subtitle>
               </div>
             </v-list>
             <v-row class="d-flex pl-4">
@@ -189,6 +189,8 @@
   border: 1px solid #4344464f; 
   padding: 16px; 
   background-color: #F8F9FA;
+  max-height: 540px;
+  overflow-y: auto;
   }
   .fixed_btn {
   position: fixed;
@@ -218,4 +220,7 @@
   .fileIcon {
     margin-bottom: 0px !important;
   }
+  ::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+}
 </style>

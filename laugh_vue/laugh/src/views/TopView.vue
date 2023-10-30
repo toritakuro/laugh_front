@@ -403,9 +403,6 @@
     line-height: 75px;
     margin-right: 5px;
   } 
-  /* .upside_pulldown {
-    margin: 9px 70px 0px 0px;
-  } */
 
   .main {
     height: 1600px;
@@ -517,13 +514,6 @@
   const redirectToDetails = async (item: User) => {
     console.log("usertype",item.userType)
     router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: userId }  })
-    // const themeId = route.query.themeId;
-    // const {data} = await http.get('oogiri/detail',{
-    //   params: {
-    //     themeId: themeId
-    //   }}
-    // )
-    // oogiri.value = [data.data];
   }
 
   /** お知らせ取得 */
@@ -546,7 +536,6 @@
     const {data} = await http.get('/top',{
       params: {
         userType: userType
-        // userType: store.state.user.userType
       }}
     )
     dispUsers.value = data.data;

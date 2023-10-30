@@ -127,14 +127,6 @@
   .content {
     margin-top:10px;
   }
-
-  .profile {
-    /* height: 550px; */
-  }
-  /* .profile_right {
-    height: 550px;
-    overflow-y: scroll;
-  } */
   .v-card-text {
     padding: 0rem;
     white-space: pre-line;
@@ -142,10 +134,6 @@
     -webkit-box-orient: vertical; /* 必須 */
     overflow: hidden; 
   }
-  /* プロフィール */
-
-
-
   .detail_card .v-card-subtitle {
     border-bottom: 2px dashed #FB8C00;
     /* border-bottom: 2px dotted #FB8C00; */
@@ -160,94 +148,85 @@
   }
 
   .float-btn {
-  position: absolute;
-  top: 150px;
-  right: 30px;
-  z-index: 100;
-}
+    position: absolute;
+    top: 150px;
+    right: 30px;
+    z-index: 100;
+  }
  .laugh-btn{
-  height: 120px;
-  width: 120px;
-  font-weight: bold;
-  font-size: large;
-  color: #FB8C00;
-  border: 2px solid #FB8C00;
-  background-color: #FFFF;
-  border-radius: 50%;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-	transition: background-color 0.5s;
-}
-.laugh-btn:hover{
-  color: #FFFF;
-  background-color: #FB8C00;
-}
-.approval-btn{
-  height: 120px;
-  width: 120px;
-  font-weight: bold;
-  font-size: large;
-  /* color: #FB8C00;
-  border: 2px solid #FB8C00; */
-  color: #86cff6;
-  border: 2px solid #86cff6;
-  background-color: #FFFF;
-  border-radius: 50%;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-	transition: background-color 0.5s;
-}
-.approval-btn:hover{
-  color: #FFFF;
-  border: 2px solid #86cff6;
-  background-color: #86cff6;
-}
-.cancel-btn{
-  height: 120px;
-  width: 120px;
-  font-weight: bold;
-  font-size: large;
-  /* color: #FB8C00;
-  border: 2px solid #FB8C00; */
-  color: #f68a8a;
-  border: 2px solid #f68a8a;
-  background-color: #FFFF;
-  border-radius: 50%;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-	transition: background-color 0.5s;
-}
-.cancel-btn:hover{
-  color: #FFFF;
-  border: 2px solid #f68a8a;
-  background-color: #f68a8a;
-}
+    height: 120px;
+    width: 120px;
+    font-weight: bold;
+    font-size: large;
+    color: #FB8C00;
+    border: 2px solid #FB8C00;
+    background-color: #FFFF;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s;
+  }
+  .laugh-btn:hover{
+    color: #FFFF;
+    background-color: #FB8C00;
+  }
+  .approval-btn{
+    height: 120px;
+    width: 120px;
+    font-weight: bold;
+    font-size: large;
+    /* color: #FB8C00;
+    border: 2px solid #FB8C00; */
+    color: #86cff6;
+    border: 2px solid #86cff6;
+    background-color: #FFFF;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s;
+  }
+  .approval-btn:hover{
+    color: #FFFF;
+    border: 2px solid #86cff6;
+    background-color: #86cff6;
+  }
+  .cancel-btn{
+    height: 120px;
+    width: 120px;
+    font-weight: bold;
+    font-size: large;
+    /* color: #FB8C00;
+    border: 2px solid #FB8C00; */
+    color: #f68a8a;
+    border: 2px solid #f68a8a;
+    background-color: #FFFF;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.5s;
+  }
+  .cancel-btn:hover{
+    color: #FFFF;
+    border: 2px solid #f68a8a;
+    background-color: #f68a8a;
+  }
 </style>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, defineProps } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import MyPageProfile from '@/components/MyPageProfile.vue';
-import UserDetailContent from '@/components/UserDetailContent.vue';
-import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
-import LaughModal from "@/components/LaughModal.vue";
-import LaughApprovalModal from "@/components/LaughApprovalModal.vue";
-import LaughCancelModal from "@/components/LaughCancelModal.vue";
-import http from "@/http-common"
-import type User from "@/types/User";
+  import { computed, ref, onMounted, defineProps } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { useStore } from 'vuex'
+  import MyPageProfile from '@/components/MyPageProfile.vue';
+  import UserDetailContent from '@/components/UserDetailContent.vue';
+  import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
+  import LaughModal from "@/components/LaughModal.vue";
+  import LaughApprovalModal from "@/components/LaughApprovalModal.vue";
+  import LaughCancelModal from "@/components/LaughCancelModal.vue";
+  import http from "@/http-common"
+  import type User from "@/types/User";
 
-onMounted(() => { getData(); });
+  onMounted(() => { getData(); });
 
-const oogiriRef = ref();
-const contentRef = ref();
-const route = useRoute()
-// onMounted(() => {
-//     console.log(route.query.myId)
-//     console.log(route.query.userType)
-//     userId.value = route.query.userId
-//     console.log("userId",userId.value)
-//     getData();
-//     // getLaugh();
-//     // getProfile();
-//   })
+  const oogiriRef = ref();
+  const contentRef = ref();
+  const route = useRoute()
   const store = useStore();
   const userId = store.getters['user/getUserId'];
   const userType = store.getters['user/getUserType'];
@@ -293,25 +272,26 @@ const route = useRoute()
     getContet();
   }
 
-const sendMsg = "どちらを送りますか？";
-const recieveMsg = "Laughを承認しますか？";
-const cancelMsg = "マッチングを解消しますか？";
-const modal = ref(false);
+  const sendMsg = "どちらを送りますか？";
+  const recieveMsg = "Laughを承認しますか？";
+  const cancelMsg = "マッチングを解消しますか？";
+  const modal = ref(false);
 
-const showModal = () => {
-  // モーダル表示する際の処理が必要ならここに書く
-  modal.value = true;
-  console.log("aaa",modal.value)
-};
+  const showModal = () => {
+    // モーダル表示する際の処理が必要ならここに書く
+    modal.value = true;
+    console.log("aaa",modal.value)
+  };
 
-const postMatch = async (matchStatus: number) => {
-  // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
-  console.log("aaa")
-  modal.value = false;
-  const sendUserId = userId
-  const receiveUserId = route.query.receiveUserId
-  if (matchStatus != null) {
-    await http.post('/userDetail/match', { matchStatus, sendUserId, receiveUserId, userType })
-  }
-};
+  const postMatch = async (matchStatus: number) => {
+    // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
+    console.log("aaa")
+    modal.value = false;
+    const sendUserId = userId
+    const receiveUserId = route.query.receiveUserId
+    if (matchStatus != null) {
+      await http.post('/userDetail/match', { matchStatus, sendUserId, receiveUserId, userType })
+      getData();
+    }
+  };
 </script>
