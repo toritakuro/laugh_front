@@ -1,85 +1,96 @@
 <template>
-    <v-icon size="30">mdi-movie-play</v-icon>
-    <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
-      <v-row>
-        <v-col
-          v-for="(item, i) in movieContents"
+  <div v-if="existFlg">
+    <div v-if="existMovieFlg">
+      <v-icon size="30">mdi-movie-play</v-icon>
+      <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;">
+        <v-row>
+          <v-col
+            v-for="(item, i) in movieContents"
+            :key = "i"
+            cols = "4"
+            class = "mb-4"
+          >
+            <v-card class="pb-2">
+              <v-list>
+                <div>
+                  <v-card-title>{{ item.title }}</v-card-title>
+                </div>
+                <div>
+                  <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
+                    <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                  </div>
+                  <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
+                </div>
+                <div>
+                  <v-card-subtitle class="mt-8 postTime"><v-icon icon="mdi-cloud-upload-outline"/>:{{ formatDate(item.createAt) }}</v-card-subtitle>
+                </div>
+              </v-list>
+              <v-row class="d-flex pl-4">
+                <v-col cols="auto">
+                  <v-btn 
+                  block
+                  size="small"
+                  class="mt-2" 
+                  color="grey-lighten-1" 
+                  @click="downloadFile(item.contentPath)"
+                  ><v-icon size="small">mdi-download</v-icon></v-btn>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-sheet>
+    </div>
+
+    <!-- PDFファイル一覧 -->
+    <div v-if="existFileFlg">
+      <v-icon size="30" class="mt-12 mb-4 fileIcon">mdi-file-outline</v-icon>
+      <v-sheet class="rounded-lg  card-row" style="border:3px solid orange;">
+        <v-row>
+          <v-col
+          v-for="(item, i) in fileContents"
           :key = "i"
           cols = "4"
           class = "mb-4"
-        >
-          <v-card class="pb-2">
-            <v-list>
-              <div>
-                <v-card-title>{{ item.title }}</v-card-title>
-              </div>
-              <div>
-                <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
-                  <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+          >
+            <v-card class="pb-2">
+              <v-list>
+                <div>
+                  <v-card-title>{{ item.title }}</v-card-title>
                 </div>
-                <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
-              </div>
-              <div>
-                <v-card-subtitle class="mt-8 postTime"><v-icon icon="mdi-cloud-upload-outline"/>:{{ formatDate(item.createAt) }}</v-card-subtitle>
-              </div>
-            </v-list>
-            <v-row class="d-flex pl-4">
-              <v-col cols="auto">
-                <v-btn 
-                block
-                size="small"
-                class="mt-2" 
-                color="grey-lighten-1" 
-                @click="downloadFile(item.contentPath)"
-                ><v-icon size="small">mdi-download</v-icon></v-btn>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-sheet>
-
-    <!-- PDFファイル一覧 -->
-    <v-icon size="30" class="mt-12 mb-4 fileIcon">mdi-file-outline</v-icon>
-    <v-sheet class="rounded-lg  card-row" style="border:3px solid orange;">
-      <v-row>
-        <v-col
-        v-for="(item, i) in fileContents"
-        :key = "i"
-        cols = "4"
-        class = "mb-4"
-        >
-          <v-card class="pb-2">
-            <v-list>
-              <div>
-                <v-card-title>{{ item.title }}</v-card-title>
-              </div>
-              <div>
-                <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
-                  <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                <div>
+                  <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
+                    <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                  </div>
+                  <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
                 </div>
-                <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
-              </div>
-              <div class="postTime">
-                <v-card-subtitle class="mt-8 postTime"><v-icon icon="mdi-cloud-upload-outline"/>:{{ formatDate(item.createAt) }}</v-card-subtitle>
-              </div>
-            </v-list>
-            <v-row class="d-flex pl-4">
-              <v-col cols="auto">
-                <v-btn 
-                block
-                size="small"
-                class="mt-2" 
-                color="grey-lighten-1" 
-                @click="downloadFile(item.contentPath)"
-                ><v-icon>mdi-download</v-icon></v-btn>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-sheet>
-
+                <div class="postTime">
+                  <v-card-subtitle class="mt-8 postTime"><v-icon icon="mdi-cloud-upload-outline"/>:{{ formatDate(item.createAt) }}</v-card-subtitle>
+                </div>
+              </v-list>
+              <v-row class="d-flex pl-4">
+                <v-col cols="auto">
+                  <v-btn 
+                  block
+                  size="small"
+                  class="mt-2" 
+                  color="grey-lighten-1" 
+                  @click="downloadFile(item.contentPath)"
+                  ><v-icon>mdi-download</v-icon></v-btn>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-sheet>
+    </div>
+  </div>
+  <!-- ファイルがない場合の文言 -->
+  <div v-if="!existFlg">
+    <v-col >
+      <span>表示できるコンテンツはありません。</span>
+    </v-col>
+  </div>
 </template>
   
   <script setup lang="ts">
@@ -96,6 +107,9 @@
   // 台本ファイル用
   const fileContents = computed(() => { return contents.value.filter(contents => contents.fileType == 2)});
 
+  const existFlg = ref(false); // ユーザーがファイルを投稿しているかの判定
+  const existMovieFlg = computed(() => { return movieContents.value.length > 0 });
+  const existFileFlg = computed(() => { return fileContents.value.length > 0 });
   // 投稿したファイルの説明文で改行があった時、改行して表示されるようにする
   const formatDetail = (detail: string) => {
   return detail.replace(/\r\n|\r|\n/g, "<br>");
@@ -132,6 +146,9 @@
       }
     )
     contents.value = data.data
+    if (contents.value.length > 0) {
+      existFlg.value = true
+    }
   }
   
   // 投稿日時のフォーマットを調整
@@ -143,9 +160,9 @@
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-11の範囲なので+1
     const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
+    // const hours = String(date.getHours()).padStart(2, '0');
+    // const minutes = String(date.getMinutes()).padStart(2, '0');
+    return year + '/' + month + '/' + day;
   }
   
   // ファイルをダウンロードする処理

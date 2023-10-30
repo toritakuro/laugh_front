@@ -1,9 +1,16 @@
 <template>
-  <div class="outline">
-    <p v-for="item in oogiri" class="oogiriWrap">
-      <h3 class="title">{{ item.themeContent }}</h3>
-      <div class="answer" v-for="answer in item.answers">{{ answer.answerContent }}</div>
-    </p>
+  <div v-if="existFlg">
+    <div class="outline">
+      <p v-for="item in oogiri" class="oogiriWrap">
+        <h3 class="title">{{ item.themeContent }}</h3>
+        <div class="answer" v-for="answer in item.answers">{{ answer.answerContent }}</div>
+      </p>
+    </div>
+  </div>
+  <div v-if="!existFlg">
+    <v-col >
+      <span>表示できるコンテンツはありません。</span>
+    </v-col>
   </div>
 </template>
   
@@ -19,6 +26,7 @@
   const userId = computed(() => store.state.user.userId)
   const oogiri = ref<any[]>([])
   const route = useRoute()
+  const existFlg = ref(false); // ユーザーが大喜利を回答しているかの判定
   /** 大喜利回答一覧を取得する */
   const getOogiri = async (userId: string) => {
     const {data} = await http.get('/userDetail/oogiriAnswer',{
@@ -26,6 +34,9 @@
       }
     )
     oogiri.value = data.data;
+    if (oogiri.value.length > 0) {
+      existFlg.value = true
+    }
   }
   
   /** ユーザ詳細へ遷移 */
@@ -43,6 +54,8 @@
     border: 1px solid #efefef;
     padding: 10px;
     border-radius: 5px;
+    max-height: 1180px;
+    overflow-y: auto;
   }
   .oogiriWrap {
     margin-top: 20px;

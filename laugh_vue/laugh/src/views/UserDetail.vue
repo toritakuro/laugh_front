@@ -1,71 +1,71 @@
 <template>
   <v-container fluid="true" class="content">
     <v-row>
-      <v-col cols="6" >
-          <v-card class="mx-auto pa-2 detail_card">
-            <v-container fluid="true">
-              <v-row>
-                <v-col cols="5">
-                  <v-img
-                    :aspect-ratio="1"
-                    src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
-                    cover
-                    class="rounded-lg  profile_img"
-                ></v-img>
-                </v-col>
-                <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
-                  <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ user?.userName }}</v-card-title>
-                  <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" /> 性別： 男 </v-card-subtitle>
-                  <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" /> 性別： 女 </v-card-subtitle>
-                  <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" /> 性別： 男女 </v-card-subtitle>
-                  <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" /> メンバー： {{ user?.memberNum }} 人</v-card-subtitle>
-                  <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> 活動歴： {{ user?.activityDt }}</v-card-subtitle>
-                  <v-card-subtitle><v-icon icon="mdi-office-building" /> 事務所： {{ user?.officeName }}</v-card-subtitle>
-                  <v-card-subtitle><v-icon icon="mdi-map-marker" /> 活動地域： {{ user?.areaName }}</v-card-subtitle>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col class="profile_downside" v-if="user?.userType === 2">
-                  <v-card-subtitle class="mb-1 text-subtitle-1">得意分野</v-card-subtitle>
-                  <v-chip
-                    v-for="(itemName, i) in user?.comedyStyleNameList" :key="i"
-                    class="mr-1 mt-1 profile_chip"
-                    color="orange"
-                    text-color="white"
-                    >{{ itemName }}
-                  </v-chip>
-                  <v-card-subtitle class="mb-1 text-subtitle-1 profile_specialSkill_text">特殊スキル</v-card-subtitle>
-                  <v-chip
-                    v-for="(itemName, i) in user?.specialSkillNameList" :key="i"
-                    class="mr-1 mt-1"
-                    color="orange"
-                    text-color="white"
-                    >{{ itemName }}
-                  </v-chip>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col class="profile_downside" v-if="user?.userType === 1">
-                  <v-card-subtitle class="mb-1 text-subtitle-1">芸風</v-card-subtitle>
-                  <v-chip
-                    v-for="(itemName, i) in user?.comedyStyleNameList" :key="i"
-                    class="mr-1 mt-1"
-                    color="orange"
-                    text-color="white"
-                    >{{ itemName }}
-                  </v-chip>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col class="profile_downside">
-                  <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" />自己紹介</v-card-subtitle>
-                  <v-card-text class="text-subtitle-1">{{ user?.selfIntroduction }}</v-card-text>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-        </v-col>
-      <v-col cols="6">
+      <v-col cols="6" class="content_box">
+        <v-card class="mx-auto pa-2 detail_card">
+          <v-container fluid="true">
+            <v-row>
+              <v-col cols="5">
+                <v-img
+                  :aspect-ratio="1"
+                  src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
+                  cover
+                  class="rounded-lg  profile_img"
+              ></v-img>
+              </v-col>
+              <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
+                <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ user?.userName }}</v-card-title>
+                <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" /> 性別： 男 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" /> 性別： 女 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" /> 性別： 男女 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" /> メンバー： {{ user?.memberNum }} 人</v-card-subtitle>
+                <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> 活動歴： {{ user?.activityDt }}</v-card-subtitle>
+                <v-card-subtitle><v-icon icon="mdi-office-building" /> 事務所： {{ user?.officeName }}</v-card-subtitle>
+                <v-card-subtitle><v-icon icon="mdi-map-marker" /> 活動地域： {{ user?.areaName }}</v-card-subtitle>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="profile_downside" v-if="user?.userType === 2">
+                <v-card-subtitle class="mb-1 text-subtitle-1">得意分野</v-card-subtitle>
+                <v-chip
+                  v-for="(itemName, i) in user?.comedyStyleNameList" :key="i"
+                  class="mr-1 mt-1 profile_chip"
+                  color="orange"
+                  text-color="white"
+                  >{{ itemName }}
+                </v-chip>
+                <v-card-subtitle class="mb-1 text-subtitle-1 profile_specialSkill_text">特殊スキル</v-card-subtitle>
+                <v-chip
+                  v-for="(itemName, i) in user?.specialSkillNameList" :key="i"
+                  class="mr-1 mt-1"
+                  color="orange"
+                  text-color="white"
+                  >{{ itemName }}
+                </v-chip>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="profile_downside" v-if="user?.userType === 1">
+                <v-card-subtitle class="mb-1 text-subtitle-1">芸風</v-card-subtitle>
+                <v-chip
+                  v-for="(itemName, i) in user?.comedyStyleNameList" :key="i"
+                  class="mr-1 mt-1"
+                  color="orange"
+                  text-color="white"
+                  >{{ itemName }}
+                </v-chip>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="profile_downside">
+                <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" />自己紹介</v-card-subtitle>
+                <v-card-text class="text-subtitle-1 profile_selfIntroduction">{{ user?.selfIntroduction }}</v-card-text>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-col>
+      <v-col cols="6" class="content_box">
         <v-card>
           <v-tabs
             v-model="tab"
@@ -127,16 +127,21 @@
   .content {
     margin-top:10px;
   }
+  .content_box {
+    height: 1284px;
+  }
+  .profile_selfIntroduction {
+    max-height: 850px;
+    overflow-y: auto;
+  }
   .v-card-text {
     padding: 0rem;
     white-space: pre-line;
     display: -webkit-box; /* 必須 */
     -webkit-box-orient: vertical; /* 必須 */
-    overflow: hidden; 
   }
   .detail_card .v-card-subtitle {
     border-bottom: 2px dashed #FB8C00;
-    /* border-bottom: 2px dotted #FB8C00; */
     margin-left: 7px;
     margin-bottom: 5px;
     padding: 0.2rem 0.7rem
