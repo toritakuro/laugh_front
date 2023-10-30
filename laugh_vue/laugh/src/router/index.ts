@@ -100,7 +100,11 @@ const router = createRouter({
 })
 
 router.beforeResolve((to, from, next) => {
-  if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
+  if(to.name == 'profile') next()
+  else if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
   else next()
+
+  // if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
+  // else next()
 })
 export default router

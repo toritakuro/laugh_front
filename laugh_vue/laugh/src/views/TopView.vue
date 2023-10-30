@@ -512,7 +512,6 @@
   const router = useRouter()
  
   const redirectToDetails = async (item: User) => {
-    console.log("usertype",item.userType)
     router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: userId }  })
   }
 
@@ -529,7 +528,19 @@
   // メッセージ既読
   const readMessage = (notice: Notice) => {
     http.post('/notice',{id: notice.id });
-    // notice.targetTypeを見て、notice.targetIdで振り分け :TODO
+    
+    // メッセージの場合はチャットルームへ
+    if(notice.targetType) {
+      router.push({ name: 'chat', query: { 
+        userId: store.state.user.userId,
+        userType: store.state.user.userType
+        }
+      })
+    } 
+    // Laughの場合は各ユーザへ飛ぶ
+    else {
+      router.push({ name: 'detail', query: { receiveUserId: store.state.user.userId, userType: store.state.user.userType, sendUserId: notice.targetId }  })
+    }
   }
   /** User一覧を取得する */
   const getData = async () => {
