@@ -6,12 +6,22 @@
           <v-container fluid="true">
             <v-row>
               <v-col cols="5">
+                <div v-if="user?.profileImgPath">
+                  <v-img
+                    :aspect-ratio="1"
+                    :src="user?.profileImgPath"
+                    cover
+                    class="rounded-lg  profile_img"
+                  ></v-img>
+              </div>
+              <div v-if="!user?.profileImgPath">
                 <v-img
                   :aspect-ratio="1"
-                  src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
+                  :src="src"
                   cover
                   class="rounded-lg  profile_img"
-              ></v-img>
+                ></v-img>
+              </div>
               </v-col>
               <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
                 <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ user?.userName }}</v-card-title>
@@ -235,6 +245,7 @@
   const store = useStore();
   const userId = store.getters['user/getUserId'];
   const userType = store.getters['user/getUserType'];
+  const src = ref("/img/man.svg");
 
   
   /** 大喜利取得 */

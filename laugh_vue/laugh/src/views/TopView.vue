@@ -235,12 +235,22 @@
                 <v-container fluid="true">
                   <v-row>
                     <v-col class="pa-0" lg="6" md="6" sm="12">
-                      <v-img
-                        :aspect-ratio="1"
-                        :src="item.profileImgPath"
-                        cover
-                        class="rounded-lg  profile_img"
-                    ></v-img>
+                      <div v-if="item?.profileImgPath">
+                        <v-img
+                          :aspect-ratio="1"
+                          :src="item.profileImgPath"
+                          cover
+                          class="rounded-lg  profile_img"
+                        ></v-img>
+                      </div>
+                      <div v-if="!item?.profileImgPath">
+                        <v-img
+                          :aspect-ratio="1"
+                          :src="src"
+                          cover
+                          class="rounded-lg  profile_img"
+                        ></v-img>
+                      </div>
                     </v-col>
                     <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
                       <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ item.userName }}</v-card-title>
@@ -498,6 +508,7 @@
   const dispUserType = ref();
   const dispUserCount = ref(0);
   const store = useStore();
+  const src = ref("/img/man.svg");
 
   const userId = store.getters['user/getUserId'];
   const userType = store.getters['user/getUserType'];
@@ -512,7 +523,7 @@
   const router = useRouter()
  
   const redirectToDetails = async (item: User) => {
-    router.push({ name: 'detail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: userId }  })
+    router.push({ name: 'userDetail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: userId }  })
   }
 
   /** お知らせ取得 */

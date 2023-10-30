@@ -66,10 +66,9 @@ const router = createRouter({
           component: MypageContent
         },
         {
-          path: 'detail',
-          name: 'detail',
-          component: UserDetail,
-          props: true
+          path: 'userDetail',
+          name: 'userDetail',
+          component: UserDetail
         },
         {
           path: 'mypage/laugh',
