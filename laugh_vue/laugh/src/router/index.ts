@@ -6,14 +6,15 @@ import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
 import MypageContent from '../views/MypageContent.vue'
+import ProfileInit from '../views/SingleLayout/ProfileInit.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
+import ProfileRegisterCompletion from '../views/SingleLayout/ProfileRegisterCompletion.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import ChatRoom from '../views/ChatRoomList.vue'
 import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
 import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
-import HelpView from '../views/HelpView.vue'
 import store from "@/store"
 
 const router = createRouter({
@@ -25,9 +26,19 @@ const router = createRouter({
       component: LoginView
     },
     {
+      path: '/profile/init',
+      name: 'ProfileInit',
+      component: ProfileInit
+    },
+    {
       path: '/profile/register/:address(.*)',
       name: 'profile',
       component: ProfileRegister
+    },
+    {
+      path: '/profile/register/completion',
+      name: 'completion',
+      component: ProfileRegisterCompletion
     },
     {
       path: '/', redirect: '/top',component: Main,
@@ -89,10 +100,6 @@ const router = createRouter({
           path: 'detail',
           name: 'chatDetail',
           component: ChatDetail,
-        },
-        {
-          path: '/help',
-          component: HelpView,
         }
       ]
     }

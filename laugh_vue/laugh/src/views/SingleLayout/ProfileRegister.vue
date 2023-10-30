@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="bakColor">
     <v-row justify="center" align-content="center">
       <ul class="step-box">
         <li class="step-1 done"><div class="step-num">１</div><div class="step-desc">アドレス登録</div></li>
@@ -9,19 +9,55 @@
     </v-row>
     <v-row>
       <v-card
-        class="mx-auto profileRegWrap"
+      class="mx-auto profileRegWrap"
         prepend-icon="mdi-home"
-      >
+        >
         <template v-slot:title>
           新規登録
         </template>
-
+        
         <v-card-text>
           <v-form>
+            <v-radio-group v-model="profileReq.userType" inline :rules="[rules.radioVerify]">
+              <v-radio
+                label="芸人"
+                value="1"
+                color="orange"
+              ></v-radio>
+              <v-radio
+                label="作家"
+                value="2"
+                color="orange"
+              ></v-radio>
+            </v-radio-group>
+            <!-- 画像トリミング新規登録はここを見る -->
+            <v-list-item-tile>プロフィール画像</v-list-item-tile>
+            <v-col class="d-flex justify-center">
+              <v-col class="profBox" cols="3">
+                <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
+                <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
+                  <v-img
+                    :aspect-ratio="1"
+                    :src="src"
+                    ></v-img>
+                </div>
+                <div v-if="cropImg !== ''" class="profilePhoto" @click.prevent="showFileChooser">
+                  <v-img
+                    :aspect-ratio="1"
+                    :src="cropImg"
+                    cover
+                    class="rounded-lg"
+                  ></v-img>
+                </div>
+                <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
+              </v-col>
+            </v-col>
+            <!-- 画像トリミング -->
             <v-text-field
               v-model="profileReq.userAddress"
               label="メールアドレス"
               disabled
+              density="compact"
             ></v-text-field>
             <!-- <div class="mail-box">
               <p class="mail-text">jjjj@gmail.com</p>
@@ -34,6 +70,7 @@
               label="パスワード ※入力必須"
               counter
               @click:append="show1 = !show1"
+              density="compact"
             ></v-text-field>
             <v-text-field
               v-model="password2"
@@ -43,40 +80,40 @@
               label="【確認用】パスワード ※入力必須"
               counter
               @click:append="show2 = !show2"
+              density="compact"
             ></v-text-field>
-            <v-radio-group v-model="profileReq.userType" inline :rules="[rules.radioVerify]">
-              <v-radio
-                label="作家"
-                value="1"
-                color="orange"
-              ></v-radio>
-              <v-radio
-                label="芸人"
-                value="2"
-                color="orange"
-              ></v-radio>
-            </v-radio-group>
             <v-text-field
               v-model="profileReq.userName"
               label="活動名 ※入力必須"
               :rules="[rules.textVerify]"
+              density="compact"
             ></v-text-field>
             <v-text-field
               v-model="profileReq.userNameKana"
               label="活動名（カナ） ※入力必須"
               :rules="[rules.textVerify]"
+              density="compact"
             ></v-text-field>
-            <v-col class="d-flex justify-start" cols="6" v-if="profileReq.userType == 2">
-              <v-select :items="yearRef" item-title="name" item-value="id" label="活動開始年" v-model="profileReq.debutYear" :rules="[rules.debutYearVerify]"></v-select>
-              <v-select :items="monthRef" item-title="name" item-value="id" label="活動開始月" v-model="profileReq.debutMonth" :rules="[rules.debutMonthVerify]"></v-select>
+            <v-col class="inp-month-box" cols="6" v-if="profileReq.userType == 1">
+              <v-list-item-tile>デビュー</v-list-item-tile>
+              <div class="month-box">
+                <input 
+                  type="month"
+                  v-model="profileReq.debutDtStr"
+                  :rules="[rules.debutYearVerify]"
+                />
+              </div>
             </v-col>
-            <v-col v-if="profileReq.userType == 2">
+            <v-col v-if="profileReq.userType == 1" class="d-flex justify-start">
               <v-text-field
                 v-model="profileReq.memberNum"
                 label="活動人数"
                 :rules="[rules.textVerify]"
+                density="compact"
               ></v-text-field>            
             </v-col>
+
+            <v-list-item-tile>性別</v-list-item-tile>
             <v-radio-group inline v-model="profileReq.gender" :rules="[rules.radioVerify]">
               <v-radio
                 label="回答なし"
@@ -99,17 +136,18 @@
                 color="orange"
               ></v-radio>
             </v-radio-group>
-            <!-- <v-select :items="office" item-text="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select> -->
-            <v-select :items="officeRef" item-title="name" item-value="id" label="所属事務所" v-model="profileReq.officeId"></v-select>
+            <v-select :items="officeRef" item-title="name" item-value="id" label="所属事務所" v-model="profileReq.officeId" density="compact"></v-select>
 
-            <v-list-item-tile>得意分野（芸風）</v-list-item-tile>
-            <v-col class="d-flex justify-start first_row" >
+            <v-list-item-tile v-if="profileReq.userType == 1">芸風</v-list-item-tile>
+            <v-list-item-tile v-if="profileReq.userType == 2">得意分野</v-list-item-tile>
+            <v-col class="d-flex justify-start first_row" v-if="profileReq.userType == 1 || profileReq.userType == 2">
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
                   label="漫才"
                   color="orange"
                   value="1"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -118,6 +156,7 @@
                   label="ピン"
                   color="orange"
                   value="2"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -126,6 +165,7 @@
                   label="コント"
                   color="orange"
                   value="3"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -134,10 +174,11 @@
                   label="ギャグ"
                   color="orange"
                   value="4"
+                  density="compact"
                 ></v-checkbox>
               </div>
             </v-col>
-            <v-col class="d-flex justify-start second_row" >
+            <v-col class="d-flex justify-start second_row" v-if="profileReq.userType == 1 || profileReq.userType == 2" density="compact">
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
@@ -145,6 +186,7 @@
                   color="orange"
                   value="5"
                   :rules="[rules.chkVerify]"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -153,6 +195,7 @@
                   label="歌ネタ"
                   color="orange"
                   value="6"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
@@ -161,37 +204,43 @@
                   label="リズムネタ"
                   color="orange"
                   value="7"
+                  density="compact"
                 ></v-checkbox>
               </div>
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="その他"
+                  label="漫才"
                   color="orange"
                   value="8"
+                  density="compact"
                 ></v-checkbox>
               </div>
             </v-col>
 
-            <v-radio-group inline v-if="profileReq.userType == 1" v-model="profileReq.feeType" :rules="[rules.radioVerify]">
-              <v-radio
-                label="時給"
-                value="1"
-                color="orange"
-              ></v-radio>
-              <v-radio
-                label="成果物による"
-                value="2"
-                color="orange"
-              ></v-radio>
-            </v-radio-group>
+            <v-col class="radio-box">
+              <v-list-item-tile v-if="profileReq.userType == 2">料金体系</v-list-item-tile>
+              <v-radio-group inline v-if="profileReq.userType == 2" v-model="profileReq.feeType" :rules="[rules.radioVerify]">
+                <v-radio
+                  label="時給"
+                  value="1"
+                  color="orange"
+                ></v-radio>
+                <v-radio
+                  label="成果物による"
+                  value="2"
+                  color="orange"
+                ></v-radio>
+              </v-radio-group>
+            </v-col>
 
-            <v-col class="d-flex justify-start" cols="6">
-              <v-text-field v-model="profileReq.fee" label="金額" suffix="円/時間" v-if="profileReq.userType == 1 && profileReq.feeType == 1" :rules="[rules.textVerify]"></v-text-field>
-              <v-text-field v-model="profileReq.fee" label="金額" suffix="円" v-if="profileReq.userType == 1 && profileReq.feeType == 2" :rules="[rules.textVerify]"></v-text-field>
+            <v-col class="d-flex justify-start inp-box" cols="6">
+              <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円/時間" v-if="profileReq.userType == 2 && profileReq.feeType == 1" :rules="[rules.textVerify]" density="compact"></v-text-field>
+              <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円" v-if="profileReq.userType == 2 && profileReq.feeType == 2" :rules="[rules.textVerify]" density="compact"></v-text-field>
             </v-col>
             
-            <v-col class="d-flex justify-start" v-if="profileReq.userType == 1">
+            <v-list-item-tile v-if="profileReq.userType == 2">特技</v-list-item-tile>
+            <v-col class="d-flex justify-start tokugi-box" v-if="profileReq.userType == 2">
               <v-col class="d-flex justify-start" cols="6">
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
@@ -218,11 +267,13 @@
               <v-text-field
                 v-model="profileReq.anotherSkill"
                 label="その他の場合はここに入力"
+                density="compact"
               ></v-text-field> 
             </v-col>
 
-            <!-- <v-select :items="tihou" label="活動場所" v-model="profileReq.areaId"></v-select> -->
-            <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId"></v-select>
+            <v-col class="sec-box">
+              <v-select :items="areaRef" item-title="name" item-value="id" label="活動場所" v-model="profileReq.areaId" density="compact"></v-select>
+            </v-col>
 
             <v-textarea 
               v-model="profileReq.selfIntroduction" 
@@ -232,34 +283,17 @@
               label="自己紹介" 
               :rules="[rules.max500]"
             ></v-textarea>
-            <!-- 画像トリミング新規登録はここを見る -->
-            <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
-            <div v-if="cropImg === ''" class="default profilePhoto" @click.prevent="showFileChooser">
-              <v-img
-                :aspect-ratio="1"
-                :src="src"
-              ></v-img>
-            </div>
-            <div v-if="cropImg !== ''" class="profilePhoto" @click.prevent="showFileChooser">
-              <v-img
-                :aspect-ratio="1"
-                :src="cropImg"
-                cover
-                class="rounded-lg"
-              ></v-img>
-            </div>
-            <ImageModalComponent :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
-            <!-- 画像トリミング -->
             <v-col class="d-flex justify-center">
               <v-col cols="5">
                 <v-btn 
                   block 
                   class="mt-2" 
-                  color="orange" 
+                  color="orange-darken-1"
                   @click="reg"
                 >登　録</v-btn>
               </v-col>
             </v-col>
+            <v-date-picker v-model="picker"></v-date-picker>
           </v-form>
         </v-card-text>
       </v-card>
@@ -313,6 +347,7 @@ const showModal = ref(false);
 const show1 = ref(false);
 const show2 = ref(false);
 const password2 = ref('');
+const picker = ref('');
 
 const profileReq = ref<Profile>({
   id : null,
@@ -321,7 +356,7 @@ const profileReq = ref<Profile>({
   userNameKana : '',
   userType : null,
   password : '',
-  debutYear : null,
+  debutDtStr : '',
   debutMonth : null,
   memberNum : null,
   gender : null,
@@ -376,17 +411,11 @@ const setModelValue = (value:Boolean) => {
 } 
 const setImg = (img:string) => {
   cropImg.value = img;
+  profileReq.value.profileImgPath = img;
 } 
 const showFileChooser = () => {
   file.value.click();
 };
-watch(cropImg, (newValue) => {
-  profileReq.value.profileImgPath = newValue;
-  if (newValue !== '') {
-    let parts = newValue.split(',');
-    profileReq.value.profileImgPath = parts[1];
-  }
-})
 
 const reg = async () => {
   
@@ -405,6 +434,7 @@ const reg = async () => {
   .finally(() => {
     // 正常終了・エラー問わず必ず行う処理
   });
+  router.push({ path: '/profile/register/completion' })
 }
 
 
@@ -416,15 +446,14 @@ const isFormValid = computed(() => {
     && (profileReq.value.password != '')
     && (profileReq.value.selfIntroduction.length <= 500);
 
-  if (profileReq.value.userType == 2) {
+  if (profileReq.value.userType == 1) {
     return cmnValid
       && (profileReq.value.memberNum != null)
       && (profileReq.value.gender != null)
-      && (profileReq.value.debutYear != null)
-      && (profileReq.value.debutMonth != null);
+      && (profileReq.value.debutDtStr != null)
   }
 
-  if (profileReq.value.userType == 1) {
+  if (profileReq.value.userType == 2) {
     return cmnValid
       && (profileReq.value.fee != null)
       && (profileReq.value.feeType != null);
@@ -442,8 +471,7 @@ const rules = {
   min: (v: any) => v.length >= 8 || 'パスワードは8文字以上、入力してください',
   radioVerify: (value: any) => !!value || '必ず選択してください',
   textVerify: (value: any) => !!value || '必ず入力してください',
-  debutYearVerify: (value: any) => !!value || '活動開始年を入力してください',
-  debutMonthVerify: (value: any) => !!value || '活動開始月を入力してください',
+  debutYearVerify: (value: any) => !!value || '年月を入力してください',
   max500: (v: any) => v.length <= 500 || '500文字以内で入力してください',
   chkVerify: (v: any) => v.length > 0 || '必ずチェックを入れてください',
 }
@@ -451,6 +479,19 @@ const rules = {
 </script>
 
 <style scoped>
+
+::v-deep .input-number input {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.profBox {
+  border: solid 3px #cccccc;
+  border-radius: 10px;
+}
+.bakColor {
+  background-color: #F8F9FA; 
+}
 
 .chkW {
   width: 206px;
@@ -461,10 +502,33 @@ const rules = {
   font-weight: bold;
 }
 
+.first_row {
+  margin-top: 0px;
+}
+
 .second_row {
   margin-top: -40px;
 }
 
+.inp-box {
+  margin-top: -20px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
+
+.sec-box {
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
+
+.tokugi-box {
+  margin-top: -10px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
 .profileRegWrap {
   width: 900px;
 }
@@ -475,8 +539,25 @@ const rules = {
   padding-right: 0px;
 }
 
+.inp-month-box {
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+}
+
+.month-box > input {
+  margin-top: 12px;
+  padding: 11px;
+}
 .mail-box {
   margin-bottom: 22px;
+}
+
+.radio-box {
+  margin-top: -10px;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
 }
 
 .mail-text {
@@ -484,6 +565,7 @@ const rules = {
   padding: 12px;
 }
 
+/* ステップバーの表示 */
 .step-box {
   display: flex;
   justify-content: center;
