@@ -21,7 +21,7 @@
                     <v-card-subtitle>{{ item.themeUserName }}</v-card-subtitle>
                   </div>
                 </v-tabs>
-
+                <!-- 回答 -->
                 <template v-for="(answer, i) in item.answers" :key="answer.answerId">
                   <v-list-item v-if="answer.answerId == 0">
                     まだ回答がありません
@@ -57,6 +57,7 @@
                       <div class="d-flex align-center justify-end">
                         <v-list-item-subtitle>{{ answer.answerUserName }}</v-list-item-subtitle>
                       </div>
+                      <!-- 削除ボタン -->
                       <div class="d-flex align-center justify-end">
                         <v-btn
                           v-if="isUserAnswer(answer)"
@@ -211,13 +212,11 @@ const reaction = async (answer) => {
     userId: userId, // TODO：ログインユーザーのIDを入れる
     reactionStatus: reactionedNumber
   }
-
   // 再リアクション用オブジェクト
   const editReaction = {
     reactionId: reactionedId,
     reactionStatus: reactionedNumber
   }
-
   // リアクション削除用オブジェクト
   const editDelReaction = {
     reactionId: reactionedId,

@@ -59,7 +59,7 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex'
 import http from "@/http-common";
 import type Chat from "@/types/Chat";
@@ -84,8 +84,8 @@ const getChatRoom = async () => {
     }
   })
   chat.value = data.data;
-  console.log(chat.value);
 }
+
 // チャット詳細を表示
 const getChatDetail = (chat: Chat) => {
   chatDetailRef.value = chat;
@@ -127,8 +127,6 @@ onMounted(() => {
 .unread-icon {
   position: absolute;
   right: 0;
-  /* width: 4px;
-  height: 4px; */
   background-color: orange;
 }
 .unread-number {
