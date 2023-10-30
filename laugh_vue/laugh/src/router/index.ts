@@ -7,6 +7,7 @@ import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
 import MypageContent from '../views/MypageContent.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
+import ProfileRegisterCompletion from '../views/SingleLayout/ProfileRegisterCompletion.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import ChatRoom from '../views/ChatRoomList.vue'
 import ChatDetail from '../views/ChatDetail.vue'
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/profile/register/:address(.*)',
       name: 'profile',
       component: ProfileRegister
+    },
+    {
+      path: '/profile/register/completion',
+      name: 'completion',
+      component: ProfileRegisterCompletion
     },
     {
       path: '/', redirect: '/top',component: Main,
