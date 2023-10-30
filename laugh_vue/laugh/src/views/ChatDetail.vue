@@ -15,6 +15,7 @@
                   <v-container class="chat-message-wrap">
                     <v-row v-for="(item, index) in chatDetail?.chatList" :key="index">
                       <v-col class="py-0">
+                        <div class="justify-center" v-if="!index || chatDetail.chatList[index-1].sendAt !== item.sendAt">{{ item.sendAt }}</div>
                         <div :class="{ 'balloon_l': !item.isMyMessage, 'balloon_r': item.isMyMessage }">
                           <div v-if="!item.isMyMessage" class="face_icon">
                             <v-avatar class="profile-icon" @click="redirectToDetails()">
@@ -25,7 +26,11 @@
                               ></v-img>
                             </v-avatar>
                           </div>
-                          <p class="says">{{ item.message }}</p>
+                          <div class="d-flex">
+                            <div v-if="item.isMyMessage" class="mx-2 send-time">{{ item.sendTime }}</div>
+                            <div class="says">{{ item.message }}</div>
+                            <div v-if="!item.isMyMessage" class="mx-2 send-time">{{ item.sendTime }}</div>
+                          </div>
                         </div>
                       </v-col>
                     </v-row>
@@ -112,10 +117,12 @@ const scrollToBottom = () => {
     }
   });
 }
+
 // 空文字チェック
 const isInputValid = computed(() => {
   return newMessage.value.trim() !== '';
 })
+
 // メッセージを送信
 const sendMessage = async() => {
   const roomId = props.chatDetailData.chatRoomId;
@@ -216,7 +223,6 @@ defineExpose({
   box-sizing: border-box;
   margin: 0 !important;
   line-height: 1.5;
-  /*   align-items: center; */
 }
 .says p {
   margin: 8px 0 0 !important;
@@ -231,6 +237,10 @@ defineExpose({
 .balloon_r .says:after {
   right: -26px;
   border-left: 22px solid #8ee7b6;
+}
+.send-time {
+  font-size: x-small;
+  align-self: flex-end;
 }
 .send-btn {
   margin-bottom: 5px;

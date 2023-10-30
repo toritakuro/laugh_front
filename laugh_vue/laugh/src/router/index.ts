@@ -15,6 +15,7 @@ import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
 import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
+import HelpView from '../views/HelpView.vue'
 import store from "@/store"
 
 const router = createRouter({
@@ -99,6 +100,11 @@ const router = createRouter({
           path: 'detail',
           name: 'chatDetail',
           component: ChatDetail,
+        },
+        {
+          path: '/help',
+          name: 'help',
+          component: HelpView,
         }
       ]
     }
