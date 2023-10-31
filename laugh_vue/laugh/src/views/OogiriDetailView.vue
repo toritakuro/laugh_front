@@ -256,7 +256,7 @@ const isSameType = (answer) => {
 // ユーザー詳細へ遷移
 const redirectToDetails = (answer) => {
   router.push({ 
-    name: 'detail',
+    name: 'userDetail',
     query: { receiveUserId: answer.answerUserId, userType: answer.userType, sendUserId: userId }
   })
 }

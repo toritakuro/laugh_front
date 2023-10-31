@@ -142,7 +142,7 @@ const sendMessage = async() => {
 // ユーザー詳細へ遷移
 const redirectToDetails = () => {
   router.push({ 
-    name: 'detail',
+    name: 'userDetail',
     query: { 
       receiveUserId: props.chatDetailData.targetUserId,
       userType: targetUserType,
