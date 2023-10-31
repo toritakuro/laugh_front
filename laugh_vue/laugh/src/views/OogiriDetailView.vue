@@ -3,8 +3,7 @@
 
     <v-main>
       <v-container
-        class="py-8 px-6"
-        style="width: 80%;"
+        class="oogiri-detail-wrap py-8 px-6"
         fluid
       >
         <v-row>
@@ -14,25 +13,43 @@
             cols="12"
           >
             <v-card>
-              <v-list style="padding: 0;" lines="two">
+              <v-list class="p-0" lines="two">
                 <!-- お題 -->
-                <v-tabs bg-color="orange-darken-2">
+                <v-tabs bg-color="orange-darken-1">
                   <div class="d-flex align-center">
                     <v-card-title>{{ item.themeContent }}</v-card-title>
                     <v-card-subtitle>{{ item.themeUserName }}</v-card-subtitle>
                   </div>
                 </v-tabs>
-
+                <!-- 回答 -->
                 <template v-for="(answer, i) in item.answers" :key="answer.answerId">
-                  <v-list-item>
+                  <v-list-item v-if="answer.answerId == 0">
+                    まだ回答がありません
+                  </v-list-item>
+                  <v-list-item v-if="answer.answerId != 0">
                     <!-- アイコン -->
                       <template v-slot:prepend>
-                        <v-avatar color="grey-darken-1">aaa</v-avatar>
+                        <v-avatar
+                          :class="['profile-icon', isSameType(answer) ? 'pointer-events-none' : '']"
+                          @click="isSameType(answer) ? undefined : redirectToDetails(answer)"
+                        >
+                          <v-img
+                            :aspect-ratio="1"
+                            :src="answer.img || src"
+                            cover
+                          ></v-img>
+                        </v-avatar>
                       </template>
                       <!-- 回答情報 -->
                       <div class="d-flex align-center justify-space-between mb-1">
-                        <v-list-item-title style="white-space: unset">{{ answer.answerContent }}</v-list-item-title>
-                        <v-btn class="ma-1" :disabled="isUserAnswer(answer)" size="x-small" icon @click="reaction(answer)">
+                        <v-list-item-title class="answer-content">{{ answer.answerContent }}</v-list-item-title>
+                        <v-btn
+                          class="ma-1"
+                          :disabled="isUserAnswer(answer)"
+                          size="x-small"
+                          icon
+                          @click="reaction(answer)"
+                        >
                           <v-icon :color="isReacted(answer) ? 'orange' : 'grey'" size="large">mdi-emoticon-lol-outline</v-icon>
                           <p>{{ countReactionsWithStatus(answer.reactions, 11) }}</p>
                         </v-btn>
@@ -40,8 +57,15 @@
                       <div class="d-flex align-center justify-end">
                         <v-list-item-subtitle>{{ answer.answerUserName }}</v-list-item-subtitle>
                       </div>
+                      <!-- 削除ボタン -->
                       <div class="d-flex align-center justify-end">
-                        <v-btn class="deleteBtn align-center justify-space-end ma-2" :color="'#F5F5F5'" v-if="isUserAnswer(answer)" @click="answer.dialog = true" size="x-small">削除</v-btn>
+                        <v-btn
+                          v-if="isUserAnswer(answer)"
+                          class="deleteBtn align-center justify-space-end ma-2"
+                          :color="'#F5F5F5'"
+                          @click="answer.dialog = true"
+                          size="x-small"
+                        >削除</v-btn>
                       </div>
                   </v-list-item>
                   <v-divider thickness="2px" color="orange-darken-1" class="mr-2"
@@ -55,12 +79,12 @@
                     width="auto"
                   >
                   <v-card>
-                    <v-card-text style="background-color: #f57c00; color: white;">
+                    <v-card-text class="delete-message">
                       この回答を削除します。よろしいですか？
                     </v-card-text>
-                    <v-card-actions class="justify-center d-flex">
-                      <v-btn color="'#F5F5F5'" @click="answer.dialog = false">閉じる</v-btn>
-                      <v-btn color="orange" @click=deleteAnswer(answer)>削除する</v-btn>
+                    <v-card-actions class=" justify-space-around d-flex">
+                      <v-btn color="orange" @click=deleteAnswer(answer)>はい</v-btn>
+                      <v-btn color="'#F5F5F5'" @click="answer.dialog = false">いいえ</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -85,6 +109,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import type Oogiri from "@/types/Oogiri";
 import http from "@/http-common";
 import { useStore } from 'vuex'
@@ -93,7 +118,14 @@ const oogiri = ref<Oogiri[]>([]);
 const newAnswer = ref('');
 const route = useRoute();
 const store = useStore();
-const userId = store.getters['user/getUserId']; 
+const userId = store.getters['user/getUserId'];
+const userType = store.getters['user/getUserType'];
+const src = ref("/img/man.svg");
+const router = useRouter();
+
+// 大喜利ステータス
+const reactionedNumber = 11;
+const deletedNumber = 99;
 
 // 大喜利詳細取得
 const getOogiriDetail = async () => {
@@ -135,17 +167,24 @@ const isInputValid = computed(() => {
 
 // ステータスごとのリアクション数を集計する
 const countReactionsWithStatus = (reactions, status) => {
-      return reactions.filter(reaction => reaction.reactionStatus === status).length;
+  if (!reactions) {
+    return 0;
+  }
+  return reactions.filter(reaction => reaction.reactionStatus === status).length;
 }
 
 // リアクション済みかどうかを判定する
 const isReacted = (answer) => {
-    for (const reaction of answer.reactions) {
-      if (reaction.reactionUserId === userId && reaction.reactionStatus === 11) {
-        return true; // リアクションしている場合
-      }
+  if (!answer.reactions || !Array.isArray(answer.reactions)) {
+    // リアクションがまだない場合、処理を中断してfalseを返す
+    return false;
+  }
+  for (const reaction of answer.reactions) {
+    if (reaction.reactionUserId === userId && reaction.reactionStatus === reactionedNumber) {
+      return true; // リアクションしている場合
     }
-    return false; // リアクションしていない場合
+  }
+  return false; // リアクションしていない場合
 }
 
 // リアクションボタン押下時
@@ -154,35 +193,34 @@ const reaction = async (answer) => {
   var reacFlg = false;
   var reacDelFlg = false;
   var reactionedId;
-  
-  for (const reaction of answer.reactions) {
-    if (reaction.reactionUserId == userId && reaction.reactionStatus == 11) { // リアクション済み且つステータスが11
-      reacFlg = true;
-      reactionedId = reaction.reactionId;
-    }
-    if (reaction.reactionUserId == userId && reaction.reactionStatus == 99) { // リアクション済み且つステータスが99(削除済み)
-      reacFlg = true;
-      reacDelFlg = true;
-      reactionedId = reaction.reactionId;
+  if (answer.reactions || Array.isArray(answer.reactions)) {
+    for (const reaction of answer.reactions) {
+      if (reaction.reactionUserId == userId && reaction.reactionStatus == reactionedNumber) { // リアクション済み且つステータスが11
+        reacFlg = true;
+        reactionedId = reaction.reactionId;
+      }
+      if (reaction.reactionUserId == userId && reaction.reactionStatus == deletedNumber) { // リアクション済み且つステータスが99(削除済み)
+        reacFlg = true;
+        reacDelFlg = true;
+        reactionedId = reaction.reactionId;
+      }
     }
   }
   // 登録用オブジェクト
   const regReaction = {
     answerId: answer.answerId,
     userId: userId, // TODO：ログインユーザーのIDを入れる
-    reactionStatus: 11
+    reactionStatus: reactionedNumber
   }
-
   // 再リアクション用オブジェクト
   const editReaction = {
     reactionId: reactionedId,
-    reactionStatus: 11
+    reactionStatus: reactionedNumber
   }
-
   // リアクション削除用オブジェクト
   const editDelReaction = {
     reactionId: reactionedId,
-    reactionStatus: 99
+    reactionStatus: deletedNumber
   }
 
   if (reacFlg && !reacDelFlg) {
@@ -198,7 +236,6 @@ const reaction = async (answer) => {
   getOogiriDetail();
 }
 
-
 // 回答投稿
 const regAnswer = async() => {
   const answerData = {
@@ -211,8 +248,41 @@ const regAnswer = async() => {
   getOogiriDetail();
 }
 
+// 同じユーザータイプか判定
+const isSameType = (answer) => {
+  return userType == answer.userType;
+}
+
+// ユーザー詳細へ遷移
+const redirectToDetails = (answer) => {
+  router.push({ 
+    name: 'detail',
+    query: { receiveUserId: answer.answerUserId, userType: answer.userType, sendUserId: userId }
+  })
+}
+
 // マウント時にデータを取得し代入する
 onMounted(() => {
   getOogiriDetail();
 });
 </script>
+
+<style scoped>
+.oogiri-detail-wrap {
+  width: 90%;
+}
+.answer-content {
+  white-space: unset;
+}
+.delete-message {
+  background-color: #f57c00;
+  color: white;
+  text-align: center;
+}
+.profile-icon {
+  cursor: pointer;
+}
+.pointer-events-none {
+  pointer-events: none;
+}
+</style>

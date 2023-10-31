@@ -215,8 +215,8 @@
 export default {
   data: () => ({
     itemsMatching: [
-      { title: 'ユーザー一覧    ', link: '/user/list' },
-      { title: 'チャット        ', link: '/chat' },
+      { title: 'ユーザー一覧　　', link: '/top' },
+      { title: 'チャット　　　　', link: '/chat' },
     ],
 
     itemsOgiri: [
@@ -225,11 +225,8 @@ export default {
     ],
 
     itemsMypage: [
-      { title: 'プロフィール編集', link: '/profile/edit' },
-      { title: 'Laugh一覧', link: '/laugh/list' },
-      { title: 'マッチング一覧', link: '/matching/list' },
-      { title: '投稿一覧', link: '/posts/list' },
-      { title: '退会(アカウント削除)', link: '/quit' },
+      { title: 'マイページ', link: '/mypage' },
+      { title: '投稿一覧', link: '/posts-list' },
     ],
     dialog: false,
   }),

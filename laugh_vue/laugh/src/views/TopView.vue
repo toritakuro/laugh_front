@@ -1,46 +1,256 @@
 <template>
-  <v-container fluid class="top">
-    <v-row justify="center">
-      <v-col cols="5" class="mx-auto mt-5 upside">
-        <v-row>
-          <v-col cols="4">
-            <v-text class="text-h4 upside_num">{{ dispUserCount }}</v-text>
-            <v-text class="text-h6 upside_ken"> 件</v-text>
-          </v-col>
-          <v-col cols="7" class="upside_right">
-            <v-icon class="upside_sortIcon">mdi-sort-descending</v-icon>
-            <v-text class="text-subtitle-1 upside_sortText">並び替え</v-text>
-            <v-select
-              class="upside_pulldown"
-              v-model="selectedSorts"
-              :items="optionSorts"
-              item-title="name"
-              item-value="id"
-              label="Select"
-              persistent-hint
-              return-object
-              single-line
-              @update:modelValue="postSort"
-            ></v-select>
-          </v-col>
-      </v-row>
-      </v-col>
+  <v-container fluid>
+    <v-row>
+        <v-col offset="7" cols="1" class="pt-0 pb-0 pl-9 mt-3">
+          <div style="border-bottom: 1px solid; width: 60px; text-align: center;">
+            <v-text class="text-h5 upside_num">{{ dispUserCount }}</v-text>
+            <v-text class="text-h7"> 件</v-text>
+          </div>
+        </v-col>
     </v-row>
-    <v-row justify="center">
-      <v-col cols="7" class="main">
+    <v-row justify="center" class="mt-2">
+      <!-- プロフィール -->
+      <v-col cols="6" class="main">
         <v-row>
-          <v-col cols="7" class="profile" >
+          <v-col
+            class="ps-6 user_filter"
+            cols="5"
+            >
+              <v-row>
+                <v-col>
+                <v-select
+                  append-icon="mdi-sort"
+                  class="upside_pulldown"
+                  v-model="selectedSorts"
+                  :items="optionSorts"
+                  item-title="name"
+                  item-value="id"
+                  label="Select"
+                  persistent-hint
+                  return-object
+                  single-line
+                  hide-details="true"
+                  density="compact"
+                  @update:modelValue="postSort"
+                ></v-select>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    label="活動名"
+                    density="compact"
+                    bg-color="#fffffff"
+                    @input="postName"
+                    v-model="searchName"
+                    hide-details="true"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1">性別</v-card-subtitle>
+                  <v-checkbox-group inline v-model="checkGender">
+                    <v-checkbox
+                      v-for="select in optionGender"
+                      v-bind:value="select.id" 
+                      v-bind:key="select.id" 
+                      v-bind:label="select.name"
+                      v-model="select.flg"
+                      @click="postGender(select.id, select.flg)"
+                      density="compact"
+                      hide-details="true"
+                      color="orange-darken-1"
+                    ></v-checkbox>
+                  </v-checkbox-group>
+                </v-col>
+              </v-row>
+              <v-row>
+              <v-col v-if="dispUserType == 1">
+                <v-card-subtitle class="font-weight-bold text-subtitle-1">活動形態</v-card-subtitle>
+                <v-checkbox-group v-model="checkActivityNum">
+                  <v-checkbox
+                    v-for="select in optionActivityNum"
+                    v-bind:value="select.id" 
+                    v-bind:key="select.id" 
+                    v-bind:label="select.name"
+                    v-model="select.flg"
+                    @click="postActivityNum(select.id, select.flg)"
+                    density="compact"
+                    hide-details="true"
+                    color="orange-darken-1"
+                  ></v-checkbox>
+                </v-checkbox-group>
+              </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動歴</v-card-subtitle>
+                  <v-radio-group v-model="radiosActivity">
+                    <v-radio
+                      v-for="select in optionActivity"
+                      v-bind:value="select.id" 
+                      v-bind:key="select.id" 
+                      v-bind:label="select.name"
+                      @click="postActivity(select.id, select.value)"
+                      density="compact"
+                      hide-details="true"
+                      color="orange-darken-1"
+                    ></v-radio>
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+              <v-row>
+              <v-col>
+                <v-card-subtitle class="font-weight-bold text-subtitle-1">事務所</v-card-subtitle>
+                <v-checkbox-group v-model="checkOffice">
+                  <v-checkbox
+                    v-for="select in optionOffice"
+                    v-bind:value="select.id" 
+                    v-bind:key="select.id" 
+                    v-bind:label="select.name"
+                    v-model="select.flg"
+                    @click="postOffice(select.id, select.flg)"
+                    density="compact"
+                    hide-details="true"
+                    color="orange-darken-1"
+                  ></v-checkbox>
+                </v-checkbox-group>
+              </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 1">芸風</v-card-subtitle>
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 2">得意分野</v-card-subtitle>
+                  <v-checkbox-group v-model="checkComedyStyle">
+                    <v-checkbox
+                      v-for="select in optionComedyStyle"
+                      v-bind:value="select.id" 
+                      v-bind:key="select.id" 
+                      v-bind:label="select.name"
+                      v-model="select.flg"
+                      @click="postComedyStyle(select.id, select.flg)"
+                      density="compact"
+                      hide-details="true"
+                      color="orange-darken-1"
+                    ></v-checkbox>
+                  </v-checkbox-group>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col v-if="dispUserType == 2">
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">料金体系</v-card-subtitle>
+                  <v-select
+                    v-model="selectFeeType"
+                    :items="optionFeeType"
+                    item-title="name"
+                    item-value="id"
+                    label="Select"
+                    persistent-hint
+                    return-object
+                    single-line
+                    @update:modelValue="postFeeType"
+                  ></v-select>
+                </v-col>
+                <v-col v-if="dispUserType == 2">
+                <v-card-subtitle class="font-weight-bold text-subtitle-1">金額</v-card-subtitle>
+                  <div class="d-flex flex-row">
+                    <v-sheet class="py-2 w-100">
+                      <v-select
+                        v-model="selectLowPrice"
+                        :items="optionLowPrice"
+                        item-title="name"
+                        item-value="id"
+                        label="Select"
+                        persistent-hint
+                        return-object
+                        single-line
+                        @update:modelValue="postFee"
+                      ></v-select>
+                    </v-sheet>
+                    <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
+                    <v-sheet class="py-2 w-100">
+                      <v-select
+                        v-model="selectHighPrice"
+                        :items="optionHighPrice"
+                        item-title="name"
+                        item-value="id"
+                        label="Select"
+                        persistent-hint
+                        return-object
+                        single-line
+                        @update:modelValue="postFee"
+                      ></v-select>
+                    </v-sheet>
+                  </div>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col v-if="dispUserType == 2">
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1">特殊スキル</v-card-subtitle>
+                  <v-checkbox-group v-model="checkSpecialSkill">
+                    <v-checkbox
+                      v-for="select in optionSpecialSkill"
+                      v-bind:value="select.id" 
+                      v-bind:key="select.id" 
+                      v-bind:label="select.name"
+                      v-model="select.flg"
+                      @click="postSpecialSkill(select.id, select.flg)"
+                      density="compact"
+                      hide-details="true"
+                      color="orange-darken-1"
+                    ></v-checkbox>
+                  </v-checkbox-group> 
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動場所</v-card-subtitle>
+                  <v-select-group>
+                    <v-select
+                      v-model="selectArea"
+                      :items="optionArea"
+                      item-title="text"
+                      item-value="id"
+                      label="Select"
+                      persistent-hint
+                      return-object
+                      single-line
+                      density="compact"
+                      @update:modelValue="postArea"
+                    ></v-select>
+                  </v-select-group>
+                </v-col>
+              </v-row>
+              <v-col align="center">
+                <v-btn variant="tonal" @click="clear">
+                  clear
+                </v-btn>
+              </v-col>
+          </v-col>
+          
+          <v-col offset="2" cols="8" class="profile" >
             <v-col v-for="item in dispUsers" class="profile_paddingTop">
-              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails()">
+              <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails(item)">
                 <v-container fluid="true">
                   <v-row>
                     <v-col class="pa-0" lg="6" md="6" sm="12">
-                      <v-img
-                        :aspect-ratio="1"
-                        src="https://comedian-new.com/wp-content/uploads/2020/01/samezombie.png"
-                        cover
-                        class="rounded-lg  profile_img"
-                    ></v-img>
+                      <div v-if="item?.profileImgPath">
+                        <v-img
+                          :aspect-ratio="1"
+                          :src="item.profileImgPath"
+                          cover
+                          class="rounded-lg  profile_img"
+                        ></v-img>
+                      </div>
+                      <div v-if="!item?.profileImgPath">
+                        <v-img
+                          :aspect-ratio="1"
+                          :src="src"
+                          cover
+                          class="rounded-lg  profile_img"
+                        ></v-img>
+                      </div>
                     </v-col>
                     <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
                       <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ item.userName }}</v-card-title>
@@ -81,6 +291,7 @@
                         class="mr-1 mt-1"
                         color="orange"
                         text-color="white"
+                        size="small"
                         >{{ itemName }}
                       </v-chip>
                     </v-col>
@@ -91,235 +302,105 @@
                       <v-card-text class="text-subtitle-1">{{ item.selfIntroduction }}</v-card-text>
                     </v-col>
                   </v-row>
-                  <v-row>
-                    <v-col class="profile_ichioshi">
-                      <div class="font-weight-bold text-subtitle-1 recomend-script">イチオシのネタ</div>
-                      <v-list class="profile_ichioshi_neta" density="compact">
-                        <v-list-item
-                          class="pl-0"
-                          v-for="(item, i) in items"
-                          :key="i"
-                          :value="item"
-                          color="primary"
-                        >
-                          <template  class="profile_contents" v-slot:prepend>
-                            <v-icon :icon="item.icon"></v-icon>
-                          </template>
-                          <v-list-item-title v-text="item.text"></v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-col>
-                  </v-row>
                 </v-container>
               </v-card>
             </v-col>
           </v-col>
-          <v-col
-            class="ps-6 user_filter"
-            cols="5"
-            >
-            <v-card
-            class="pa-4 user_filter_card"
-            >
-            <v-col>
-              <v-text-field
-                label="活動名"
-                density="compact"
-                bg-color="#fffffff"
-                @input="postName"
-                v-model="searchName"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1">性別</v-card-subtitle>
-              <v-checkbox-group v-model="checkGender">
-                <v-checkbox
-                  v-for="select in optionGender"
-                  v-bind:value="select.id" 
-                  v-bind:key="select.id" 
-                  v-bind:label="select.name"
-                  v-model="select.flg"
-                  @click="postGender(select.id, select.flg)"
-                  density="compact"
-                  hide-details="true"
-                  color="orange-darken-1"
-                ></v-checkbox>
-              </v-checkbox-group>
-            </v-col>
-            <v-col v-if="dispUserType == 1">
-              <v-card-subtitle class="font-weight-bold text-subtitle-1">活動形態</v-card-subtitle>
-              <v-checkbox-group v-model="checkActivityNum">
-                <v-checkbox
-                  v-for="select in optionActivityNum"
-                  v-bind:value="select.id" 
-                  v-bind:key="select.id" 
-                  v-bind:label="select.name"
-                  v-model="select.flg"
-                  @click="postActivityNum(select.id, select.flg)"
-                  density="compact"
-                  hide-details="true"
-                  color="orange-darken-1"
-                ></v-checkbox>
-              </v-checkbox-group>
-            </v-col>
-            <v-col>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動歴</v-card-subtitle>
-              <v-radio-group v-model="radiosActivity">
-                <v-radio
-                  v-for="select in optionActivity"
-                  v-bind:value="select.id" 
-                  v-bind:key="select.id" 
-                  v-bind:label="select.name"
-                  @click="postActivity(select.id, select.value)"
-                  density="compact"
-                  hide-details="true"
-                  color="orange-darken-1"
-                ></v-radio>
-              </v-radio-group>
-            </v-col>
-            <v-col>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1">事務所</v-card-subtitle>
-              <v-checkbox-group v-model="checkOffice">
-                <v-checkbox
-                  v-for="select in optionOffice"
-                  v-bind:value="select.id" 
-                  v-bind:key="select.id" 
-                  v-bind:label="select.name"
-                  v-model="select.flg"
-                  @click="postOffice(select.id, select.flg)"
-                  density="compact"
-                  hide-details="true"
-                  color="orange-darken-1"
-                ></v-checkbox>
-              </v-checkbox-group>
-            </v-col>
-            <v-col>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 1">芸風</v-card-subtitle>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1" v-if="dispUserType == 2">得意分野</v-card-subtitle>
-              <v-checkbox-group v-model="checkComedyStyle">
-                <v-checkbox
-                  v-for="select in optionComedyStyle"
-                  v-bind:value="select.id" 
-                  v-bind:key="select.id" 
-                  v-bind:label="select.name"
-                  v-model="select.flg"
-                  @click="postComedyStyle(select.id, select.flg)"
-                  density="compact"
-                  hide-details="true"
-                  color="orange-darken-1"
-                ></v-checkbox>
-              </v-checkbox-group>
-            </v-col>
-            <v-col v-if="dispUserType == 2">
-              <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">料金体系</v-card-subtitle>
-              <v-select
-                v-model="selectFeeType"
-                :items="optionFeeType"
-                item-title="name"
-                item-value="id"
-                label="Select"
-                persistent-hint
-                return-object
-                single-line
-                @update:modelValue="postFeeType"
-              ></v-select>
-            </v-col>
-            <v-col v-if="dispUserType == 2">
-            <v-card-subtitle class="font-weight-bold text-subtitle-1">金額</v-card-subtitle>
-              <div class="d-flex flex-row">
-                <v-sheet class="py-2 w-100">
-                  <v-select
-                    v-model="selectLowPrice"
-                    :items="optionLowPrice"
-                    item-title="name"
-                    item-value="id"
-                    label="Select"
-                    persistent-hint
-                    return-object
-                    single-line
-                    @update:modelValue="postFee"
-                  ></v-select>
-                </v-sheet>
-                <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
-                <v-sheet class="py-2 w-100">
-                  <v-select
-                    v-model="selectHighPrice"
-                    :items="optionHighPrice"
-                    item-title="name"
-                    item-value="id"
-                    label="Select"
-                    persistent-hint
-                    return-object
-                    single-line
-                    @update:modelValue="postFee"
-                  ></v-select>
-                </v-sheet>
-              </div>
-            </v-col>
-            <v-col v-if="dispUserType == 2">
-              <v-card-subtitle class="font-weight-bold text-subtitle-1">特殊スキル</v-card-subtitle>
-              <v-checkbox-group v-model="checkSpecialSkill">
-                <v-checkbox
-                  v-for="select in optionSpecialSkill"
-                  v-bind:value="select.id" 
-                  v-bind:key="select.id" 
-                  v-bind:label="select.name"
-                  v-model="select.flg"
-                  @click="postSpecialSkill(select.id, select.flg)"
-                  density="compact"
-                  hide-details="true"
-                  color="orange-darken-1"
-                ></v-checkbox>
-              </v-checkbox-group> 
-            </v-col>
-            <v-col>
-              <v-card-subtitle class="font-weight-bold text-subtitle-1 py-2">活動場所</v-card-subtitle>
-              <v-select-group>
-                <v-select
-                  v-model="selectArea"
-                  :items="optionArea"
-                  item-title="text"
-                  item-value="id"
-                  label="Select"
-                  persistent-hint
-                  return-object
-                  single-line
-                  @update:modelValue="postArea"
-                ></v-select>
-              </v-select-group>
-            </v-col>
-            <v-col align="center">
-              <v-btn variant="tonal" @click="clear">
-                clear
-              </v-btn>
-            </v-col>
-            </v-card>
-          </v-col>
+          <!-- 検索エリア-->
         </v-row>
       </v-col>
+      <div class="notice">
+        <v-card
+          class="mx-auto"
+          max-width="344"
+        >
+        <v-card-text>
+          <div class="text-h８ text--primary title"><p>お知らせ</p></div>
+          <div class="msg text--primary">
+              <template v-for="n in notice">
+              <v-hover v-slot="{ isHovering, props }">
+              <div 
+                :class="{ 'div-hover': isHovering }"
+                class="noticeRow">
+                <div
+                  @click="readMessage(n)"
+                  v-bind="props">
+                  {{ n.message }}
+                </div>
+              </div>
+              </v-hover>
+              </template>
+          </div>
+        </v-card-text>
+        </v-card>
+    </div>
     </v-row>
   </v-container>
 </template>  
 
 
 
-  <style scoped>
-  .top {
-    transform: scale(0.85) translate(0px, -180px);
-    /* background-color: #F8F9FA; */
+<style scoped>
+@media screen and (min-width: 960px) and (max-width:1280px) {
+  .user_filter {
+    top: 25%  !important;
+    left: 10% !important;
   }
-
-  /* 上部分 */
+  .notice {
+    right: 10px !important;
+  }
+}
+@media screen and (max-width:959px) {
+  .user_filter,
+  .title,
+  .msg{
+    display: none !important;
+  }
+}
+.notice {
+  position: fixed;
+  top: 120px;
+  right: 1px;
+  width: 400px;
+}
+.notice .title {
+  background-color: #EF9A9A;
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding-left:5px;
+}
+.user_filter {
+  transform: scale(0.9) translate(0px, -92px);
+  position: fixed;
+  top: 22%;
+  left: 16%;
+  width: 300px;
+  max-height: 80%;
+  overflow-y: scroll;
+  border: 1px solid #efefef;
+  border-radius: 5px;
+}
+.upside_num {
+  font-weight: bold;
+  color:  #FB8C00;
+}
+.noticeRow {
+  height: 30px;
+}
+.noticeRow > div {
+  display: inline-block;
+  vertical-align: middle;
+}
+.title p {
+  display: inline-block;
+  vertical-align: middle;
+}
+/* 上部分 */
   .upside {
     transform: translate(-130px, 20px);
     height: 70px;
     margin-bottom: 30px;
-  }
-  .upside_num {
-    font-weight: bold;
-    color:  #FB8C00;
-    line-height: 70px;
-    margin-left: 20px;
   }
   .upside_right {
     display: flex;
@@ -336,29 +417,16 @@
     line-height: 75px;
     margin-right: 5px;
   } 
-  .upside_pulldown {
-    margin: 9px 70px 0px 0px;
-  }
 
   .main {
     height: 1600px;
   }
   /* プロフィール */
-  .profile {
-    margin-top: 24px;
-    padding-top: 0px;
-    height: 1900px;
-    overflow-y: scroll;
-  }
   .profile_paddingTop {
     padding-top: 0px;
   }
   .profile_card {
     border: 4px solid #FB8C00;
-    border-radius: 10px;
-  }
-  .profile_img {
-    border: 2px solid #FB8C00;
     border-radius: 10px;
   }
   .profile_info .v-card-subtitle{
@@ -392,7 +460,9 @@
   .profile_comedyStyle {
     padding-left: 0.2rem;
   }
-
+  .profile_img {
+    width:180px;
+  }
   .v-card-text {
     padding: 0rem;
     white-space: pre-line;
@@ -419,68 +489,79 @@
   }
 
   /* ユーザーフィルター */
-  .user_filter {
-    transform: scale(0.9) translate(0px, -92px);
-  }
   .user_filter_card {
     border: 3px solid #FB8C00;
     border-radius: 10px;
   }
   
-  
+  .div-hover { cursor: pointer; }
+  .div-hover { background-color: var(--blue-grey-lighten-5); }
   
   </style>
   <script setup lang="ts">
   import { computed, ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router';
+  import { useStore } from 'vuex'
   import type User from "@/types/User";
+  import type Notice from '@/types/Notice';
   import http from "@/http-common"
   
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
+  const notice = ref([] as Notice[]);
   const dispUserType = ref();
   const dispUserCount = ref(0);
+  const store = useStore();
+  const src = ref("/img/man.svg");
 
+  const userId = store.getters['user/getUserId'];
+  const userType = store.getters['user/getUserType'];
+
+  const eee = ref([{id:1, type:"1", message:"メッセージ1"},{id:2, type:"2",message:"メッセージ２"}]);
 
   onMounted(() => {
     getData();
+    getNotice();
   })
 
   const router = useRouter()
+ 
+  const redirectToDetails = async (item: User) => {
+    router.push({ name: 'userDetail', query: { receiveUserId: item.id, userType: item.userType, sendUserId: userId }  })
+  }
 
-  // const redirectToDetails = (user:User) => {
-  //   router.push({ name: 'detail', params: { user: '123' }  })
-    // router.push({ path: 'detail/${user}'})
-  // }
-  // const redirectToDetails = async () => {
-  //   this.$router.push({ path: `/details/${this.itemId}` })
-  // }
-//   const laughs = ref([] as User[]);
-//   const redirectToDetails = async (user:User) => {
-//   const {data} = await http.get('/mypage/laugh',{
-//     params: {
-//       userId: user.userName
-//     }}
-//   )
-//   laughs.value = data.data;
-// }
+  /** お知らせ取得 */
+  const getNotice = async () => {
+    const {data} = await http.get('/notice',{
+      params: {
+        userId: store.state.user.userId
+      }}
+    );
+    notice.value = data.data;
+  }
 
-const redirectToDetails = async () => {
-  router.push({ name: 'detail', query: { user: '123' }  })
-  // const themeId = route.query.themeId;
-  // const {data} = await http.get('oogiri/detail',{
-  //   params: {
-  //     themeId: themeId
-  //   }}
-  // )
-  // oogiri.value = [data.data];
-}
-
+  // メッセージ既読
+  const readMessage = (notice: Notice) => {
+    http.post('/notice',{id: notice.id });
+    
+    // メッセージの場合はチャットルームへ
+    if(notice.targetType) {
+      router.push({ name: 'chat', query: { 
+        userId: store.state.user.userId,
+        userType: store.state.user.userType
+        }
+      })
+    } 
+    // Laughの場合は各ユーザへ飛ぶ
+    else {
+      router.push({ name: 'detail', query: { receiveUserId: store.state.user.userId, userType: store.state.user.userType, sendUserId: notice.targetId }  })
+    }
+  }
   /** User一覧を取得する */
   const getData = async () => {
-    const {data} = await http.get('/top/init',{
+    const {data} = await http.get('/top',{
       params: {
-        userType: 2
+        userType: userType
       }}
     )
     dispUsers.value = data.data;

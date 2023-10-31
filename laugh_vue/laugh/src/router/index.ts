@@ -5,13 +5,18 @@ import DemoView from '../views/DemoView.vue'
 import MyPage from '../views/MyPage.vue'
 import LoginView from '../views/SingleLayout/Login.vue'
 import Main from '../views/Main.vue'
+import MypageContent from '../views/MypageContent.vue'
+import ProfileInit from '../views/SingleLayout/ProfileInit.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
+import ProfileRegisterCompletion from '../views/SingleLayout/ProfileRegisterCompletion.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
 import OogiriList from '../views/OogiriListView.vue'
 import OogiriPost from '../views/OogiriPostView.vue'
-import OogiriEdit from '../views/OogiriEditView.vue'
+import ChatRoom from '../views/ChatRoomList.vue'
+import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
+import HelpView from '../views/HelpView.vue'
 import store from "@/store"
 
 const router = createRouter({
@@ -23,9 +28,19 @@ const router = createRouter({
       component: LoginView
     },
     {
+      path: '/profile/init',
+      name: 'ProfileInit',
+      component: ProfileInit
+    },
+    {
       path: '/profile/register/:address(.*)',
       name: 'profile',
       component: ProfileRegister
+    },
+    {
+      path: '/profile/register/completion',
+      name: 'completion',
+      component: ProfileRegisterCompletion
     },
     {
       path: '/', redirect: '/top',component: Main,
@@ -42,6 +57,7 @@ const router = createRouter({
         },
         {
           path: 'top',
+          name: 'top',
           component: TopView
         },
         {
@@ -49,10 +65,13 @@ const router = createRouter({
           component: MyPage
         },
         {
-          path: 'detail',
-          name: 'detail',
-          component: UserDetail,
-          props: true
+          path: '/posts-list',
+          component: MypageContent
+        },
+        {
+          path: 'userDetail',
+          name: 'userDetail',
+          component: UserDetail
         },
         {
           path: 'mypage/laugh',
@@ -73,18 +92,36 @@ const router = createRouter({
           name: 'OogiriPost',
           component: OogiriPost,
         },
+      ]
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: Main,
+      children: [
         {
-          path: '/oogiri/edit',
-          name: 'OogiriEdit',
-          component: OogiriEdit,
+          path: '',
+          name: 'chat',
+          component: ChatRoom,
         },
+        {
+          path: 'detail',
+          name: 'chatDetail',
+          component: ChatDetail,
+        },
+        {
+          path: '/help',
+          name: 'help',
+          component: HelpView,
+        }
       ]
     }
   ]
 })
 
 router.beforeResolve((to, from, next) => {
-  if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
+  if(to.name == 'profile') next()
+  else if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
   else next()
 })
 export default router

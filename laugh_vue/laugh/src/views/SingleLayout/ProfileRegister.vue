@@ -405,6 +405,7 @@ const reg = async () => {
   .finally(() => {
     // 正常終了・エラー問わず必ず行う処理
   });
+  router.push({ path: '/profile/register/completion' })
 }
 
 

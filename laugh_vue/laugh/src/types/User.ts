@@ -28,4 +28,5 @@ export default interface User {
     specialSkillNameList?: Array<string>;
     specialSkillNames?: string;
     anotherSkill?: string;
+    matchStatus?: number;
   }

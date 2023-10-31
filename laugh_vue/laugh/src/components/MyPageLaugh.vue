@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 import type Laugh from "@/types/Laugh";
@@ -60,9 +60,18 @@ const getLaugh = async () => {
   laughs.value = data.data;
 }
 
+const userMyType = store.getters['user/getUserType'];
+
 /** ユーザ詳細へ遷移 */
-const displayUser = (laugh:Laugh) => {
-  router.push({ path: '/home', query: { userId: laugh.targetUserId }  })
+const displayUser = (Laugh:Laugh) => {
+  let userType;
+  if (userMyType.value == 1) {
+    userType = 2
+  } else {
+    userType = 1
+  }
+
+  router.push({ name: 'userDetail', query: { receiveUserId: Laugh.targetUserId, userType: userType, sendUserId: store.state.user.userId }  })
 }
 
 defineExpose({
