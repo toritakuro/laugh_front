@@ -315,7 +315,7 @@
           max-width="344"
         >
         <v-card-text class="aaaa">
-          <div class="text-h5 text--primary title"><p class="font-weight-bold" style="display: inline-block;vertical-align: middle;">お知らせ</p></div>
+          <div class="text-h5 text--primary title"><p class="notice_title" style="display: inline-block;vertical-align: middle;">お知らせ</p></div>
           <div class="text--primary">
               <template v-for="n in notice">
               <v-hover v-slot="{ isHovering, props }">
@@ -368,6 +368,13 @@
   align-items: center;
   height: 30px;
   padding-left:5px;
+}
+.notice_title {
+  font-weight: bold;
+  font-size: 20px;
+}
+.text--primary {
+  padding-left: 5px;
 }
 .user_filter {
   transform: scale(0.9) translate(0px, -92px);
@@ -539,9 +546,17 @@
   // メッセージ既読
   const readMessage = (notice: Notice) => {
     http.post('/notice',{id: notice.id });
-    
+    console.log(notice.targetType)
+    let targetUserType = 0;
+    // 遷移先ユーザのユーザタイプを設定
+   if (store.state.user.userType == 1) {
+     targetUserType = 2
+   } else {
+     targetUserType = 1
+   }
+
     // メッセージの場合はチャットルームへ
-    if(notice.targetType) {
+    if(notice.targetType == 2) {
       router.push({ name: 'chat', query: { 
         userId: store.state.user.userId,
         userType: store.state.user.userType
@@ -550,7 +565,7 @@
     } 
     // Laughの場合は各ユーザへ飛ぶ
     else {
-      router.push({ name: 'detail', query: { receiveUserId: store.state.user.userId, userType: store.state.user.userType, sendUserId: notice.targetId }  })
+      router.push({ name: 'userDetail', query: { receiveUserId: notice.targetId, userType: targetUserType, sendUserId: store.state.user.userId}  })
     }
   }
   /** User一覧を取得する */
