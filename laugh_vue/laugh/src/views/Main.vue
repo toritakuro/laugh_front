@@ -235,7 +235,6 @@ export default {
     itemsMypage: [
       { title: 'マイページ', link: '/mypage' },
       { title: '投稿一覧', link: '/posts-list' },
-      { title: '退会(アカウント削除)', link: '/quit' },
     ],
     dialog: false,
   }),
