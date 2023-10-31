@@ -582,11 +582,6 @@
     postSort()
   }
 
-  const items = ref([
-    { text: 'トカゲのおっさん', icon: 'mdi-video' },
-    { text: 'ゴレンジャイ', icon: 'mdi-file' },
-  ]) ;
-
   // sort
   const selectedSorts = ref({ id: 1, name: 'ログイン順'})
   const optionSorts = [
