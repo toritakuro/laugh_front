@@ -3,11 +3,12 @@ export default interface Oogiri {
   themeUserId: number;
   themeUserName: string;
   img: string;
-  type: number;
+  userType: number;
   themeContent: string;
   themeCreatedAt: string;
   themeUpdatedAt: string | null;
   answers: Answer[];
+  answerCount: number;
 }
 
 interface Answer {
@@ -15,7 +16,7 @@ interface Answer {
   answerUserId: number;
   answerUserName: string;
   img: string;
-  type: number;
+  userType: number;
   answerContent: string;
   answerCreatedAt: string;
   answerDeletedAt: string;
