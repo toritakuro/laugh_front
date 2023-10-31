@@ -2,7 +2,7 @@
 <v-dialog v-model="modalFlg" width="600">
   <v-card>
     <v-card>
-      <v-card-text class="justify-center">
+      <v-card-text class="justify-center" style="height: 430px;">
         <vue-cropper
           ref="cropper"
           :aspect-ratio="16 / 9"
@@ -67,9 +67,8 @@ const closeModal = () => { modalFlg.value = false; }
 /** 画像送信 */
 const updProfileImg = () => {
   // store.state.user.userId;
-  // TODO: このメソッドは必要？確認
   userRef.id = 5;
-  userRef.profileImgPath = cropper.value.getCroppedCanvas().toDataURL();
+  userRef.profileImg = cropper.value.getCroppedCanvas().toDataURL();
   http.post('/demo/updProfileImg', userRef);
 }
 </script>

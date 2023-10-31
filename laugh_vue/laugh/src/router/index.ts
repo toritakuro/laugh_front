@@ -10,10 +10,11 @@ import ProfileInit from '../views/SingleLayout/ProfileInit.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import ProfileRegisterCompletion from '../views/SingleLayout/ProfileRegisterCompletion.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
+import OogiriList from '../views/OogiriListView.vue'
+import OogiriPost from '../views/OogiriPostView.vue'
 import ChatRoom from '../views/ChatRoomList.vue'
 import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
-import UserDetailOogiri from '@/components/UserDetailOogiri.vue'
 import MyPageLaugh from '../components/MyPageLaugh.vue'
 import HelpView from '../views/HelpView.vue'
 import store from "@/store"
@@ -56,6 +57,7 @@ const router = createRouter({
         },
         {
           path: 'top',
+          name: 'top',
           component: TopView
         },
         {
@@ -76,13 +78,19 @@ const router = createRouter({
           component: MyPageLaugh
         },
         {
-          path: 'userDetail/oogiriAnswer',
-          component: UserDetailOogiri
-        },
-        {
           path: '/oogiri/detail',
           name: 'oogiriDetail',
           component: OogiriDetail,
+        },
+        {
+          path: '/oogiri/list',
+          name: 'OogiriList',
+          component: OogiriList,
+        },
+        {
+          path: '/oogiri/post',
+          name: 'OogiriPost',
+          component: OogiriPost,
         },
       ]
     },
@@ -115,8 +123,5 @@ router.beforeResolve((to, from, next) => {
   if(to.name == 'profile') next()
   else if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
   else next()
-
-  // if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
-  // else next()
 })
 export default router

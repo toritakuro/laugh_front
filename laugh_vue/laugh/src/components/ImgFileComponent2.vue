@@ -1,58 +1,24 @@
 <template>
   <div>
-    <div 
-      @dragenter="dragenter"
-      @dragleave="dragLeave"
-      @dragover.prevent
-      @drop.prevent="drop"
-      :class="['fileWrap ', {enter: enterFlg}]"
-    >
-      ファイルの場所
-    </div>
-    <!-- <img :src="targetImage" alt="選択された画像" class="image"> -->
+    <v-file-input
+              accept="image/*"
+              label="画像ファイルをアップロードしてください"
+              prepend-icon="mdi-image"
+              @change="handleFileSelect"
+            ></v-file-input>
+    <!-- <input type="file" @change="handleFileSelect" /> -->
+    <img v-if="targetImage" :src="targetImage" alt="選択された画像" class="image">
     <canvas class="ds-none" ref="canvas"></canvas>
+    <v-btn class="clear-btn" @click="clearImg" v-if="targetImage">画像をクリア</v-btn>
   </div>
 </template>
 <script setup lang="ts">
-  const emit = defineEmits(['setFile']);
+  const emit = defineEmits(['setFile','clearImgFile']);
   import { ref } from 'vue'
 
-  const enterFlg = ref(false);
-  let file = ref<File>();
   let targetImage = ref<string>('')
-  
+
   const canvas = ref<HTMLCanvasElement>(); // canvas要素のrefを作成
-
-  const dragenter = () => {
-    enterFlg.value = true;
-  }
-  const dragLeave = () => {
-    enterFlg.value = false;
-  }
-
-  /**
-   * ファイルをリサイズしemitで親へbase64を渡す
-   * @param e 
-   */
-  const drop = async (e: DragEvent) => {
-    if (!e.dataTransfer) {
-      return;
-    }
-    enterFlg.value = false;
-    file.value = e.dataTransfer.files[0];
-
-    try {
-      const imgDateBase64 = await getFileAsBase64(e.dataTransfer.files[0]);
-      if (!canvas.value) {
-        throw new Error('Canvas is undefined');
-      }
-
-      const resizedBase64 = await resizeImage64withCanvase(imgDateBase64, canvas.value);
-      emit('setFile', resizedBase64);
-    } catch (error) {
-      console.error(error);
-    }    
-  }
 
   /**
    * ファイルオブジェクトからBase64へ変換
@@ -118,21 +84,53 @@
       // 描画処理
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
-      ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, image.width, image.height);
       ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvasWidth, canvasHeight);
 
       return Promise.resolve(canvas.toDataURL(mineType));
     })
   }
+
+  const handleFileSelect = async (e: Event) => {
+    const input = e.target as HTMLInputElement;
+    if (!input.files) {
+      return;
+    }
+    const selectedFile = input.files[0];
+    
+    try {
+      const imgDataBase64 = await getFileAsBase64(selectedFile);
+      if (!canvas.value) {
+        throw new Error('Canvas is undefined');
+      }
+
+      const resizedBase64 = await resizeImage64withCanvase(imgDataBase64, canvas.value);
+      targetImage.value = resizedBase64;
+      emit('setFile', resizedBase64);
+    } catch (error) {
+      console.error(error);
+    } 
+  };
+
+  const clearImg = () => {
+    targetImage.value = '';
+    emit('clearImgFile');
+  };
 </script>
 
 <style scoped>
+
   div.fileWrap {
-    width: 100px;
-    height: 100px;
+    width: 400px;
+    height: 50px;
     background-color: aqua;
   }
   .enter {
     border: 10px dotted powderblue;
+  }
+
+  .clear-btn {
+    display: block;
+    margin-top: 10px;
+    margin-left: 4px;
   }
 </style>

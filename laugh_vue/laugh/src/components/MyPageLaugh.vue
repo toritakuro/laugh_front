@@ -9,20 +9,21 @@
           @click="displayUser(item)"
         >
         <td class="status-icon">
-          <v-icon v-if='item.status == 10 || item.status == 11' size="x-large" color="#EC407A" icon="mdi-handshake" />
+            <v-icon v-if='item.status == 10 || item.status == 11' size="x-large" color="#EC407A" icon="mdi-handshake" />
             <v-icon v-if='item.mySendLough == false && item.status == 0' size="x-large" color="#42A5F5" icon="mdi-timer-sand" />
             <v-icon v-if='item.mySendLough && item.status == 0' size="x-large" color="#42A5F5" icon="mdi-send-clock" />
         </td>
-        <td class="img pa-0">
+        <td class="img">
           <v-avatar color="surface-variant">
           <v-img
-            :src="item.imgPath"
+            aspect-ratio="16/9"
             cover
+            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
           ></v-img>
           </v-avatar>
           </td>
-          <td class="name pa-0 font-weight-bold">{{ item.name }}</td>
-          <td class="text-right active-term  pa-0">{{ item.activeTermYear }}年目</td>
+          <td  class="name">{{ item.name }}</td>
+          <td class="text-right active-term">{{ item.activeTermYear }}年目</td>
           <td>
             <v-chip
               class="ma-2"
@@ -45,14 +46,15 @@ import http from "@/http-common";
 
 const store = useStore()
 const router = useRouter()
+const userId = computed(() => store.state.user.userId)
 const laughs = ref<Laugh[]>([])
 
 /** Laugh一覧を取得する */
 const getLaugh = async () => {
   const {data} = await http.get('/mypage/laugh',{
     params: {
-      userId: store.state.user.userId,
-      userType: store.state.user.userType
+      userId: 5,
+      userType: 1,
     }}
   )
   laughs.value = data.data;
@@ -79,8 +81,7 @@ defineExpose({
 
 <style scoped>
 .status-icon { width:50px; }
-.img { width:70px; }
-.name { width:120px; }
+.img { width:100px; }
+.name { width:100px; }
 .active-term { width:80px; }
-.tr-hover { cursor: pointer; }
 </style>

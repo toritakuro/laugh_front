@@ -314,9 +314,9 @@
           class="mx-auto"
           max-width="344"
         >
-        <v-card-text class="aaaa">
-          <div class="text-h5 text--primary title"><p class="font-weight-bold" style="display: inline-block;vertical-align: middle;">お知らせ</p></div>
-          <div class="text--primary">
+        <v-card-text>
+          <div class="text-h８ text--primary title"><p>お知らせ</p></div>
+          <div class="msg text--primary">
               <template v-for="n in notice">
               <v-hover v-slot="{ isHovering, props }">
               <div 
@@ -343,7 +343,6 @@
 <style scoped>
 @media screen and (min-width: 960px) and (max-width:1280px) {
   .user_filter {
-    background-color: #EF9A9A;
     top: 25%  !important;
     left: 10% !important;
   }
@@ -352,8 +351,10 @@
   }
 }
 @media screen and (max-width:959px) {
-  .user_filter {
-    display: none;
+  .user_filter,
+  .title,
+  .msg{
+    display: none !important;
   }
 }
 .notice {
@@ -366,7 +367,7 @@
   background-color: #EF9A9A;
   display: flex;
   align-items: center;
-  height: 30px;
+  height: 20px;
   padding-left:5px;
 }
 .user_filter {
@@ -391,7 +392,10 @@
   display: inline-block;
   vertical-align: middle;
 }
-
+.title p {
+  display: inline-block;
+  vertical-align: middle;
+}
 /* 上部分 */
   .upside {
     transform: translate(-130px, 20px);

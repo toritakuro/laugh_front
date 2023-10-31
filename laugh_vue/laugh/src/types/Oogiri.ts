@@ -2,20 +2,17 @@ export default interface Oogiri {
   themeId: number;
   themeUserId: number;
   themeUserName: string;
-  img: string;
-  type: number;
   themeContent: string;
   themeCreatedAt: string;
   themeUpdatedAt: string | null;
   answers: Answer[];
+  answerCount: number;
 }
 
 interface Answer {
   answerId: number;
   answerUserId: number;
   answerUserName: string;
-  img: string;
-  type: number;
   answerContent: string;
   answerCreatedAt: string;
   answerDeletedAt: string;
