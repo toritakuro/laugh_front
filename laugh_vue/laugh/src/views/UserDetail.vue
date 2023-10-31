@@ -261,7 +261,6 @@
 
   /** 投稿取得 */
   const getContet = () => {
-    console.log(111)
     if (contentRef.value == undefined) {
       setTimeout(_getContet, 200);
     } else {
@@ -284,7 +283,6 @@
       }}
     )
     user.value = data.data;
-    console.log("user",user.value)
     getContet();
   }
 
