@@ -77,6 +77,10 @@ const router = createRouter({
           component: MyPageLaugh
         },
         {
+          path: 'userDetail/oogiriAnswer',
+          component: UserDetailOogiri
+        },
+        {
           path: '/oogiri/detail',
           name: 'oogiriDetail',
           component: OogiriDetail,
