@@ -46,7 +46,6 @@ import http from "@/http-common";
 
 const store = useStore()
 const router = useRouter()
-const userId = computed(() => store.state.user.userId)
 const laughs = ref<Laugh[]>([])
 
 /** Laugh一覧を取得する */
