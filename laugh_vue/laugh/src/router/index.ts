@@ -56,6 +56,7 @@ const router = createRouter({
         },
         {
           path: 'top',
+          name: 'top',
           component: TopView
         },
         {
@@ -74,10 +75,6 @@ const router = createRouter({
         {
           path: 'mypage/laugh',
           component: MyPageLaugh
-        },
-        {
-          path: 'userDetail/oogiriAnswer',
-          component: UserDetailOogiri
         },
         {
           path: '/oogiri/detail',

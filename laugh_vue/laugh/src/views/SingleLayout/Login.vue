@@ -14,11 +14,8 @@
             <v-form id="login-form" class="mt-2" ref="form" v-model="valid" lazy-validation @submit.prevent="checkLogin">
             <v-card-text class="pa-7">
               <v-text-field class="mb-8" autocomplete="off"  density="compact" v-model="email" label="メールアドレス" hide-details required></v-text-field>
-              <div>
+              <div class="mb-5">
               <v-text-field density="compact" autocomplete="off" v-model="password" label="パスワード" type="password" hide-details required></v-text-field>
-              <div class="mb-5 text-right">
-                <a href="#" class="link" >パスワードをお忘れの方</a>
-              </div>
               </div>
               <div class="password-link">
               </div>
@@ -32,9 +29,9 @@
           </v-card>
         <div class="mem-regist mt-5 text-center" style="font-size: 12px;">
             <span>まだ会員登録していない方は</span>
-            <a href="#"  class="link" @mouseover="changeColor" @mouseout="resetColor">
+            <router-link to="/profile/init">
               こちらから登録
-            </a>
+            </router-link>
             <span>(無料)お願いします</span>
           </div>
         </v-col>
@@ -117,13 +114,12 @@ const getUser = async () => {
     const response = await LoginService.getLoginUser(data.email, data.password);
     if (response.status === 200) {
       // ログイン成功
-        alert(`ようこそ！`);
-        store.commit('token/saveIdToken', response.data.data.idToken);
-        store.commit('token/saveRefreshToken', response.data.data.refreshToken);
-        store.commit('user/saveUserId', response.data.data.id);
-        store.commit('user/saveUserType', response.data.data.userType);
-        store.commit('user/saveUserName', response.data.data.userName);
-        router.push({ name: 'demo' });
+      store.commit('token/saveIdToken', response.data.data.idToken);
+      store.commit('token/saveRefreshToken', response.data.data.refreshToken);
+      store.commit('user/saveUserId', response.data.data.id);
+      store.commit('user/saveUserType', response.data.data.userType);
+      store.commit('user/saveUserName', response.data.data.userName);
+      router.push({ name: 'top' });
     } else {
       // ログイン失敗
       error.value = true;
