@@ -60,7 +60,8 @@ const getLaugh = async () => {
 
 /** ユーザ詳細へ遷移 */
 const displayUser = (laugh:Laugh) => {
-  let targetUserType = 0;  
+  let targetUserType = 0;
+  // 遷移先ユーザのユーザタイプを設定
   if (store.state.user.userType == 1) {
     targetUserType = 2
   } else {
