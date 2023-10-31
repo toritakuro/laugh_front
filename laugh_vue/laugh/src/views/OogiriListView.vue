@@ -86,11 +86,15 @@
             <v-col cols="12">
               <v-row id="ans-row">
                 <v-col cols="1" id="ans-avatar">
-                  <router-link to="/">
-                    <v-avatar color="grey-darken-1">
-                      {{ answer.answerUserName }}
-                    </v-avatar>
-                  </router-link>
+                  <v-avatar id="ans-size"
+                    :class="['profile-icon', isSameType(answer) ? 'pointer-events-none' : '']"
+                    @click="isSameType(answer) ? undefined : redirectToDetails(answer)">
+                    <v-img
+                      :aspect-ratio="1"
+                      :src="answer.img || src"
+                      cover>
+                    </v-img>
+                  </v-avatar>
                 </v-col>
                 <v-col cols="11" id="ans-content">
                   <v-list-item-subtitle>
@@ -141,6 +145,11 @@
   min-width: 80px;
   max-width: 80px;
 }
+#ans-size {
+  width: 30px;
+  height: auto;
+}
+
 #ans-content {
   padding: 0 8px;
   margin-left: -30px;
@@ -157,6 +166,16 @@
 import { ref, onMounted } from 'vue';
 import type Oogiri from "@/types/Oogiri";
 import http from "@/http-common";
+import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
+
+const route = useRoute();
+const store = useStore();
+const userId = store.getters['user/getUserId'];
+const userType = store.getters['user/getUserType'];
+const src = ref("/img/man.svg");
+const router = useRouter();
 
 // 大喜利のデータ
 const oogiri = ref<Oogiri[]>([]);
@@ -204,5 +223,18 @@ const resetSearch = async () => {
   themeUserName.value = "";
   answerUserName.value = "";
   await getOogiri(); // 全件データを再取得
+}
+
+// 同じユーザータイプか判定
+const isSameType = (answer) => {
+  return userType == answer.userType;
+}
+
+// ユーザー詳細へ遷移
+const redirectToDetails = (answer) => {
+  router.push({ 
+    name: 'userDetail',
+    query: { receiveUserId: answer.answerUserId, userType: 2, sendUserId: userId }
+  })
 }
 </script>
