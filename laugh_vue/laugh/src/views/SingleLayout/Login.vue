@@ -32,9 +32,9 @@
           </v-card>
         <div class="mem-regist mt-5 text-center" style="font-size: 12px;">
             <span>まだ会員登録していない方は</span>
-            <a href="#"  class="link" @mouseover="changeColor" @mouseout="resetColor">
+            <router-link to="/profile/init">
               こちらから登録
-            </a>
+            </router-link>
             <span>(無料)お願いします</span>
           </div>
         </v-col>
@@ -117,11 +117,12 @@ const getUser = async () => {
     const response = await LoginService.getLoginUser(data.email, data.password);
     if (response.status === 200) {
       // ログイン成功
-        store.commit('token/saveIdToken', response.data.data.idToken);
-        store.commit('token/saveRefreshToken', response.data.data.refreshToken);
-        store.commit('user/saveUserId', response.data.data.id);
-        store.commit('user/saveUserType', response.data.data.userType);
-        router.push({ name: 'top' });
+      store.commit('token/saveIdToken', response.data.data.idToken);
+      store.commit('token/saveRefreshToken', response.data.data.refreshToken);
+      store.commit('user/saveUserId', response.data.data.id);
+      store.commit('user/saveUserType', response.data.data.userType);
+      store.commit('user/saveUserName', response.data.data.userName);
+      router.push({ name: 'top' });
     } else {
       // ログイン失敗
       error.value = true;

@@ -294,12 +294,9 @@
   const showModal = () => {
     // モーダル表示する際の処理が必要ならここに書く
     modal.value = true;
-    console.log("aaa",modal.value)
   };
 
   const postMatch = async (matchStatus: number) => {
-    // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
-    console.log("aaa")
     modal.value = false;
     const sendUserId = userId
     const receiveUserId = route.query.receiveUserId

@@ -314,26 +314,26 @@
           class="mx-auto"
           max-width="344"
         >
-        <v-card-text>
-          <div class="text-h８ text--primary title"><p>お知らせ</p></div>
-          <div class="msg text--primary">
+          <v-card-text>
+            <div class="text-h８ text--primary title"><p>お知らせ</p></div>
+            <div class="msg text--primary">
               <template v-for="n in notice">
-              <v-hover v-slot="{ isHovering, props }">
-              <div 
-                :class="{ 'div-hover': isHovering }"
-                class="noticeRow">
-                <div
-                  @click="readMessage(n)"
-                  v-bind="props">
-                  {{ n.message }}
-                </div>
-              </div>
-              </v-hover>
+                <v-hover v-slot="{ isHovering, props }">
+                  <div 
+                    :class="{ 'div-hover': isHovering }"
+                    class="noticeRow">
+                    <div
+                      @click="readMessage(n)"
+                      v-bind="props">
+                      {{ n.message }}
+                    </div>
+                  </div>
+                </v-hover>
               </template>
-          </div>
-        </v-card-text>
+            </div>
+          </v-card-text>
         </v-card>
-    </div>
+      </div>
     </v-row>
   </v-container>
 </template>  
@@ -369,6 +369,9 @@
   align-items: center;
   height: 20px;
   padding-left:5px;
+}
+.text--primary {
+  padding-left: 5px;
 }
 .user_filter {
   transform: scale(0.9) translate(0px, -92px);
@@ -543,9 +546,17 @@
   // メッセージ既読
   const readMessage = (notice: Notice) => {
     http.post('/notice',{id: notice.id });
-    
+    console.log(notice.targetType)
+    let targetUserType = 0;
+    // 遷移先ユーザのユーザタイプを設定
+   if (store.state.user.userType == 1) {
+     targetUserType = 2
+   } else {
+     targetUserType = 1
+   }
+
     // メッセージの場合はチャットルームへ
-    if(notice.targetType) {
+    if(notice.targetType == 2) {
       router.push({ name: 'chat', query: { 
         userId: store.state.user.userId,
         userType: store.state.user.userType
@@ -554,7 +565,7 @@
     } 
     // Laughの場合は各ユーザへ飛ぶ
     else {
-      router.push({ name: 'detail', query: { receiveUserId: store.state.user.userId, userType: store.state.user.userType, sendUserId: notice.targetId }  })
+      router.push({ name: 'userDetail', query: { receiveUserId: notice.targetId, userType: targetUserType, sendUserId: store.state.user.userId}  })
     }
   }
   /** User一覧を取得する */
@@ -570,11 +581,6 @@
     countUsers()
     postSort()
   }
-
-  const items = ref([
-    { text: 'トカゲのおっさん', icon: 'mdi-video' },
-    { text: 'ゴレンジャイ', icon: 'mdi-file' },
-  ]) ;
 
   // sort
   const selectedSorts = ref({ id: 1, name: 'ログイン順'})

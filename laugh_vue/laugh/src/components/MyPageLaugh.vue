@@ -59,18 +59,16 @@ const getLaugh = async () => {
   laughs.value = data.data;
 }
 
-const userMyType = store.getters['user/getUserType'];
-
 /** ユーザ詳細へ遷移 */
-const displayUser = (Laugh:Laugh) => {
-  let userType;
-  if (userMyType.value == 1) {
-    userType = 2
+const displayUser = (laugh:Laugh) => {
+  let targetUserType = 0;
+  // 遷移先ユーザのユーザタイプを設定
+  if (store.state.user.userType == 1) {
+    targetUserType = 2
   } else {
-    userType = 1
+    targetUserType = 1
   }
-
-  router.push({ name: 'userDetail', query: { receiveUserId: Laugh.targetUserId, userType: userType, sendUserId: store.state.user.userId }  })
+  router.push({ name: 'userDetail', query: { receiveUserId: laugh.targetUserId, userType: targetUserType, sendUserId: store.state.user.userId }  })
 }
 
 defineExpose({
