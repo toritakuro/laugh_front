@@ -10,6 +10,8 @@ import ProfileInit from '../views/SingleLayout/ProfileInit.vue'
 import ProfileRegister from '../views/SingleLayout/ProfileRegister.vue'
 import ProfileRegisterCompletion from '../views/SingleLayout/ProfileRegisterCompletion.vue'
 import OogiriDetail from '../views/OogiriDetailView.vue'
+import OogiriList from '../views/OogiriListView.vue'
+import OogiriPost from '../views/OogiriPostView.vue'
 import ChatRoom from '../views/ChatRoomList.vue'
 import ChatDetail from '../views/ChatDetail.vue'
 import UserDetail from '../views/UserDetail.vue'
@@ -84,6 +86,16 @@ const router = createRouter({
           path: '/oogiri/detail',
           name: 'oogiriDetail',
           component: OogiriDetail,
+        },
+        {
+          path: '/oogiri/list',
+          name: 'oogiriList',
+          component: OogiriList,
+        },
+        {
+          path: '/oogiri/post',
+          name: 'oogiriPost',
+          component: OogiriPost,
         },
       ]
     },

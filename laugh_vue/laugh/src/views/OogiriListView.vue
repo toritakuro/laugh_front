@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-row>
+      <!-- お題の投稿ボタン -->
       <v-col large cols="4">
         <router-link :to="{ path: '/oogiri/post'}">
           <v-btn
@@ -15,6 +16,7 @@
         </router-link>
       </v-col>
       <v-row>
+        <!-- 投稿者、回答者名を検索 -->
         <v-col cols="7">
           <v-col cols="12">
             <v-text-field v-model="themeUserName" label="投稿者検索" hide-details="true"></v-text-field>
@@ -60,23 +62,32 @@
         v-if="oogiri != null"
         v-for="(item, i) in oogiri" :key="i">
         <v-col cols="12">
-          <v-row id="theme-row">
+          <v-row id="tm-row">
+            <!-- お題を表示 -->
             <v-col cols="7">
               <router-link :to="{ path: '/oogiri/detail', query: { themeId: item.themeId } }">
-                <v-list-item-title id="theme">
+                <v-list-item-title id="tm">
                   <v-icon color="orange-darken-1">mdi mdi-note-text-outline</v-icon>
                   {{ item.themeContent }}
                 </v-list-item-title>
               </router-link>
             </v-col>
-            <v-col cols="3">
-              <router-link to="/">
-                <v-list-item-title id="pst-name">
-                  <v-icon color="orange-darken-1">mdi mdi-account</v-icon>
-                  {{ item.themeUserName }}
-                </v-list-item-title>
-              </router-link>
+            <!-- お題の投稿者を表示 -->
+            <v-col cols="3" class="d-flex align-center">
+              <v-avatar id="tm-avatar-size"
+                :class="['profile-icon', isSameTypeTheme(item) ? 'pointer-events-none' : '']"
+                @click="isSameTypeTheme(item) ? undefined : redirectToDetailsTheme(item)">
+                <v-img
+                  :aspect-ratio="1"
+                  :src="item.img || src"
+                  cover>
+                </v-img>
+              </v-avatar>
+              <v-list-item-title id="pst-name" class="ml-2">
+                {{ item.themeUserName }}
+              </v-list-item-title>
             </v-col>
+            <!-- 回答数を表示 -->
             <v-col cols="2">
               <v-list-item-title>回答数 {{ item.answerCount }}件</v-list-item-title>
             </v-col>
@@ -85,10 +96,11 @@
           <template v-for="(answer, i) in item.answers" :key="answer.answerId">
             <v-col cols="12">
               <v-row id="ans-row">
+                <!-- 回答者をアイコンで表示 -->
                 <v-col cols="1" id="ans-avatar">
-                  <v-avatar id="ans-size"
-                    :class="['profile-icon', isSameType(answer) ? 'pointer-events-none' : '']"
-                    @click="isSameType(answer) ? undefined : redirectToDetails(answer)">
+                  <v-avatar id="ans-avatar-size"
+                    :class="['profile-icon', isSameTypeAnswer(answer) ? 'pointer-events-none' : '']"
+                    @click="isSameTypeAnswer(answer) ? undefined : redirectToDetailsAnswer(answer)">
                     <v-img
                       :aspect-ratio="1"
                       :src="answer.img || src"
@@ -96,6 +108,7 @@
                     </v-img>
                   </v-avatar>
                 </v-col>
+                <!-- 回答を表示 -->
                 <v-col cols="11" id="ans-content">
                   <v-list-item-subtitle>
                     {{ answer.answerContent }}
@@ -116,25 +129,19 @@
   text-decoration:none;
   color:inherit
 }
-#pst-name {
-  color: #6495ED; /* リンクの初期色 */
-  font-size: 18px;
-}
+
 #pst-list {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
-#theme {
-  color: #6495ED; /* リンクの初期色 */
+#tm {
+  color: #6495ED;
   font-size: 18px;
 }
-#theme-row {
+#tm-row {
   align-items: center;
 }
 
-#ans-name {
-  color: #6495ED; /* リンクの初期色 */
-}
 #ans-row {
   align-items: center;
   margin-top: 1px;
@@ -145,20 +152,26 @@
   min-width: 80px;
   max-width: 80px;
 }
-#ans-size {
+#tm-avatar-size,#ans-avatar-size {
   width: 30px;
   height: auto;
 }
-
 #ans-content {
   padding: 0 8px;
   margin-left: -30px;
 }
-#theme:hover, #pst-name:hover {
+#tm:hover:hover {
   color: #FB8C00;
 }
-#ans-name:hover {
-  color: #FB8C00; /* ホバー時の色 */
+.profile-icon {
+  cursor: pointer;
+}
+.profile-icon:hover {
+  transform: scale(1.5);
+  transition: transform 0.2s;
+}
+.pointer-events-none {
+  pointer-events: none;
 }
 </style>
 
@@ -180,11 +193,7 @@ const router = useRouter();
 // 大喜利のデータ
 const oogiri = ref<Oogiri[]>([]);
 const getOogiri = async () => {
-  const {data} = await http.get('oogiri', {
-    // params: {
-    //   page: 1
-    // }
-  })
+  const {data} = await http.get('oogiri')
   console.log(data);
   oogiri.value = data.data;
   console.log(oogiri);
@@ -198,14 +207,12 @@ onMounted(() => {
 // 投稿者、回答者の検索
 const themeUserName = ref("");
 const answerUserName = ref("");
-// const page = ref(1);
 const searchOogiriByUser = async () => {
   try {
     const { data } = await http.get('/oogiri/user', {
       params: {
         themeUserName: themeUserName.value,
         answerUserName: answerUserName.value
-        // page: page.value
       }
     });
     if (data && data.data) {
@@ -225,16 +232,28 @@ const resetSearch = async () => {
   await getOogiri(); // 全件データを再取得
 }
 
-// 同じユーザータイプか判定
-const isSameType = (answer) => {
+// 回答者_同じユーザータイプか判定
+const isSameTypeAnswer = (answer) => {
   return userType == answer.userType;
 }
-
-// ユーザー詳細へ遷移
-const redirectToDetails = (answer) => {
+// 回答者_ユーザー詳細へ遷移
+const redirectToDetailsAnswer = (answer) => {
   router.push({ 
     name: 'userDetail',
-    query: { receiveUserId: answer.answerUserId, userType: 2, sendUserId: userId }
+    query: { receiveUserId: answer.answerUserId, userType: answer.userType, sendUserId: userId }
+  })
+}
+
+// お題投稿者_同じユーザータイプか判定
+const isSameTypeTheme = (theme) => {
+  console.log(theme);
+  return userType == theme.userType;
+}
+// お題投稿者_ユーザー詳細へ遷移
+const redirectToDetailsTheme = (theme) => {
+  router.push({ 
+    name: 'userDetail',
+    query: { receiveUserId: theme.themeUserId, userType: theme.userType, sendUserId: userId }
   })
 }
 </script>
