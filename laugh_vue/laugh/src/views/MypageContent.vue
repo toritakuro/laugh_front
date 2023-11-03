@@ -21,12 +21,22 @@
       </v-col>
 
       <v-col cols="auto" class="pb-16 text-end">
-        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openUploadModal"></v-btn>
+        <!-- <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openUploadModal"></v-btn> -->
+        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="showModal"></v-btn>
       </v-col>
     </v-row>
 
+    <div v-show="modal" class="overlay" @click="closeModal">
+      <ContentModal
+        @click.stop
+        :contentsReq = "contentsReq" 
+        @set-content="setContent"
+        @upload-file="uploadFile"
+        @set-file="setFile"
+      />
+    </div>
     <!-- アップロードモーダル -->
-    <v-menu
+    <!-- <v-menu
       v-model="uplodadModalFlg"
       class="bordered-dialog"
       @click.stop
@@ -69,7 +79,7 @@
           @click="uploadFile"
         >アップロード</v-btn>
       </v-form>
-    </v-menu>
+    </v-menu> -->
 
     <!-- 編集モーダル -->
     <v-menu
@@ -233,6 +243,22 @@ import { useStore } from 'vuex'
 import type Content from "@/types/Content";
 import http from "@/http-common";
 import FileComponent from "../components/FileComponent.vue"
+import ContentModal from "../components/ContentModal.vue"
+
+
+const modal = ref(false);
+const showModal = () => {
+  modal.value = true;
+}
+const closeModal = () => {
+  modal.value = false;
+}
+const setContent = (contentsModal: any) => {
+  contentsReq.value.fileType = contentsModal.fileType;
+  contentsReq.value.title = contentsModal.title;
+  contentsReq.value.detail = contentsModal.detail;
+}
+
 
 const store = useStore()
 const contents = ref<Content[]>([]) //タイトル検索で絞られた後のファイル一覧はこの変数に入れる
@@ -248,68 +274,68 @@ const searchKariName = ref('') // タイトル検索用(スペース削除後)
 
 // アップロード時のリクエスト
 const contentsReq = ref<Content>({
-id : null,
-userId : store.state.user.userId ,
-title : '' ,
-detail : '' ,
-fileType : 1 ,
-content : '' ,
-contentPath : '',
-createAt : null,
-UpdateAt : null
+  id : null,
+  userId : store.state.user.userId ,
+  title : '' ,
+  detail : '' ,
+  fileType : 1 ,
+  content : '' ,
+  contentPath : '',
+  createAt : null,
+  UpdateAt : null
 })
 
 // 編集時のリクエスト
 const contentsEditReq = ref<Content>({
-id : null,
-userId : store.state.user.userId ,
-title : '' ,
-detail : '' ,
-fileType : 1 ,
-content : 'editTest' ,
-contentPath : '',
-createAt : null,
-UpdateAt : null
+  id : null,
+  userId : store.state.user.userId ,
+  title : '' ,
+  detail : '' ,
+  fileType : 1 ,
+  content : 'editTest' ,
+  contentPath : '',
+  createAt : null,
+  UpdateAt : null
 })
 
 // 動画ファイル用
 const mpContents = computed(() => {
-return contents.value.filter(contents => contents.fileType == 1)
+  return contents.value.filter(contents => contents.fileType == 1)
 })
 // PDFファイル用
 const pdfContents = computed(() => {
-return contents.value.filter(contents => contents.fileType == 2)
+  return contents.value.filter(contents => contents.fileType == 2)
 })
 
 
 
 // マウント時にデータを取得し代入する
 onMounted(() => {
-getContent();
+  getContent();
 });
 
 const getContent = async () => {
-const {data} = await http.get('/mypage/getFile',{
-  params: {
-    userId: store.state.user.userId
-  }}
-  )
-contents.value = data.data
-OriginContents.value = data.data
-if(OriginContents.value.length > 0) {
-  existFlg.value = true;
-}
-if(OriginContents.value.length <= 0) {
-  existFlg.value = false;
-}
-titleExistFlg.value = existFlg.value; // 最初の画面表示時はtitleExistFlgもexistFlgも同じ
+  const {data} = await http.get('/mypage/getFile',{
+    params: {
+      userId: store.state.user.userId
+    }}
+    )
+  contents.value = data.data
+  OriginContents.value = data.data
+  if(OriginContents.value.length > 0) {
+    existFlg.value = true;
+  }
+  if(OriginContents.value.length <= 0) {
+    existFlg.value = false;
+  }
+  titleExistFlg.value = existFlg.value; // 最初の画面表示時はtitleExistFlgもexistFlgも同じ
 
 }
 
 // タイトル検索欄に文字が入力された時の処理
 const postName = () => {
-searchKariName.value = searchName.value.trim().replace(/\s/g,"") // スペースを削除
-fileSearch()
+  searchKariName.value = searchName.value.trim().replace(/\s/g,"") // スペースを削除
+  fileSearch()
 }
 const fileSearch = () => {
 console.log(searchKariName.value)
@@ -330,7 +356,7 @@ if(contents.value.length <= 0) {
 
 // 投稿したファイルの説明文で改行があった時、改行して表示されるようにする
 const formatDetail = (detail: string) => {
-return detail.replace(/\r\n|\r|\n/g, "<br>");
+  return detail.replace(/\r\n|\r|\n/g, "<br>");
 }
 
 // 投稿したファイルの説明文が画面で2行で収まるかの判定
@@ -376,57 +402,60 @@ return detail;
 
 // 投稿日時のフォーマットを調整
 const formatDate = (dateString: any) => {
-if(dateString == null) {
-  return;
-}
-const date = new Date(dateString);
-const year = date.getFullYear();
-const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-11の範囲なので+1
-const day = String(date.getDate()).padStart(2, '0');
-const hours = String(date.getHours()).padStart(2, '0');
-const minutes = String(date.getMinutes()).padStart(2, '0');
-return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
+  if(dateString == null) {
+    return;
+  }
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-11の範囲なので+1
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
 }
 
 
 
 // ファイルをダウンロードする処理
 const downloadFile = (path: string) => {
-window.open(path, '_blank');
+  window.open(path, '_blank');
 }
 
 
 
 // アップロードのモーダルを表示する
 const openUploadModal = () => {
-uplodadModalFlg.value = true
+  uplodadModalFlg.value = true
 }
 // アップロードするファイルをセットする
 const fileExtension = ref('');
 const setFile = (base64:string, extension:string) => {
-console.log(extension)
-fileExtension.value = extension;
-contentsReq.value.content = base64;
+  console.log(extension)
+  fileExtension.value = extension;
+  contentsReq.value.content = base64;
 }
 // アップロードのリクエストを送る
 const uploadFile = async () => {
-if(contentsReq.value.title != '') {
-  contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value // S3に登録するために、一時的にタイトルに拡張子をつける
-}
-http.post("/mypage/uploadContent", contentsReq.value)
-.then(() => {
-  console.log('成功');
-  contentsReq.value.title = '';
-  contentsReq.value.detail = '';
-})
-.catch((error) => {
-  contentsReq.value.title = contentsReq.value.title.split('.')[0];
-  console.log(error);
-})
-.finally(() => {
-  uplodadModalFlg.value = false;
-  getContent();
-});
+  if(contentsReq.value.title != '') {
+    contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value // S3に登録するために、一時的にタイトルに拡張子をつける
+  }
+
+  // TODO: 20231103 ファイルタイプと拡張子が一致していなかったらリクエスト飛ばさないようにしたい。
+
+  http.post("/mypage/uploadContent", contentsReq.value)
+    .then(() => {
+      console.log('成功');
+      contentsReq.value.title = '';
+      contentsReq.value.detail = '';
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      modal.value = false;
+      // uplodadModalFlg.value = false;
+      getContent();
+    });
 }
 
 
@@ -440,16 +469,16 @@ contentsEditReq.value.detail = item.detail;
 }
 // 編集のリクエストを送る
 const editFile = async () => {
-http.post("/mypage/editFile",contentsEditReq.value )
-  .then(() => {
-    getContent();
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-  .finally(() => {
-    editModalFlg.value = false;
-  });
+  http.post("/mypage/editFile",contentsEditReq.value )
+    .then(() => {
+      getContent();
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+    .finally(() => {
+      editModalFlg.value = false;
+    });
 }
 
 
@@ -463,14 +492,14 @@ if (window.confirm(item.id+'削除しますか？')) {
   console.log(item)
   delItem2.value.id = item.id
   http.post("/mypage/deleteFile",delItem2.value )
-  .then(() => {
-    getContent();
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-  .finally(() => {
-  });
+    .then(() => {
+      getContent();
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+    .finally(() => {
+    });
 }
 }
 
@@ -535,5 +564,18 @@ overflow-y: auto;
   cursor: pointer;
   color: blue;
   text-decoration: underline;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 98
 }
 </style>

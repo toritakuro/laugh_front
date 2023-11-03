@@ -66,7 +66,7 @@ const router = createRouter({
           component: MyPage
         },
         {
-          path: '/posts-list',
+          path: '/posts/list',
           component: MypageContent
         },
         {
