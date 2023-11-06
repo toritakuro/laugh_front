@@ -1,7 +1,7 @@
 <template>
   <v-container
     class="py-8 px-6"
-    style="width: 90%;"
+    style="width: 90%; max-width: 1100px;"
     fluid
   >
 
@@ -21,68 +21,34 @@
       </v-col>
 
       <v-col cols="auto" class="pb-16 text-end">
-        <!-- <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openUploadModal"></v-btn> -->
-        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="showModal"></v-btn>
+        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openReg"></v-btn>
       </v-col>
     </v-row>
 
-    <div v-show="modal" class="overlay" @click="closeModal">
+    <!-- 登録用モーダル -->
+    <div v-if="modal && regEditType == 1" class="overlay" @click="closeModal">
       <ContentModal
         @click.stop
+        v-show="modal"
         :contentsReq = "contentsReq" 
-        @set-content="setContent"
-        @upload-file="uploadFile"
+        :regEditType ="regEditType"
+        @upload-content="uploadContent"
         @set-file="setFile"
       />
     </div>
-    <!-- アップロードモーダル -->
-    <!-- <v-menu
-      v-model="uplodadModalFlg"
-      class="bordered-dialog"
-      @click.stop
-    >
-      <v-form @click.stop class="form-container">
-        <v-radio-group 
-          v-model="contentsReq.fileType" 
-          inline
-          class="ml-8 mt-8"
-          >
-          <v-radio
-            label="動画"
-            value="1"
-            color="orange"
-          ></v-radio>
-          <v-radio
-            label="PDF"
-            value="2"
-            color="orange"
-          ></v-radio>
-        </v-radio-group>
-        <v-text-field
-          v-model="contentsReq.title"
-          label="タイトル"
-          placeholder="ここにタイトルを入力"
-          class="ml-8"
-        ></v-text-field>
-        <v-textarea
-          v-model="contentsReq.detail"
-          label="説明文"
-          class="ml-8 mt-4"
-        ></v-textarea>
-        
-        <FileComponent @set-file="setFile"/>
 
-        <v-btn 
-          class="ml-8 mt-8"
-          style="width:80%;"
-          color="orange-darken-1" 
-          @click="uploadFile"
-        >アップロード</v-btn>
-      </v-form>
-    </v-menu> -->
+    <!-- 更新用モーダル -->
+    <div v-if="modal && regEditType == 2" class="overlay" @click="closeModal">
+      <ContentModal
+        @click.stop
+        :contentsEditReq = "contentsEditReq" 
+        :regEditType ="regEditType"
+        @edit-content="editContent"
+      />
+    </div>
 
     <!-- 編集モーダル -->
-    <v-menu
+    <!-- <v-menu
       v-model="editModalFlg"
       class="bordered-dialog"
       @click.stop
@@ -110,7 +76,7 @@
           @click="editFile"
         >編集</v-btn>
       </v-form>
-    </v-menu>
+    </v-menu> -->
 
     <!-- 動画ファイル一覧 -->
     <v-icon size="48" v-if="titleExistFlg">mdi-movie-play</v-icon>
@@ -245,18 +211,23 @@ import http from "@/http-common";
 import FileComponent from "../components/FileComponent.vue"
 import ContentModal from "../components/ContentModal.vue"
 
-
+const regEditType = ref(1);
 const modal = ref(false);
-const showModal = () => {
+const openReg = () => {
   modal.value = true;
+  regEditType.value = 1;
 }
 const closeModal = () => {
   modal.value = false;
 }
-const setContent = (contentsModal: any) => {
-  contentsReq.value.fileType = contentsModal.fileType;
-  contentsReq.value.title = contentsModal.title;
-  contentsReq.value.detail = contentsModal.detail;
+// const setContent = (contentsModal: any) => {
+//   contentsReq.value.fileType = contentsModal.fileType;
+//   contentsReq.value.title = contentsModal.title;
+//   contentsReq.value.detail = contentsModal.detail;
+// }
+const setEditContent = (contentsEditModal: any) => {
+  contentsEditReq.value.title = contentsEditModal.title;
+  contentsEditReq.value.detail = contentsEditModal.detail;
 }
 
 
@@ -423,10 +394,6 @@ const downloadFile = (path: string) => {
 
 
 
-// アップロードのモーダルを表示する
-const openUploadModal = () => {
-  uplodadModalFlg.value = true
-}
 // アップロードするファイルをセットする
 const fileExtension = ref('');
 const setFile = (base64:string, extension:string) => {
@@ -435,40 +402,47 @@ const setFile = (base64:string, extension:string) => {
   contentsReq.value.content = base64;
 }
 // アップロードのリクエストを送る
-const uploadFile = async () => {
+const uploadContent = async (contentsModal: any) => {
+  contentsReq.value.fileType = contentsModal.fileType;
+  contentsReq.value.title = contentsModal.title;
+  contentsReq.value.detail = contentsModal.detail;
+
   if(contentsReq.value.title != '') {
     contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value // S3に登録するために、一時的にタイトルに拡張子をつける
   }
 
   // TODO: 20231103 ファイルタイプと拡張子が一致していなかったらリクエスト飛ばさないようにしたい。
 
-  http.post("/mypage/uploadContent", contentsReq.value)
-    .then(() => {
-      console.log('成功');
-      contentsReq.value.title = '';
-      contentsReq.value.detail = '';
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .finally(() => {
-      modal.value = false;
-      // uplodadModalFlg.value = false;
-      getContent();
-    });
+  try{
+    await http.post("/mypage/uploadContent", contentsReq.value);
+    console.log('成功');
+    contentsReq.value.title = '';
+    contentsReq.value.detail = '';
+    contentsReq.value.content = '';
+  } catch(error) {
+    console.log(error);
+  } finally {
+    modal.value = false;
+    await getContent();
+  };
 }
 
 
 
 // 編集のモーダルを表示する
 const openEdit = (item: Content) => {
-editModalFlg.value = true;
-contentsEditReq.value.id = item.id;
-contentsEditReq.value.title = item.title;
-contentsEditReq.value.detail = item.detail;
+// editModalFlg.value = true;
+  modal.value = true;
+  regEditType.value = 2;
+  contentsEditReq.value.id = item.id;
+  contentsEditReq.value.title = item.title;
+  contentsEditReq.value.detail = item.detail;
 }
 // 編集のリクエストを送る
-const editFile = async () => {
+const editContent = async (contentsEditModal: any) => {
+  contentsEditReq.value.title = contentsEditModal.title;
+  contentsEditReq.value.detail = contentsEditModal.detail;
+
   http.post("/mypage/editFile",contentsEditReq.value )
     .then(() => {
       getContent();
@@ -477,7 +451,7 @@ const editFile = async () => {
       console.log(error)
     })
     .finally(() => {
-      editModalFlg.value = false;
+      modal.value = false;
     });
 }
 

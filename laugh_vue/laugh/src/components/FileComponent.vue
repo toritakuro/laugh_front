@@ -4,8 +4,8 @@
       accept="*"
       prepend-icon="mdi-upload"
       outlined
-    :clearable="false"
-    :show-size="1000"
+      :clearable="false"
+      :show-size="1000"
       label="ファイルをアップロードしてください"
       @change="handleFileSelect"
       class="ml-8 mt-4"
