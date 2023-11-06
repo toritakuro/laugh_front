@@ -47,37 +47,6 @@
       />
     </div>
 
-    <!-- 編集モーダル -->
-    <!-- <v-menu
-      v-model="editModalFlg"
-      class="bordered-dialog"
-      @click.stop
-      close-on-content-click
-      disable-keys
-    >
-      <v-form @click.stop class="form-container">
-        <v-text-field
-          v-model="contentsEditReq.title"
-          label="タイトル"
-          placeholder="ここにタイトルを入力"
-          class="ml-8 mt-8"
-        ></v-text-field>
-        <v-textarea
-          v-model="contentsEditReq.detail"
-          label="説明文"
-          class="ml-8 mt-4"
-          rows="11"
-        ></v-textarea>
-
-        <v-btn 
-          class="ml-8 mt-8"
-          style="width:80%;"
-          color="orange-darken-1" 
-          @click="editFile"
-        >編集</v-btn>
-      </v-form>
-    </v-menu> -->
-
     <!-- 動画ファイル一覧 -->
     <v-icon size="48" v-if="titleExistFlg">mdi-movie-play</v-icon>
     <v-sheet class="rounded-lg  card-row" style="border:2px solid orange;" v-if="titleExistFlg">
@@ -204,38 +173,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import type Content from "@/types/Content";
 import http from "@/http-common";
-import FileComponent from "../components/FileComponent.vue"
 import ContentModal from "../components/ContentModal.vue"
 
+// モーダルに関する処理
 const regEditType = ref(1);
 const modal = ref(false);
-const openReg = () => {
-  modal.value = true;
-  regEditType.value = 1;
-}
 const closeModal = () => {
   modal.value = false;
 }
-// const setContent = (contentsModal: any) => {
-//   contentsReq.value.fileType = contentsModal.fileType;
-//   contentsReq.value.title = contentsModal.title;
-//   contentsReq.value.detail = contentsModal.detail;
-// }
-const setEditContent = (contentsEditModal: any) => {
-  contentsEditReq.value.title = contentsEditModal.title;
-  contentsEditReq.value.detail = contentsEditModal.detail;
-}
-
 
 const store = useStore()
 const contents = ref<Content[]>([]) //タイトル検索で絞られた後のファイル一覧はこの変数に入れる
 const OriginContents = ref<Content[]>([]) // タイトル検索で絞られる前のファイル一覧はこの変数に入れる
-const uplodadModalFlg = ref<boolean>();
-const editModalFlg = ref(false);
 
 const existFlg = ref(false); // ログインユーザーがファイルを投稿しているかの判定
 const titleExistFlg = ref(false)
@@ -277,8 +230,6 @@ const mpContents = computed(() => {
 const pdfContents = computed(() => {
   return contents.value.filter(contents => contents.fileType == 2)
 })
-
-
 
 // マウント時にデータを取得し代入する
 onMounted(() => {
@@ -385,15 +336,16 @@ const formatDate = (dateString: any) => {
   return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
 }
 
-
-
 // ファイルをダウンロードする処理
 const downloadFile = (path: string) => {
   window.open(path, '_blank');
 }
 
-
-
+// 投稿のモーダルを表示する
+const openReg = () => {
+  modal.value = true;
+  regEditType.value = 1;
+}
 // アップロードするファイルをセットする
 const fileExtension = ref('');
 const setFile = (base64:string, extension:string) => {
@@ -427,11 +379,8 @@ const uploadContent = async (contentsModal: any) => {
   };
 }
 
-
-
 // 編集のモーダルを表示する
 const openEdit = (item: Content) => {
-// editModalFlg.value = true;
   modal.value = true;
   regEditType.value = 2;
   contentsEditReq.value.id = item.id;
@@ -455,26 +404,24 @@ const editContent = async (contentsEditModal: any) => {
     });
 }
 
-
-
 // 削除のリクエストを送る
 const deleteFile = (item: Content) => {
-if (window.confirm(item.id+'削除しますか？')) {
-  const delItem = ref<Content>(item)
-  const delItem2 = contentsReq
-  console.log(delItem.value)
-  console.log(item)
-  delItem2.value.id = item.id
-  http.post("/mypage/deleteFile",delItem2.value )
-    .then(() => {
-      getContent();
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-    .finally(() => {
-    });
-}
+  if (window.confirm(item.id+'削除しますか？')) {
+    const delItem = ref<Content>(item)
+    const delItem2 = contentsReq
+    console.log(delItem.value)
+    console.log(item)
+    delItem2.value.id = item.id
+    http.post("/mypage/deleteFile",delItem2.value )
+      .then(() => {
+        getContent();
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      .finally(() => {
+      });
+  }
 }
 
 

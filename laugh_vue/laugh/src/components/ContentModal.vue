@@ -63,11 +63,7 @@
   
   <script setup lang="ts">
   import FileComponent from "../components/FileComponent.vue"
-  import { computed, ref, watchEffect, reactive } from 'vue'
-  import { useRouter , useRoute} from 'vue-router';
-  import { useStore } from 'vuex'
-  import type Laugh from "@/types/Laugh";
-  import http from "@/http-common";
+  import {  ref, watchEffect, reactive } from 'vue'
 
   const regEditType = ref(1); // 1なら登録、2なら更新。TODO: 20231105 マジックナンバー使ってるので修正したい
   const props = defineProps(["contentsReq", "contentsEditReq","regEditType"]);
