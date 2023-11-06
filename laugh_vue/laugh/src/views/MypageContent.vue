@@ -1,7 +1,7 @@
 <template>
   <v-container
     class="py-8 px-6"
-    style="width: 90%;"
+    style="width: 90%; max-width: 1100px;"
     fluid
   >
 
@@ -21,86 +21,31 @@
       </v-col>
 
       <v-col cols="auto" class="pb-16 text-end">
-        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openUploadModal"></v-btn>
+        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openReg"></v-btn>
       </v-col>
     </v-row>
 
-    <!-- アップロードモーダル -->
-    <v-menu
-      v-model="uplodadModalFlg"
-      class="bordered-dialog"
-      @click.stop
-    >
-      <v-form @click.stop class="form-container">
-        <v-radio-group 
-          v-model="contentsReq.fileType" 
-          inline
-          class="ml-8 mt-8"
-          >
-          <v-radio
-            label="動画"
-            value="1"
-            color="orange"
-          ></v-radio>
-          <v-radio
-            label="PDF"
-            value="2"
-            color="orange"
-          ></v-radio>
-        </v-radio-group>
-        <v-text-field
-          v-model="contentsReq.title"
-          label="タイトル"
-          placeholder="ここにタイトルを入力"
-          class="ml-8"
-        ></v-text-field>
-        <v-textarea
-          v-model="contentsReq.detail"
-          label="説明文"
-          class="ml-8 mt-4"
-        ></v-textarea>
-        
-        <FileComponent @set-file="setFile"/>
+    <!-- 登録用モーダル -->
+    <div v-if="modal && regEditType == 1" class="overlay" @click="closeModal">
+      <ContentModal
+        @click.stop
+        v-show="modal"
+        :contentsReq = "contentsReq" 
+        :regEditType ="regEditType"
+        @upload-content="uploadContent"
+        @set-file="setFile"
+      />
+    </div>
 
-        <v-btn 
-          class="ml-8 mt-8"
-          style="width:80%;"
-          color="orange-darken-1" 
-          @click="uploadFile"
-        >アップロード</v-btn>
-      </v-form>
-    </v-menu>
-
-    <!-- 編集モーダル -->
-    <v-menu
-      v-model="editModalFlg"
-      class="bordered-dialog"
-      @click.stop
-      close-on-content-click
-      disable-keys
-    >
-      <v-form @click.stop class="form-container">
-        <v-text-field
-          v-model="contentsEditReq.title"
-          label="タイトル"
-          placeholder="ここにタイトルを入力"
-          class="ml-8 mt-8"
-        ></v-text-field>
-        <v-textarea
-          v-model="contentsEditReq.detail"
-          label="説明文"
-          class="ml-8 mt-4"
-          rows="11"
-        ></v-textarea>
-
-        <v-btn 
-          class="ml-8 mt-8"
-          style="width:80%;"
-          color="orange-darken-1" 
-          @click="editFile"
-        >編集</v-btn>
-      </v-form>
-    </v-menu>
+    <!-- 更新用モーダル -->
+    <div v-if="modal && regEditType == 2" class="overlay" @click="closeModal">
+      <ContentModal
+        @click.stop
+        :contentsEditReq = "contentsEditReq" 
+        :regEditType ="regEditType"
+        @edit-content="editContent"
+      />
+    </div>
 
     <!-- 動画ファイル一覧 -->
     <v-icon size="48" v-if="titleExistFlg">mdi-movie-play</v-icon>
@@ -228,17 +173,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import type Content from "@/types/Content";
 import http from "@/http-common";
-import FileComponent from "../components/FileComponent.vue"
+import ContentModal from "../components/ContentModal.vue"
+
+// モーダルに関する処理
+const regEditType = ref(1);
+const modal = ref(false);
+const closeModal = () => {
+  modal.value = false;
+}
 
 const store = useStore()
 const contents = ref<Content[]>([]) //タイトル検索で絞られた後のファイル一覧はこの変数に入れる
 const OriginContents = ref<Content[]>([]) // タイトル検索で絞られる前のファイル一覧はこの変数に入れる
-const uplodadModalFlg = ref<boolean>();
-const editModalFlg = ref(false);
 
 const existFlg = ref(false); // ログインユーザーがファイルを投稿しているかの判定
 const titleExistFlg = ref(false)
@@ -248,68 +198,66 @@ const searchKariName = ref('') // タイトル検索用(スペース削除後)
 
 // アップロード時のリクエスト
 const contentsReq = ref<Content>({
-id : null,
-userId : store.state.user.userId ,
-title : '' ,
-detail : '' ,
-fileType : 1 ,
-content : '' ,
-contentPath : '',
-createAt : null,
-UpdateAt : null
+  id : null,
+  userId : store.state.user.userId ,
+  title : '' ,
+  detail : '' ,
+  fileType : 1 ,
+  content : '' ,
+  contentPath : '',
+  createAt : null,
+  UpdateAt : null
 })
 
 // 編集時のリクエスト
 const contentsEditReq = ref<Content>({
-id : null,
-userId : store.state.user.userId ,
-title : '' ,
-detail : '' ,
-fileType : 1 ,
-content : 'editTest' ,
-contentPath : '',
-createAt : null,
-UpdateAt : null
+  id : null,
+  userId : store.state.user.userId ,
+  title : '' ,
+  detail : '' ,
+  fileType : 1 ,
+  content : 'editTest' ,
+  contentPath : '',
+  createAt : null,
+  UpdateAt : null
 })
 
 // 動画ファイル用
 const mpContents = computed(() => {
-return contents.value.filter(contents => contents.fileType == 1)
+  return contents.value.filter(contents => contents.fileType == 1)
 })
 // PDFファイル用
 const pdfContents = computed(() => {
-return contents.value.filter(contents => contents.fileType == 2)
+  return contents.value.filter(contents => contents.fileType == 2)
 })
-
-
 
 // マウント時にデータを取得し代入する
 onMounted(() => {
-getContent();
+  getContent();
 });
 
 const getContent = async () => {
-const {data} = await http.get('/mypage/getFile',{
-  params: {
-    userId: store.state.user.userId
-  }}
-  )
-contents.value = data.data
-OriginContents.value = data.data
-if(OriginContents.value.length > 0) {
-  existFlg.value = true;
-}
-if(OriginContents.value.length <= 0) {
-  existFlg.value = false;
-}
-titleExistFlg.value = existFlg.value; // 最初の画面表示時はtitleExistFlgもexistFlgも同じ
+  const {data} = await http.get('/mypage/getFile',{
+    params: {
+      userId: store.state.user.userId
+    }}
+    )
+  contents.value = data.data
+  OriginContents.value = data.data
+  if(OriginContents.value.length > 0) {
+    existFlg.value = true;
+  }
+  if(OriginContents.value.length <= 0) {
+    existFlg.value = false;
+  }
+  titleExistFlg.value = existFlg.value; // 最初の画面表示時はtitleExistFlgもexistFlgも同じ
 
 }
 
 // タイトル検索欄に文字が入力された時の処理
 const postName = () => {
-searchKariName.value = searchName.value.trim().replace(/\s/g,"") // スペースを削除
-fileSearch()
+  searchKariName.value = searchName.value.trim().replace(/\s/g,"") // スペースを削除
+  fileSearch()
 }
 const fileSearch = () => {
 console.log(searchKariName.value)
@@ -330,7 +278,7 @@ if(contents.value.length <= 0) {
 
 // 投稿したファイルの説明文で改行があった時、改行して表示されるようにする
 const formatDetail = (detail: string) => {
-return detail.replace(/\r\n|\r|\n/g, "<br>");
+  return detail.replace(/\r\n|\r|\n/g, "<br>");
 }
 
 // 投稿したファイルの説明文が画面で2行で収まるかの判定
@@ -376,102 +324,104 @@ return detail;
 
 // 投稿日時のフォーマットを調整
 const formatDate = (dateString: any) => {
-if(dateString == null) {
-  return;
+  if(dateString == null) {
+    return;
+  }
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-11の範囲なので+1
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
 }
-const date = new Date(dateString);
-const year = date.getFullYear();
-const month = String(date.getMonth() + 1).padStart(2, '0'); // 月は0-11の範囲なので+1
-const day = String(date.getDate()).padStart(2, '0');
-const hours = String(date.getHours()).padStart(2, '0');
-const minutes = String(date.getMinutes()).padStart(2, '0');
-return year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
-}
-
-
 
 // ファイルをダウンロードする処理
 const downloadFile = (path: string) => {
-window.open(path, '_blank');
+  window.open(path, '_blank');
 }
 
-
-
-// アップロードのモーダルを表示する
-const openUploadModal = () => {
-uplodadModalFlg.value = true
+// 投稿のモーダルを表示する
+const openReg = () => {
+  modal.value = true;
+  regEditType.value = 1;
 }
 // アップロードするファイルをセットする
 const fileExtension = ref('');
 const setFile = (base64:string, extension:string) => {
-console.log(extension)
-fileExtension.value = extension;
-contentsReq.value.content = base64;
+  console.log(extension)
+  fileExtension.value = extension;
+  contentsReq.value.content = base64;
 }
 // アップロードのリクエストを送る
-const uploadFile = async () => {
-if(contentsReq.value.title != '') {
-  contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value // S3に登録するために、一時的にタイトルに拡張子をつける
-}
-http.post("/mypage/uploadContent", contentsReq.value)
-.then(() => {
-  console.log('成功');
-  contentsReq.value.title = '';
-  contentsReq.value.detail = '';
-})
-.catch((error) => {
-  contentsReq.value.title = contentsReq.value.title.split('.')[0];
-  console.log(error);
-})
-.finally(() => {
-  uplodadModalFlg.value = false;
-  getContent();
-});
-}
+const uploadContent = async (contentsModal: any) => {
+  contentsReq.value.fileType = contentsModal.fileType;
+  contentsReq.value.title = contentsModal.title;
+  contentsReq.value.detail = contentsModal.detail;
 
+  if(contentsReq.value.title != '') {
+    contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value // S3に登録するために、一時的にタイトルに拡張子をつける
+  }
 
+  // TODO: 20231103 ファイルタイプと拡張子が一致していなかったらリクエスト飛ばさないようにしたい。
+
+  try{
+    await http.post("/mypage/uploadContent", contentsReq.value);
+    console.log('成功');
+    contentsReq.value.title = '';
+    contentsReq.value.detail = '';
+    contentsReq.value.content = '';
+  } catch(error) {
+    console.log(error);
+  } finally {
+    modal.value = false;
+    await getContent();
+  };
+}
 
 // 編集のモーダルを表示する
 const openEdit = (item: Content) => {
-editModalFlg.value = true;
-contentsEditReq.value.id = item.id;
-contentsEditReq.value.title = item.title;
-contentsEditReq.value.detail = item.detail;
+  modal.value = true;
+  regEditType.value = 2;
+  contentsEditReq.value.id = item.id;
+  contentsEditReq.value.title = item.title;
+  contentsEditReq.value.detail = item.detail;
 }
 // 編集のリクエストを送る
-const editFile = async () => {
-http.post("/mypage/editFile",contentsEditReq.value )
-  .then(() => {
-    getContent();
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-  .finally(() => {
-    editModalFlg.value = false;
-  });
+const editContent = async (contentsEditModal: any) => {
+  contentsEditReq.value.title = contentsEditModal.title;
+  contentsEditReq.value.detail = contentsEditModal.detail;
+
+  http.post("/mypage/editFile",contentsEditReq.value )
+    .then(() => {
+      getContent();
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+    .finally(() => {
+      modal.value = false;
+    });
 }
-
-
 
 // 削除のリクエストを送る
 const deleteFile = (item: Content) => {
-if (window.confirm(item.id+'削除しますか？')) {
-  const delItem = ref<Content>(item)
-  const delItem2 = contentsReq
-  console.log(delItem.value)
-  console.log(item)
-  delItem2.value.id = item.id
-  http.post("/mypage/deleteFile",delItem2.value )
-  .then(() => {
-    getContent();
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-  .finally(() => {
-  });
-}
+  if (window.confirm(item.id+'削除しますか？')) {
+    const delItem = ref<Content>(item)
+    const delItem2 = contentsReq
+    console.log(delItem.value)
+    console.log(item)
+    delItem2.value.id = item.id
+    http.post("/mypage/deleteFile",delItem2.value )
+      .then(() => {
+        getContent();
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      .finally(() => {
+      });
+  }
 }
 
 
@@ -535,5 +485,18 @@ overflow-y: auto;
   cursor: pointer;
   color: blue;
   text-decoration: underline;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 98
 }
 </style>
