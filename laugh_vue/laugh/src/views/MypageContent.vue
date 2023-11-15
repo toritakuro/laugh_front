@@ -21,7 +21,12 @@
       </v-col>
 
       <v-col cols="auto" class="pb-16 text-end">
-        <v-btn density="default" class="fixed_btn"  icon="mdi-cloud-upload" size="92" @click="openReg"></v-btn>
+        <v-btn density="default" class="upload_btn"  icon="mdi-cloud-upload" size="150" @click="openReg">
+          <div class="flex-column align-center">
+            <v-icon>mdi-cloud-upload</v-icon><br>
+            upload
+          </div>
+        </v-btn>
       </v-col>
     </v-row>
 
@@ -76,28 +81,37 @@
             </v-list>
             <v-row class="d-flex pl-4">
               <v-col cols="auto">
-                <v-btn 
-                block 
-                class="mt-2" 
-                color="grey-lighten-1" 
-                @click="downloadFile(item.contentPath)"
-                ><v-icon>mdi-download</v-icon></v-btn>
+                <div class="tooltip-container">
+                    <v-btn 
+                    block 
+                    class="mt-2" 
+                    color="grey-lighten-1" 
+                    @click="downloadFile(item.contentPath)"
+                    ><v-icon>mdi-download</v-icon></v-btn>
+                    <span class="tooltip-text">ダウンロード</span>
+                </div>
               </v-col>
               <v-col cols="auto">
-                <v-btn 
-                block 
-                class="mt-2" 
-                color="teal-lighten-1" 
-                @click="openEdit(item)"
-                ><v-icon>mdi-pencil</v-icon></v-btn>
+                <div class="tooltip-container">
+                  <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="teal-lighten-1" 
+                  @click="openEdit(item)"
+                  ><v-icon>mdi-pencil</v-icon></v-btn>
+                  <span class="tooltip-text">編集</span>
+                </div>
               </v-col>
               <v-col cols="auto">
-                <v-btn 
-                block 
-                class="mt-2" 
-                color="red-lighten-1" 
-                @click="deleteFile(item)"
-                ><v-icon>mdi-delete</v-icon></v-btn>
+                <div class="tooltip-container">
+                  <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="red-lighten-1" 
+                  @click="deleteFile(item)"
+                  ><v-icon>mdi-delete</v-icon></v-btn>
+                  <span class="tooltip-text">削除</span>
+                </div>
               </v-col>
             </v-row>
           </v-card>
@@ -133,28 +147,37 @@
             </v-list>
             <v-row class="d-flex pl-4">
               <v-col cols="auto">
-                <v-btn 
-                block 
-                class="mt-2" 
-                color="grey-lighten-1" 
-                @click="downloadFile(item.contentPath)"
-                ><v-icon>mdi-download</v-icon></v-btn>
+                <div class="tooltip-container">
+                    <v-btn 
+                    block 
+                    class="mt-2" 
+                    color="grey-lighten-1" 
+                    @click="downloadFile(item.contentPath)"
+                    ><v-icon>mdi-download</v-icon></v-btn>
+                    <span class="tooltip-text">ダウンロード</span>
+                </div>
               </v-col>
               <v-col cols="auto">
-                <v-btn 
-                block 
-                class="mt-2" 
-                color="teal-lighten-1" 
-                @click="openEdit(item)"
-                ><v-icon>mdi-pencil</v-icon></v-btn>
+                <div class="tooltip-container">
+                  <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="teal-lighten-1" 
+                  @click="openEdit(item)"
+                  ><v-icon>mdi-pencil</v-icon></v-btn>
+                  <span class="tooltip-text">編集</span>
+                </div>
               </v-col>
               <v-col cols="auto">
-                <v-btn 
-                block 
-                class="mt-2" 
-                color="red-lighten-1" 
-                @click="deleteFile(item)"
-                ><v-icon>mdi-delete</v-icon></v-btn>
+                <div class="tooltip-container">
+                  <v-btn 
+                  block 
+                  class="mt-2" 
+                  color="red-lighten-1" 
+                  @click="deleteFile(item)"
+                  ><v-icon>mdi-delete</v-icon></v-btn>
+                  <span class="tooltip-text">削除</span>
+                </div>
               </v-col>
             </v-row>
           </v-card>
@@ -358,12 +381,22 @@ const uploadContent = async (contentsModal: any) => {
   contentsReq.value.fileType = contentsModal.fileType;
   contentsReq.value.title = contentsModal.title;
   contentsReq.value.detail = contentsModal.detail;
+  
+  // TODO: 20231103 ファイルタイプと拡張子が一致していなかったらリクエスト飛ばさないようにしたい。
+  if(contentsReq.value.fileType == 1 && fileExtension.value != 'mp4') {
+    alert('すみませんが、動画は拡張子がmp4のファイルしか投稿できません。');
+    return;
+  }
+
+  if(contentsReq.value.fileType == 2 && fileExtension.value != 'pdf') {
+    alert('すみませんが、PDFは拡張子がpdfのファイルしか投稿できません。');
+    return;
+  }
 
   if(contentsReq.value.title != '') {
     contentsReq.value.title = contentsReq.value.title + '.' + fileExtension.value // S3に登録するために、一時的にタイトルに拡張子をつける
   }
 
-  // TODO: 20231103 ファイルタイプと拡張子が一致していなかったらリクエスト飛ばさないようにしたい。
 
   try{
     await http.post("/mypage/uploadContent", contentsReq.value);
@@ -464,9 +497,9 @@ border: 1px solid #4344464f;
 padding: 16px; 
 background-color: #F8F9FA;
 }
-.fixed_btn {
+.upload_btn {
 position: fixed;
-bottom: 12%;
+top: 20%;
 right: 6%;
 background-color: orange;
 border: 2px solid 4344464f;
@@ -486,7 +519,6 @@ overflow-y: auto;
   color: blue;
   text-decoration: underline;
 }
-
 .overlay {
   position: fixed;
   top: 0;
@@ -498,5 +530,31 @@ overflow-y: auto;
   justify-content: center;
   align-items: center;
   z-index: 98
+}
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+.tooltip-text {
+  visibility: hidden;
+  font-size: 8px;
+  width: 50px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  position: absolute;
+  top: 0%;
+  left: 100%;
+  margin-left: -60px;
+
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 </style>
