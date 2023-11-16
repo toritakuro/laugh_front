@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" v-if="regEditType == 1">
+  <div class="modal" v-if="regEditType == 1" @click.stop>
     <v-form @click.stop class="form-container">
       <v-radio-group 
         v-model="contentsModal.fileType" 
@@ -38,7 +38,7 @@
     </v-form>
   </div>
 
-  <div class="modal" v-if="regEditType == 2">
+  <div class="modal" v-if="regEditType == 2" @click.stop>
     <v-form @click.stop class="form-container">
       <v-text-field
         v-model="contentsEditModal.title"
@@ -81,12 +81,15 @@
   })
 
   watchEffect(() => {
-    contentsModal.title = props.contentsReq?.title;
-    contentsModal.detail = props.contentsReq?.detail;
-    contentsModal.content = props.contentsReq?.content;
-    contentsEditModal.title = props.contentsEditReq?.title;
-    contentsEditModal.detail = props.contentsEditReq?.detail;
     regEditType.value = props.regEditType;
+    if (regEditType.value == 1 && !contentsModal.content) {
+      contentsModal.title = props.contentsReq?.title;
+      contentsModal.detail = props.contentsReq?.detail;
+    }
+    if (regEditType.value == 2) {
+      contentsEditModal.title = props.contentsEditReq?.title;
+      contentsEditModal.detail = props.contentsEditReq?.detail;
+    }
   });
 
   const emit = defineEmits(['set-file', 'edit-content', 'upload-content']);
@@ -108,14 +111,17 @@
     border: 2px solid #000000;
     background: #FFFF;
     z-index: 99;
-    display: block;
+    /* display: block; */
     text-align: center;
     position: fixed;
-    top: 50%;
+    top: 52%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    height: 70%;
+    max-height: 73%;
     width: 50%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
   }
   </style>
