@@ -102,7 +102,7 @@
                     <v-col lg="6" md="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
-                        label="ピン"
+                        label="コント"
                         color="orange-darken-2"
                         density="compact"
                         :value="2"
@@ -118,7 +118,7 @@
                     <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
-                        label="コント"
+                        label="ギャグ"
                         color="orange-darken-2"
                         density="compact"
                         :value="3"
@@ -128,7 +128,7 @@
                     <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
-                        label="ギャグ"
+                        label="モノマネ"
                         color="orange-darken-2"
                         density="compact"
                         :value="4"
@@ -154,7 +154,7 @@
                     <v-col lg="5" sm="12" class="pa-0 ml-1">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
-                        label="漫談"
+                        label="リズムネタ"
                         color="orange-darken-2"
                         density="compact"
                         :value="8"
@@ -167,23 +167,10 @@
                     <v-col lg="7" offset-lg="1" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
-                        label="モノマネ"
+                        label="その他"
                         color="orange-darken-2"
                         density="compact"
                         :value="5"
-                      ></v-checkbox>
-                    </v-col>
-                  </v-row>                  
-                </v-col>
-                <v-col lg="3" sm="12" class="pl-1" >
-                  <v-row dense="true" class="dense1">
-                    <v-col lg="11" sm="12" class="pa-0">
-                      <v-checkbox
-                        v-model="userRef.comedyStyleIdList"
-                        label="リズムネタ"
-                        color="orange-darken-2"
-                        density="compact"
-                        :value="7"
                       ></v-checkbox>
                     </v-col>
                   </v-row>                  
@@ -244,7 +231,7 @@
                     <v-col lg="2" md="12" class="pl-0 pr-0">
                       <v-checkbox
                         v-model="userRef.specialSkillIdList"
-                        label="イラスト"
+                        label="イラスト制作"
                         color="orange-darken-2"
                         density="compact"
                         :value="2"
@@ -254,7 +241,7 @@
                     <v-col lg="2" md="12" class="pl-0 pr-0">
                       <v-checkbox
                         v-model="userRef.specialSkillIdList"
-                        label="音源作成"
+                        label="音源制作"
                         color="orange-darken-2"
                         density="compact"
                         :value="3"
