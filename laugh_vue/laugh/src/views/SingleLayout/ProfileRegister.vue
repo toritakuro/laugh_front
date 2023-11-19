@@ -94,7 +94,7 @@
               :rules="[rules.textVerify]"
               density="compact"
             ></v-text-field>
-            <v-col class="inp-month-box" cols="6" v-if="profileReq.userType == 1">
+            <v-col class="inp-month-box" cols="6">
               <v-list-item-tile>デビュー</v-list-item-tile>
               <div class="month-box">
                 <input 
@@ -153,7 +153,7 @@
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="ピン"
+                  label="コント"
                   color="orange"
                   value="2"
                   density="compact"
@@ -162,7 +162,7 @@
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="コント"
+                  label="ギャグ"
                   color="orange"
                   value="3"
                   density="compact"
@@ -171,7 +171,7 @@
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="ギャグ"
+                  label="モノマネ"
                   color="orange"
                   value="4"
                   density="compact"
@@ -182,7 +182,7 @@
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="モノマネ"
+                  label="歌ネタ"
                   color="orange"
                   value="5"
                   :rules="[rules.chkVerify]"
@@ -192,7 +192,7 @@
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="歌ネタ"
+                  label="リズムネタ"
                   color="orange"
                   value="6"
                   density="compact"
@@ -201,18 +201,9 @@
               <div class="chkW">
                 <v-checkbox
                   v-model="profileReq.comedyStyleIdList"
-                  label="リズムネタ"
+                  label="その他"
                   color="orange"
                   value="7"
-                  density="compact"
-                ></v-checkbox>
-              </div>
-              <div class="chkW">
-                <v-checkbox
-                  v-model="profileReq.comedyStyleIdList"
-                  label="漫才"
-                  color="orange"
-                  value="8"
                   density="compact"
                 ></v-checkbox>
               </div>
@@ -251,7 +242,7 @@
               ></v-checkbox>
               <v-checkbox
                 v-model="profileReq.specialSkillIdList"
-                label="イラスト"
+                label="イラスト制作"
                 color="orange"
                 value="2"
                 hide-details
