@@ -639,7 +639,7 @@
   const checkOffice = ref([])
   const optionOffice = ref([
     { id: 1, name: '吉本興業', flg: false},
-    { id: 2, name: '人力舎', flg: false},
+    { id: 2, name: 'プロダクション人力舎', flg: false},
     { id: 3, name: 'マセキ芸能社', flg: false},
     { id: 4, name: '松竹芸能', flg: false},
     { id: 5, name: 'その他', flg: false}
@@ -696,11 +696,9 @@
   const checkSpecialSkill = ref([])
   const optionSpecialSkill = ref([
     { id: 1, name: '動画編集', flg: false},
-    { id: 2, name: 'イラスト', flg: false},
+    { id: 2, name: 'イラスト制作', flg: false},
     { id: 3, name: '音源制作', flg: false},
-    { id: 4, name: '振り付け', flg: false},
-    { id: 5, name: 'ものしり', flg: false},
-    { id: 6, name: 'その他', flg: false}
+    { id: 4, name: 'その他', flg: false}
   ])
 
   const selectArea = ref({ id: 0, text: ''});
@@ -712,7 +710,8 @@
     { id: 4, text: '中部' }, 
     { id: 5, text: '近畿' }, 
     { id: 6, text: '中国' }, 
-    { id: 7, text: '九州' }
+    { id: 7, text: '四国' }, 
+    { id: 8, text: '九州' }
   ])
  
   // チェックフラグ
