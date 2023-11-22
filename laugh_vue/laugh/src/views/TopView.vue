@@ -546,7 +546,6 @@
   // メッセージ既読
   const readMessage = (notice: Notice) => {
     http.post('/notice',{id: notice.id });
-    console.log(notice.targetType)
     let targetUserType = 0;
     // 遷移先ユーザのユーザタイプを設定
    if (store.state.user.userType == 1) {
@@ -880,6 +879,9 @@
         if (searchName.value != '') {
           const kariCheckedGenderUser = ref([] as User[])
           for (var genderId of checkedGenderIds.value) {
+            if (genderId.id == 0) {
+              continue
+            }
             // チェック済みの性別と一致するユーザーを取得
             user.value = kariCheckedUser.value.filter(t => t.gender === genderId.id)
             for (var item of user.value) {
@@ -889,6 +891,9 @@
           kariCheckedUser.value = kariCheckedGenderUser.value
         } else {
           for (var genderId of checkedGenderIds.value) {
+            if (genderId.id == 0) {
+              continue
+            }
             // チェック済みの性別と一致するユーザーを取得
             user.value = usersOrigin.value.filter(t => t.gender === genderId.id)
             for (var item of user.value) {
@@ -900,7 +905,8 @@
       // 活動形態
       if (checkedMemberNumIds.value.length > 1) {
         // 別カテゴリーにもチェックが入っている場合
-        if (searchName.value != '') {
+        if (searchName.value != ''
+        || checkedGenderIds.value.length > 1) {
           const kariCheckedMemberNumUser = ref([] as User[])
           for (var memberNum of checkedMemberNumIds.value) {
             // チェック済みの活動形態と一致するユーザーを取得
@@ -932,7 +938,8 @@
       if (checkedActivityId.value > 0) {
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
-        || checkedGenderIds.value.length > 1) {
+        || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1) {
           // 「１０年以上」、「指定なし」以外の場合
           if (checkedActivityId.value < 7) {
             kariCheckedUser.value = kariCheckedUser.value.filter(t => t.activityNum < checkedActivityValue.value)
@@ -953,11 +960,18 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0) {
           const kariCheckedOfficeUser = ref([] as User[])
           for (var officeId of checkedOfficeIds.value) {
             // チェック済みの事務所と一致するユーザーを取得
-            user.value = kariCheckedUser.value.filter(t => t.officeId === officeId.id)
+            //その他以外
+            if (officeId.id != 5) {
+              user.value = kariCheckedUser.value.filter(t => t.officeId === officeId.id)
+            } else {
+              //その他の場合
+              user.value = kariCheckedUser.value.filter(t => t.officeId >= officeId.id)
+            }
             for (var item of user.value) {
               kariCheckedOfficeUser.value.push(item)
             }
@@ -966,7 +980,13 @@
         } else {
           for (var officeId of checkedOfficeIds.value) {
             // チェック済みの事務所と一致するユーザーを取得
-            user.value = usersOrigin.value.filter(t => t.officeId === officeId.id)
+            //その他以外
+            if (officeId.id != 5) {
+              user.value = usersOrigin.value.filter(t => t.officeId === officeId.id)
+            } else {
+              //その他の場合
+              user.value = usersOrigin.value.filter(t => t.officeId >= officeId.id)
+            }
             for (var item of user.value) {
               kariCheckedUser.value.push(item)
             }
@@ -978,6 +998,7 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1) {
           const kariCheckedComedyUser = ref([] as User[]);
@@ -1014,6 +1035,7 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1) {
@@ -1027,6 +1049,7 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
@@ -1041,6 +1064,7 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
@@ -1056,6 +1080,7 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
@@ -1096,6 +1121,7 @@
         // 別カテゴリーにもチェックが入っている場合
         if (searchName.value != ''
         || checkedGenderIds.value.length > 1
+        || checkedMemberNumIds.value.length > 1
         || checkedActivityId.value > 0
         || checkedOfficeIds.value.length > 1
         || checkedComedyStyleIds.value.length > 1
@@ -1126,9 +1152,14 @@
     // 性別
     checkGender.value = []
     checkedGenderIds.value = [{ id: 0 }]
-    console.log(optionGender.value.length)
     for (var i = 0; i < optionGender.value.length; i++) {
       optionGender.value[i].flg = false
+    }
+    // 活動形態
+    checkActivityNum.value = []
+    checkedMemberNumIds.value = [{ id: 0 }]
+    for (var i = 0; i < optionActivityNum.value.length; i++) {
+      optionActivityNum.value[i].flg = false
     }
     // 活動歴 
     radiosActivity.value = 0
