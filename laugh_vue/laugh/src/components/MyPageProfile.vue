@@ -147,7 +147,7 @@
                         label="歌ネタ"
                         color="orange-darken-2"
                         density="compact"
-                        :value="6"
+                        :value="5"
                         hide-details
                       ></v-checkbox>
                     </v-col><!--   -->
@@ -157,7 +157,7 @@
                         label="リズムネタ"
                         color="orange-darken-2"
                         density="compact"
-                        :value="8"
+                        :value="6"
                       ></v-checkbox>
                     </v-col>
                   </v-row>       
@@ -170,7 +170,7 @@
                         label="その他"
                         color="orange-darken-2"
                         density="compact"
-                        :value="5"
+                        :value="7"
                       ></v-checkbox>
                     </v-col>
                   </v-row>                  

@@ -30,7 +30,7 @@ const router = createRouter({
     },
     {
       path: '/profile/init',
-      name: 'ProfileInit',
+      name: 'profileInit',
       component: ProfileInit
     },
     {
@@ -125,7 +125,7 @@ const router = createRouter({
 })
 
 router.beforeResolve((to, from, next) => {
-  if(to.name == 'profile') next()
+  if(to.name == 'profile' || to.name == 'profileInit') next()
   else if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
   else next()
 
