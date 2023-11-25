@@ -125,7 +125,7 @@ const router = createRouter({
 })
 
 router.beforeResolve((to, from, next) => {
-  if(to.name == 'profile' || to.name == 'profileInit') next()
+  if(to.name == 'profile' || to.name == 'profileInit' || to.name == 'completion') next()
   else if (to.name !== 'login' && !store.getters['token/getIdToken']) next({ name: 'login' })
   else next()
 

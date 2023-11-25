@@ -139,9 +139,9 @@
                 </v-col>
 
                 <!-- 三組目 -->
-                <v-col lg="3" class="pl-1">
+                <v-col lg="4" class="pl-1">
                   <v-row dense="true"><!--   -->
-                    <v-col lg="6" sm="12" class="pa-0 ml-2">
+                    <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="歌ネタ"
@@ -151,7 +151,7 @@
                         hide-details
                       ></v-checkbox>
                     </v-col><!--   -->
-                    <v-col lg="5" sm="12" class="pa-0 ml-1">
+                    <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="リズムネタ"
@@ -162,9 +162,9 @@
                     </v-col>
                   </v-row>       
                 </v-col>
-                <v-col lg="3" md="12" class="pl-1">
+                <v-col lg="2" md="12" class="pl-1">
                   <v-row dense="true">
-                    <v-col lg="7" offset-lg="1" sm="12" class="pa-0">
+                    <v-col lg="12" offset-lg="1" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="その他"
@@ -248,7 +248,7 @@
                         hide-details
                       ></v-checkbox>
                     </v-col>
-                    <v-col lg="6" md="12" class="pa-0">
+                    <v-col lg="5" md="12" class="pa-0">
                       <v-text-field
                         v-model="userRef.anotherSkill"
                         label="その他の場合はここに入力"
@@ -333,8 +333,10 @@ const isComposer = computed(() => userRef.value.userType == 2);
 const feeLabel = computed(() => (userRef.value.feeType == 1) ? '時給' : '成果物');
 const feeSuffix = computed(() => (userRef.value.feeType == 1) ? '円/時間' : '円');
 
+const emit = defineEmits(['upd-user']);
 const updProfile = async () => {
-  await http.post('/profile/edit', userRef.value)
+  await http.post('/profile/edit', userRef.value);
+  emit('upd-user');
 }
 
 

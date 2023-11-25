@@ -41,7 +41,7 @@
                     >{{ item }}</v-chip>
               </div>
               <div v-if="user.userType == 2" class="pl-card">
-                <span>特殊スキル</span>
+                <span>得意分野</span>
                 <v-divider></v-divider>
                 <v-chip
                     v-for="(item, i) in user?.comedyStyleNameList" :key="i"
@@ -74,7 +74,7 @@
       <v-card-text>
       <v-window v-model="tab">
         <v-window-item value="profile">
-          <MyPageProfile ref="profileRef"></MyPageProfile>
+          <MyPageProfile ref="profileRef" @upd-user="updUser"></MyPageProfile>
         </v-window-item>
         <v-window-item value="laugh">
           <MyPageLaugh ref="laughRef"></MyPageLaugh>
@@ -140,27 +140,27 @@
   const file = ref();
   const src = ref("/img/man.svg");
   const setImage = (e: any) => {
-  const file = e.target.files[0];
-  if (!file.type.includes('image/')) {
-    alert('画像ファイルを選んでください');
-    return;
-  }
-  if (typeof FileReader === 'function') {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target != null) {
-        imgSrc.value = event.target.result as string;
-      }
-    };
-    reader.readAsDataURL(file);
-  } else {
-    alert('FileReader APIがサポートされていません');
-  }
-  setTimeout(() => {
-    console.log(11);
-    modalFlg.value = true;
-  }, 200);
-};
+    const file = e.target.files[0];
+    if (!file.type.includes('image/')) {
+      alert('画像ファイルを選んでください');
+      return;
+    }
+    if (typeof FileReader === 'function') {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target != null) {
+          imgSrc.value = event.target.result as string;
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('FileReader APIがサポートされていません');
+    }
+    setTimeout(() => {
+      console.log(11);
+      modalFlg.value = true;
+    }, 200);
+  };
 /** emitで受けるメソッド */
 const setModelValue = (value:Boolean) => {
   modalFlg.value = false;
@@ -173,6 +173,10 @@ const setImg = async (img:string) => {
 const showFileChooser = () => {
   file.value.click();
 };
+
+const updUser = () => {
+  getData();
+}
 
 </script>
 
