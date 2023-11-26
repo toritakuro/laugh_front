@@ -8,13 +8,16 @@
           <v-row>
             <v-col class="pa-0" lg="6" md="6" sm="12">
               <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
-              <div v-if="user.profileImgPath" @click.prevent="showFileChooser">
+              <div v-if="user.profileImgPath" @click.prevent="showFileChooser" class="image-container">
                 <v-img
                   :aspect-ratio="1"
                   :src="user.profileImgPath"
                   cover
                   class="rounded-lg"
                 ></v-img>
+                <v-btn icon class="delete-button" @click.stop="deleteImage" size="20">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
               </div>
               <div v-if="!user.profileImgPath" @click.prevent="showFileChooser">
                 <v-img
@@ -41,7 +44,7 @@
                     >{{ item }}</v-chip>
               </div>
               <div v-if="user.userType == 2" class="pl-card">
-                <span>特殊スキル</span>
+                <span>得意分野</span>
                 <v-divider></v-divider>
                 <v-chip
                     v-for="(item, i) in user?.comedyStyleNameList" :key="i"
@@ -74,7 +77,7 @@
       <v-card-text>
       <v-window v-model="tab">
         <v-window-item value="profile">
-          <MyPageProfile ref="profileRef"></MyPageProfile>
+          <MyPageProfile ref="profileRef" @upd-user="updUser"></MyPageProfile>
         </v-window-item>
         <v-window-item value="laugh">
           <MyPageLaugh ref="laughRef"></MyPageLaugh>
@@ -140,27 +143,27 @@
   const file = ref();
   const src = ref("/img/man.svg");
   const setImage = (e: any) => {
-  const file = e.target.files[0];
-  if (!file.type.includes('image/')) {
-    alert('画像ファイルを選んでください');
-    return;
-  }
-  if (typeof FileReader === 'function') {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target != null) {
-        imgSrc.value = event.target.result as string;
-      }
-    };
-    reader.readAsDataURL(file);
-  } else {
-    alert('FileReader APIがサポートされていません');
-  }
-  setTimeout(() => {
-    console.log(11);
-    modalFlg.value = true;
-  }, 200);
-};
+    const file = e.target.files[0];
+    if (!file.type.includes('image/')) {
+      alert('画像ファイルを選んでください');
+      return;
+    }
+    if (typeof FileReader === 'function') {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target != null) {
+          imgSrc.value = event.target.result as string;
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('FileReader APIがサポートされていません');
+    }
+    setTimeout(() => {
+      console.log(11);
+      modalFlg.value = true;
+    }, 200);
+  };
 /** emitで受けるメソッド */
 const setModelValue = (value:Boolean) => {
   modalFlg.value = false;
@@ -168,11 +171,22 @@ const setModelValue = (value:Boolean) => {
 } 
 const setImg = async (img:string) => {
   user.value.profileImgPath = img;
-  await http.post("/profile/editImg", user.value)
+  await http.post("/profile/editImg", user.value);
 } 
 const showFileChooser = () => {
   file.value.click();
 };
+
+const updUser = () => {
+  getData();
+}
+
+const deleteImage = () => {
+  if (window.confirm('画像を削除しますか？')) {
+    user.value.profileImgPath = '';
+    http.post("/profile/editImg", user.value);
+  }
+  }
 
 </script>
 
@@ -196,5 +210,13 @@ const showFileChooser = () => {
   .label-color {
     height: 20px;
     line-height: 16px;
+  }
+  .image-container {
+  position: relative;
+  }
+  .delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 </style>

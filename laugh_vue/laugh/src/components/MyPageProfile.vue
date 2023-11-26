@@ -34,6 +34,19 @@
                   <input type="month" name="test" v-model="userRef.debutDtStr">
                 </v-col>
               </v-row>
+              <!-- 活動人数 -->
+              <v-row v-show="isComedian">
+                <v-col class="mt-1 pt-0 pb-0 pl-0" lg="3">
+                  <v-text-field
+                    class="input-number"
+                    v-model="userRef.memberNum"
+                    label="活動人数"
+                    suffix="人"
+                    density="compact"
+                    :rules="[(val: any) => !isNaN(parseInt(val)) && parseInt(val).toString() === val.trim()|| '半角で整数を入力してください']"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
               <!-- 性別 -->
               <v-row>
                 <v-col class="pt-0 pb-0 pl-0">
@@ -139,9 +152,9 @@
                 </v-col>
 
                 <!-- 三組目 -->
-                <v-col lg="3" class="pl-1">
+                <v-col lg="4" class="pl-1">
                   <v-row dense="true"><!--   -->
-                    <v-col lg="6" sm="12" class="pa-0 ml-2">
+                    <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="歌ネタ"
@@ -151,7 +164,7 @@
                         hide-details
                       ></v-checkbox>
                     </v-col><!--   -->
-                    <v-col lg="5" sm="12" class="pa-0 ml-1">
+                    <v-col lg="6" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="リズムネタ"
@@ -162,9 +175,9 @@
                     </v-col>
                   </v-row>       
                 </v-col>
-                <v-col lg="3" md="12" class="pl-1">
+                <v-col lg="2" md="12" class="pl-1">
                   <v-row dense="true">
-                    <v-col lg="7" offset-lg="1" sm="12" class="pa-0">
+                    <v-col lg="12" offset-lg="1" sm="12" class="pa-0">
                       <v-checkbox
                         v-model="userRef.comedyStyleIdList"
                         label="その他"
@@ -206,6 +219,7 @@
                     :label="feeLabel"
                     :suffix="feeSuffix"
                     density="compact"
+                    :rules="[(val: any) => !isNaN(parseInt(val)) && parseInt(val).toString() === val.trim()|| '半角で整数を入力してください']"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -248,7 +262,7 @@
                         hide-details
                       ></v-checkbox>
                     </v-col>
-                    <v-col lg="6" md="12" class="pa-0">
+                    <v-col lg="5" md="12" class="pa-0">
                       <v-text-field
                         v-model="userRef.anotherSkill"
                         label="その他の場合はここに入力"
@@ -280,6 +294,7 @@
                     label="自己紹介文"
                     auto-grow
                     v-model="userRef.selfIntroduction"
+                    :rules="[(v: any) => v.length <= 500 || '500文字以内で入力してください']"
                   ></v-textarea>
                 </v-col>
               </v-row>
@@ -333,8 +348,10 @@ const isComposer = computed(() => userRef.value.userType == 2);
 const feeLabel = computed(() => (userRef.value.feeType == 1) ? '時給' : '成果物');
 const feeSuffix = computed(() => (userRef.value.feeType == 1) ? '円/時間' : '円');
 
+const emit = defineEmits(['upd-user']);
 const updProfile = async () => {
-  await http.post('/profile/edit', userRef.value)
+  await http.post('/profile/edit', userRef.value);
+  emit('upd-user');
 }
 
 

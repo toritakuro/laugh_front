@@ -28,7 +28,7 @@
                           </div>
                           <div class="d-flex">
                             <div v-if="item.isMyMessage" class="mx-2 send-time">{{ item.sendTime }}</div>
-                            <div class="says">{{ item.message }}</div>
+                            <div class="says" v-html="item.message"></div>
                             <div v-if="!item.isMyMessage" class="mx-2 send-time">{{ item.sendTime }}</div>
                           </div>
                         </div>
@@ -223,6 +223,7 @@ defineExpose({
   box-sizing: border-box;
   margin: 0 !important;
   line-height: 1.5;
+  text-align: left;
 }
 .says p {
   margin: 8px 0 0 !important;

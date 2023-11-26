@@ -226,8 +226,8 @@
             </v-col>
 
             <v-col class="d-flex justify-start inp-box" cols="6">
-              <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円/時間" v-if="profileReq.userType == 2 && profileReq.feeType == 1" :rules="[rules.textVerify]" density="compact"></v-text-field>
-              <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円" v-if="profileReq.userType == 2 && profileReq.feeType == 2" :rules="[rules.textVerify]" density="compact"></v-text-field>
+              <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円/時間" v-if="profileReq.userType == 2 && profileReq.feeType == 1" :rules="[rules.textVerify, rules.isNum]" density="compact"></v-text-field>
+              <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円" v-if="profileReq.userType == 2 && profileReq.feeType == 2" :rules="[rules.textVerify, rules.isNum]" density="compact"></v-text-field>
             </v-col>
             
             <v-list-item-tile v-if="profileReq.userType == 2">特技</v-list-item-tile>
@@ -465,6 +465,7 @@ const rules = {
   debutYearVerify: (value: any) => !!value || '年月を入力してください',
   max500: (v: any) => v.length <= 500 || '500文字以内で入力してください',
   chkVerify: (v: any) => v.length > 0 || '必ずチェックを入れてください',
+  isNum: (val: any) => !isNaN(parseInt(val)) && parseInt(val).toString() === val.trim()|| '半角で整数を入力してください'
 }
 
 </script>

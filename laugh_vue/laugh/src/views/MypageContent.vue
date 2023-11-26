@@ -5,6 +5,14 @@
     fluid
   >
 
+    <!-- Loadingのアイコン -->
+    <div class="loading_icon" v-if="loadingFlg">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+    </div>
+
     <!-- タイトル検索欄 -->
     <v-row>
       <v-col v-if="existFlg">
@@ -209,15 +217,17 @@ const closeModal = () => {
   modal.value = false;
 }
 
-const store = useStore()
-const contents = ref<Content[]>([]) //タイトル検索で絞られた後のファイル一覧はこの変数に入れる
-const OriginContents = ref<Content[]>([]) // タイトル検索で絞られる前のファイル一覧はこの変数に入れる
+const store = useStore();
+const contents = ref<Content[]>([]); //タイトル検索で絞られた後のファイル一覧はこの変数に入れる
+const OriginContents = ref<Content[]>([]); // タイトル検索で絞られる前のファイル一覧はこの変数に入れる
 
 const existFlg = ref(false); // ログインユーザーがファイルを投稿しているかの判定
-const titleExistFlg = ref(false)
+const titleExistFlg = ref(false);
 
-const searchName = ref('') // タイトル検索用
-const searchKariName = ref('') // タイトル検索用(スペース削除後)
+const searchName = ref(''); // タイトル検索用
+const searchKariName = ref(''); // タイトル検索用(スペース削除後)
+
+const loadingFlg = ref(false); // ローディングの判定
 
 // アップロード時のリクエスト
 const contentsReq = ref<Content>({
@@ -399,6 +409,7 @@ const uploadContent = async (contentsModal: any) => {
 
 
   try{
+    loadingFlg.value = true;
     await http.post("/mypage/uploadContent", contentsReq.value);
     console.log('成功');
     contentsReq.value.title = '';
@@ -407,6 +418,7 @@ const uploadContent = async (contentsModal: any) => {
   } catch(error) {
     console.log(error);
   } finally {
+    loadingFlg.value = false;
     modal.value = false;
     await getContent();
   };
@@ -439,7 +451,7 @@ const editContent = async (contentsEditModal: any) => {
 
 // 削除のリクエストを送る
 const deleteFile = (item: Content) => {
-  if (window.confirm(item.id+'削除しますか？')) {
+  if (window.confirm('削除しますか？')) {
     const delItem = ref<Content>(item)
     const delItem2 = contentsReq
     console.log(delItem.value)
@@ -556,5 +568,11 @@ overflow-y: auto;
 .tooltip-container:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+.loading_icon {
+  position: fixed;
+  top: 20%;
+  right: 50%;
+  z-index: 1000;
 }
 </style>
