@@ -34,6 +34,19 @@
                   <input type="month" name="test" v-model="userRef.debutDtStr">
                 </v-col>
               </v-row>
+              <!-- 活動人数 -->
+              <v-row v-show="isComedian">
+                <v-col class="mt-1 pt-0 pb-0 pl-0" lg="3">
+                  <v-text-field
+                    class="input-number"
+                    v-model="userRef.memberNum"
+                    label="活動人数"
+                    suffix="人"
+                    density="compact"
+                    :rules="[(val: any) => !isNaN(parseInt(val)) && parseInt(val).toString() === val.trim()|| '半角で整数を入力してください']"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
               <!-- 性別 -->
               <v-row>
                 <v-col class="pt-0 pb-0 pl-0">
@@ -206,6 +219,7 @@
                     :label="feeLabel"
                     :suffix="feeSuffix"
                     density="compact"
+                    :rules="[(val: any) => !isNaN(parseInt(val)) && parseInt(val).toString() === val.trim()|| '半角で整数を入力してください']"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -280,6 +294,7 @@
                     label="自己紹介文"
                     auto-grow
                     v-model="userRef.selfIntroduction"
+                    :rules="[(v: any) => v.length <= 500 || '500文字以内で入力してください']"
                   ></v-textarea>
                 </v-col>
               </v-row>

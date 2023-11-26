@@ -8,13 +8,16 @@
           <v-row>
             <v-col class="pa-0" lg="6" md="6" sm="12">
               <input ref="file" @change="setImage" type="file" name="image" accept="image/*" style="display: none;">
-              <div v-if="user.profileImgPath" @click.prevent="showFileChooser">
+              <div v-if="user.profileImgPath" @click.prevent="showFileChooser" class="image-container">
                 <v-img
                   :aspect-ratio="1"
                   :src="user.profileImgPath"
                   cover
                   class="rounded-lg"
                 ></v-img>
+                <v-btn icon class="delete-button" @click.stop="deleteImage" size="20">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
               </div>
               <div v-if="!user.profileImgPath" @click.prevent="showFileChooser">
                 <v-img
@@ -168,7 +171,7 @@ const setModelValue = (value:Boolean) => {
 } 
 const setImg = async (img:string) => {
   user.value.profileImgPath = img;
-  await http.post("/profile/editImg", user.value)
+  await http.post("/profile/editImg", user.value);
 } 
 const showFileChooser = () => {
   file.value.click();
@@ -176,6 +179,11 @@ const showFileChooser = () => {
 
 const updUser = () => {
   getData();
+}
+
+const deleteImage = () => {
+  user.value.profileImgPath = '';
+  http.post("/profile/editImg", user.value);
 }
 
 </script>
@@ -200,5 +208,13 @@ const updUser = () => {
   .label-color {
     height: 20px;
     line-height: 16px;
+  }
+  .image-container {
+  position: relative;
+  }
+  .delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 </style>
