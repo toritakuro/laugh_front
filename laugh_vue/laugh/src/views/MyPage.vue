@@ -182,9 +182,11 @@ const updUser = () => {
 }
 
 const deleteImage = () => {
-  user.value.profileImgPath = '';
-  http.post("/profile/editImg", user.value);
-}
+  if (window.confirm('画像を削除しますか？')) {
+    user.value.profileImgPath = '';
+    http.post("/profile/editImg", user.value);
+  }
+  }
 
 </script>
 
