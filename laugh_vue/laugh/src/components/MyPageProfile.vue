@@ -13,6 +13,7 @@
                     v-model="userRef.userName"
                     label="活動名"
                     density="compact"
+                    :rules="[(v: any) => v.length <= 50 || '50文字以内で入力してください']"
                   ></v-text-field>
                 </v-col>
                 <v-col lg="6" class="ml-2 pt-0 pb-0 pl-0">
@@ -20,6 +21,7 @@
                   v-model="userRef.userNameKana"
                   label="活動名（カナ）"
                   density="compact"
+                  :rules="[(v: any) => v.length <= 50 || '50文字以内で入力してください']"
                 ></v-text-field>
                 </v-col>
               </v-row>
