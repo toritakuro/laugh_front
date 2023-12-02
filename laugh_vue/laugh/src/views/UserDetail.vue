@@ -29,6 +29,9 @@
                 <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" /> 性別： 女 </v-card-subtitle>
                 <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" /> 性別： 男女 </v-card-subtitle>
                 <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" /> メンバー： {{ user?.memberNum }} 人</v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 2 && user?.feeType == 1"><v-icon icon="mdi-cash-multiple" /> 料金体系： 時給 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 2 && user?.feeType == 2"><v-icon icon="mdi-cash-multiple" /> 料金体系： 出来高 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 2"><v-icon icon="mdi-currency-jpy" /> 料金： {{ user?.fee }} 円</v-card-subtitle>
                 <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> 活動歴： {{ user?.activityDt }}</v-card-subtitle>
                 <v-card-subtitle><v-icon icon="mdi-office-building" /> 事務所： {{ user?.officeName }}</v-card-subtitle>
                 <v-card-subtitle><v-icon icon="mdi-map-marker" /> 活動地域： {{ user?.areaName }}</v-card-subtitle>
