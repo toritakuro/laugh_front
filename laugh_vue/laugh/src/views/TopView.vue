@@ -9,9 +9,9 @@
         </v-col>
     </v-row>
     <v-row justify="center" class="mt-2">
-      <!-- プロフィール -->
       <v-col cols="6" class="main">
         <v-row>
+          <!-- 検索エリア-->
           <v-col
             class="ps-6 user_filter"
             cols="5"
@@ -230,7 +230,7 @@
                 </v-btn>
               </v-col>
           </v-col>
-          
+          <!-- プロフィール -->
           <v-col offset="2" cols="8" class="profile" >
             <v-col v-for="item in dispUsers" class="profile_paddingTop">
               <v-card class="mx-auto pa-2 profile_card" @click="redirectToDetails(item)">
@@ -286,6 +286,13 @@
                         text-color="white"
                         >{{ itemName }}
                       </v-chip>
+                      <v-chip
+                        v-if="item.anotherSkill !== null"
+                        class="mr-1 mt-1"
+                        color="orange"
+                        text-color="white"
+                        >{{ item.anotherSkill }}
+                      </v-chip>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -311,7 +318,6 @@
               </v-card>
             </v-col>
           </v-col>
-          <!-- 検索エリア-->
         </v-row>
       </v-col>
       <div class="notice">
@@ -383,7 +389,7 @@
   position: fixed;
   top: 22%;
   left: 16%;
-  width: 300px;
+  width: 330px;
   max-height: 80%;
   overflow-y: scroll;
   border: 1px solid #efefef;
@@ -1103,7 +1109,11 @@ import WelcomeItem from '@/components/WelcomeItem.vue';
           for (var specialSkillId of checkedSpecialSkillIds.value) {
             user.value = kariCheckedUser.value.filter(function(value) {
               // チェック済みの特殊スキルを含むユーザーのみを返す
-              return value.specialSkillIdList.includes(specialSkillId.id)
+              if (specialSkillId.id !== 4) {
+                return value.specialSkillIdList.includes(specialSkillId.id)
+              } else {
+                return value.anotherSkill !== null
+              }
             })
             for (var item of user.value) {
               // 重複するデータ以外を含める（複数所有できるカテゴリーのため）
@@ -1117,7 +1127,11 @@ import WelcomeItem from '@/components/WelcomeItem.vue';
           for (var specialSkillId of checkedSpecialSkillIds.value) {
             user.value = usersOrigin.value.filter(function(value) {
               // チェック済みの特殊スキルを含むユーザーのみを返す
-              return value.specialSkillIdList.includes(specialSkillId.id)
+              if (specialSkillId.id !== 4) {
+                return value.specialSkillIdList.includes(specialSkillId.id)
+              } else {
+                return value.anotherSkill !== null
+              }
             })
             for (var item of user.value) {
               // 重複するデータ以外を含める（複数所有できるカテゴリーのため）
