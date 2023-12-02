@@ -516,6 +516,7 @@
   import type User from "@/types/User";
   import type Notice from '@/types/Notice';
   import http from "@/http-common"
+import WelcomeItem from '@/components/WelcomeItem.vue';
   
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
@@ -564,15 +565,18 @@
 
     // メッセージの場合はチャットルームへ
     if(notice.targetType == 2) {
-      router.push({ name: 'chat', query: { 
+      router.push({ path: '/chat', query: { 
         userId: store.state.user.userId,
-        userType: store.state.user.userType
+        userType: targetUserType
         }
       })
     } 
     // Laughの場合は各ユーザへ飛ぶ
     else {
-      router.push({ name: 'userDetail', query: { receiveUserId: notice.targetId, userType: targetUserType, sendUserId: store.state.user.userId}  })
+      router.push({ name: 'userDetail', query: { 
+        receiveUserId: notice.targetId, 
+        userType: targetUserType, 
+        sendUserId: store.state.user.userId}  })
     }
   }
   /** User一覧を取得する */
