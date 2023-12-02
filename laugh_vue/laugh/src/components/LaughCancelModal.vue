@@ -3,8 +3,8 @@
       <div id="modal-content" class="modal">
         <button class="modal__close" @click="close()"><v-icon icon="mdi-close-circle-outline"/></button>
         <p id="modal-message" class="modal__message">{{ message }}</p>
-        <button id="modal-cansel" class="modal__btn modal__btn_left" @click="refuse()"><v-icon class="action_icon" icon="mdi-hand-back-left-outline"/><br>いいえ</button>
-        <button class="modal__btn modal__btn_right" @click="approval()"><v-icon class="action_icon" icon="mdi-hand-wave-outline"/><br>はい</button>
+        <button id="modal-cansel" class="modal__btn modal__btn_left" @click="refuse()"><v-icon class="action_icon" icon="mdi-account-multiple"/><br>解消しない</button>
+        <button class="modal__btn modal__btn_right" @click="approval()"><v-icon class="action_icon" icon="mdi-account-multiple-remove"/><br>解消する</button>
       </div>
       <div id="modal-overlay"></div>
     </div>

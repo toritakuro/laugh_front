@@ -152,10 +152,12 @@
                     @update:modelValue="postFeeType"
                   ></v-select>
                 </v-col>
+              </v-row>
+              <v-row>
                 <v-col v-if="dispUserType == 2">
                 <v-card-subtitle class="font-weight-bold text-subtitle-1">金額</v-card-subtitle>
                   <div class="d-flex flex-row">
-                    <v-sheet class="py-2 w-100">
+                    <v-sheet class="fee_box">
                       <v-select
                         v-model="selectLowPrice"
                         :items="optionLowPrice"
@@ -168,8 +170,8 @@
                         @update:modelValue="postFee"
                       ></v-select>
                     </v-sheet>
-                    <v-sheet class="mb-4 align-self-center"><span class="search-ttl-span">～</span></v-sheet>
-                    <v-sheet class="py-2 w-100">
+                    <v-sheet class="mb-4 align-self-center fee_box"><span>～</span></v-sheet>
+                    <v-sheet class="fee_box">
                       <v-select
                         v-model="selectHighPrice"
                         :items="optionHighPrice"
@@ -258,6 +260,9 @@
                       <v-card-subtitle v-if="item.gender == 2"><v-icon icon="mdi-gender-male-female" /> 女 </v-card-subtitle>
                       <v-card-subtitle v-if="item.gender == 3"><v-icon icon="mdi-gender-male-female" /> 男女 </v-card-subtitle>
                       <v-card-subtitle v-if="item.userType == 1"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 2 && item.feeType == 1"><v-icon icon="mdi-cash-multiple" /> 時給 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 2 && item.feeType == 2"><v-icon icon="mdi-cash-multiple" /> 出来高 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 2"><v-icon icon="mdi-currency-jpy" /> {{ item.fee }} 円</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ item.activityDt }}</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item.officeName }}</v-card-subtitle>
                       <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item.areaName }}</v-card-subtitle>
@@ -496,6 +501,9 @@
     border: 3px solid #FB8C00;
     border-radius: 10px;
   }
+  .fee_box {
+    background-color: #F8F9FA;
+  }
   
   .div-hover { cursor: pointer; }
   .div-hover { background-color: var(--blue-grey-lighten-5); }
@@ -508,6 +516,7 @@
   import type User from "@/types/User";
   import type Notice from '@/types/Notice';
   import http from "@/http-common"
+import WelcomeItem from '@/components/WelcomeItem.vue';
   
   const dispUsers = ref([] as User[]);
   const usersOrigin = ref([] as User[]);
@@ -556,15 +565,18 @@
 
     // メッセージの場合はチャットルームへ
     if(notice.targetType == 2) {
-      router.push({ name: 'chat', query: { 
+      router.push({ path: '/chat', query: { 
         userId: store.state.user.userId,
-        userType: store.state.user.userType
+        userType: targetUserType
         }
       })
     } 
     // Laughの場合は各ユーザへ飛ぶ
     else {
-      router.push({ name: 'userDetail', query: { receiveUserId: notice.targetId, userType: targetUserType, sendUserId: store.state.user.userId}  })
+      router.push({ name: 'userDetail', query: { 
+        receiveUserId: notice.targetId, 
+        userType: targetUserType, 
+        sendUserId: store.state.user.userId}  })
     }
   }
   /** User一覧を取得する */
