@@ -15,8 +15,9 @@
             <v-card>
               <v-list class="p-0" lines="two">
                 <!-- お題 -->
-                <v-tabs bg-color="orange-darken-1">
+                <v-tabs bg-color="orange-darken-1"  class="full-height-tabs">
                   <div class="d-flex align-center">
+                    <h3 class="flex-item" v-html="formatStr(item.themeContent)"></h3>
                     <v-card-title>{{ item.themeContent }}</v-card-title>
                     <v-card-subtitle>{{ item.themeUserName }}</v-card-subtitle>
                   </div>
@@ -42,6 +43,7 @@
                       </template>
                       <!-- 回答情報 -->
                       <div class="d-flex align-center justify-space-between mb-1">
+                        <div v-html="formatStr(answer.answerContent)"></div>
                         <v-list-item-title class="answer-content">{{ answer.answerContent }}</v-list-item-title>
                         <v-btn
                           class="ma-1"
@@ -261,6 +263,10 @@ const redirectToDetails = (answer) => {
   })
 }
 
+const formatStr = (str: string) => {
+  return str.replace(/\r\n|\r|\n/g, "<br>");
+}
+
 // マウント時にデータを取得し代入する
 onMounted(() => {
   getOogiriDetail();
@@ -284,5 +290,8 @@ onMounted(() => {
 }
 .pointer-events-none {
   pointer-events: none;
+}
+.full-height-tabs {
+  height: 100%;
 }
 </style>

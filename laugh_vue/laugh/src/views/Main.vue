@@ -30,7 +30,8 @@
             <v-list-item
               v-for="(item, index) in itemsMatching"
               :key="index"
-              :to="item.link">
+              :to="item.link"
+              @click="reloadPage(item.link)">
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -48,7 +49,8 @@
             <v-list-item
               v-for="(item, index) in itemsOgiri"
               :key="index"
-              :to="item.link">
+              :to="item.link"
+              @click="reloadPage(item.link)">
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -66,7 +68,8 @@
             <v-list-item
               v-for="(item, index) in itemsMypage"
               :key="index"
-              :to="item.link">
+              :to="item.link"
+              @click="reloadPage(item.link)">
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -238,7 +241,12 @@ export default {
     logout() {
       store.commit('token/removeToken');
       this.$router.push({ name: 'login' });
+    },
+    reloadPage(link) {
+    if (this.$route.path === link) {
+      this.$router.go(0);
     }
+  }
   }
 }
 </script>

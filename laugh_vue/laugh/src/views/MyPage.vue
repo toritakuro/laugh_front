@@ -28,7 +28,7 @@
               <ImageModalComponent :userId="store.state.user.userId" :modelValue="modalFlg" :imgBase64="imgSrc" @update:modelValue="setModelValue" @update:imgValue="setImg"></ImageModalComponent>
             </v-col>
             <v-col class="pa-0" lg="6" md="6" sm="12">
-              <v-card-title class="font-weight-black pt-0 pb-0">{{ user.userName }}</v-card-title>
+              <v-card-title class="user-name font-weight-black pt-0 pb-0">{{ user.userName }}</v-card-title>
               <div class="label-color mt-2  mb-2 ml-6"><span>{{ (user.userType == 1) ? '芸歴' : '作家歴' }} {{ user.activityDt }}</span></div>
               <v-card-title class="pt-0 pb-0 text-subtitle-2"></v-card-title>
               <v-card-subtitle class="pt-1"><v-icon icon="mdi-office-building" color="orange-darken-2" />{{ user.officeName }}</v-card-subtitle>
@@ -218,5 +218,9 @@ const deleteImage = () => {
     position: absolute;
     top: 0;
     right: 0;
+  }
+
+  .user-name {
+    white-space: normal;
   }
 </style>
