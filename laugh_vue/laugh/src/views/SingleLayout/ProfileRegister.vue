@@ -218,7 +218,7 @@
                   color="orange"
                 ></v-radio>
                 <v-radio
-                  label="成果物による"
+                  label="出来高による"
                   value="2"
                   color="orange"
                 ></v-radio>

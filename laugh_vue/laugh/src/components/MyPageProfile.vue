@@ -41,7 +41,7 @@
                 <v-col class="mt-1 pt-0 pb-0 pl-0" lg="3">
                   <v-text-field
                     class="input-number"
-                    v-model="userRef.memberNum"
+                    v-model="formatMemberNum"
                     label="活動人数"
                     suffix="人"
                     density="compact"
@@ -206,7 +206,7 @@
                     color="orange-darken-2"
                   ></v-radio>
                     <v-radio
-                    label="成果物"
+                    label="出来高"
                     :value="2"
                     color="orange-darken-2"
                   ></v-radio>
@@ -217,7 +217,7 @@
                 <v-col class="pa-0" lg="3">
                   <v-text-field
                     class="input-number ml-4 mt-1"
-                    v-model="userRef.fee"
+                    v-model="formatFee"
                     :label="feeLabel"
                     :suffix="feeSuffix"
                     density="compact"
@@ -347,13 +347,28 @@ const area = ref<Master[]>([]);
 
 const isComedian = computed(() => userRef.value.userType == 1);
 const isComposer = computed(() => userRef.value.userType == 2);
-const feeLabel = computed(() => (userRef.value.feeType == 1) ? '時給' : '成果物');
+const feeLabel = computed(() => (userRef.value.feeType == 1) ? '時給' : '出来高');
 const feeSuffix = computed(() => (userRef.value.feeType == 1) ? '円/時間' : '円');
+const formatMemberNum = computed({
+  get: () => userRef.value.memberNum,
+  set: (val: any) => {
+    const parsedNum = parseInt(val.replace(/\D/g, ''));
+    userRef.value.memberNum = isNaN(parsedNum) ? 0 : parsedNum;
+  }
+})
+const formatFee = computed({
+  get: () => userRef.value.fee,
+  set: (val: any) => {
+    const parsedNum = parseInt(val.replace(/\D/g, ''));
+    userRef.value.fee = isNaN(parsedNum) ? 0 : parsedNum;
+  }
+})
 
 const emit = defineEmits(['upd-user']);
 const updProfile = async () => {
   await http.post('/profile/edit', userRef.value);
   emit('upd-user');
+  getProfile();
 }
 
 
