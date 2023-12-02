@@ -49,7 +49,7 @@
           </v-col>
           <v-col cols="1">
             <v-btn
-              v-if="item.answerCount === 0"
+              v-if="item.answerCount === 0 && item.themeUserId === userId"
               class="mb-1"
               @click="openDeleteDialog(item.themeId)"
               size="x-small"
@@ -114,7 +114,6 @@ const getOogiri = async () => {
       page: 1
     }
   })
-  console.log(data);
   oogiri.value = data.data;
 }
 

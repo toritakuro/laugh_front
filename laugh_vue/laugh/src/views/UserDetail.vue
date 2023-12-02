@@ -55,6 +55,13 @@
                   text-color="white"
                   >{{ itemName }}
                 </v-chip>
+                <v-chip
+                  v-if="user?.anotherSkill !== null"
+                  class="mr-1 mt-1"
+                  color="orange"
+                  text-color="white"
+                  >{{ user?.anotherSkill }}
+                </v-chip>
               </v-col>
             </v-row>
             <v-row>
