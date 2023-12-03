@@ -122,7 +122,12 @@ onMounted(() => {
   font-size: small;
 }
 .last-message {
+  display: block;
   font-size: small;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 28vh;
 }
 .unread-icon {
   position: absolute;
