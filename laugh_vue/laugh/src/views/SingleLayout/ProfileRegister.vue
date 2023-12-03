@@ -230,7 +230,7 @@
               <v-text-field v-model="profileReq.fee" label="金額" class="input-number" suffix="円" v-if="profileReq.userType == 2 && profileReq.feeType == 2" :rules="[rules.textVerify, rules.isNum]" density="compact"></v-text-field>
             </v-col>
             
-            <v-list-item-tile v-if="profileReq.userType == 2">特技</v-list-item-tile>
+            <v-list-item-tile v-if="profileReq.userType == 2">特殊スキル</v-list-item-tile>
             <v-col class="d-flex justify-start tokugi-box" v-if="profileReq.userType == 2">
               <v-col class="d-flex justify-start" cols="6">
               <v-checkbox

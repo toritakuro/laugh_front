@@ -225,10 +225,10 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <!-- 特技 -->
+              <!-- 特殊スキル -->
               <v-row v-show="isComposer">
                 <v-col class="pt-0 pb-0 pl-0">
-                  <div class="label-color mb-3" ><span>特技</span></div>
+                  <div class="label-color mb-3" ><span>特殊スキル</span></div>
                 </v-col>
               </v-row>
               <v-row class="pl-1" v-show="isComposer" dense="true">

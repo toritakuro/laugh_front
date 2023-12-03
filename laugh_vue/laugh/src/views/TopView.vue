@@ -256,16 +256,16 @@
                     </v-col>
                     <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
                       <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ item.userName }}</v-card-title>
-                      <v-card-subtitle v-if="item.gender == 1"><v-icon icon="mdi-gender-male-female" /> 男 </v-card-subtitle>
-                      <v-card-subtitle v-if="item.gender == 2"><v-icon icon="mdi-gender-male-female" /> 女 </v-card-subtitle>
-                      <v-card-subtitle v-if="item.gender == 3"><v-icon icon="mdi-gender-male-female" /> 男女 </v-card-subtitle>
-                      <v-card-subtitle v-if="item.userType == 1"><v-icon icon="mdi-account" /> {{ item.memberNum }} 人</v-card-subtitle>
-                      <v-card-subtitle v-if="item.userType == 2 && item.feeType == 1"><v-icon icon="mdi-cash-multiple" /> 時給 </v-card-subtitle>
-                      <v-card-subtitle v-if="item.userType == 2 && item.feeType == 2"><v-icon icon="mdi-cash-multiple" /> 出来高 </v-card-subtitle>
-                      <v-card-subtitle v-if="item.userType == 2"><v-icon icon="mdi-currency-jpy" /> {{ item.fee }} 円</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> {{ item.activityDt }}</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-office-building" /> {{ item.officeName }}</v-card-subtitle>
-                      <v-card-subtitle><v-icon icon="mdi-map-marker" /> {{ item.areaName }}</v-card-subtitle>
+                      <v-card-subtitle v-if="item.gender == 1"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 男 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.gender == 2"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 女 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.gender == 3"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 男女 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 1"><v-icon icon="mdi-account" color="orange-darken-2"/> {{ item.memberNum }} 人</v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 2 && item.feeType == 1"><v-icon icon="mdi-cash-multiple" color="orange-darken-2"/> 時給 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 2 && item.feeType == 2"><v-icon icon="mdi-cash-multiple" color="orange-darken-2"/> 出来高 </v-card-subtitle>
+                      <v-card-subtitle v-if="item.userType == 2"><v-icon icon="mdi-currency-jpy" color="orange-darken-2"/> {{ item.fee }} 円</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" color="orange-darken-2"/> {{ item.activityDt }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-office-building" color="orange-darken-2"/> {{ item.officeName }}</v-card-subtitle>
+                      <v-card-subtitle><v-icon icon="mdi-map-marker" color="orange-darken-2"/> {{ item.areaName }}</v-card-subtitle>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -310,7 +310,7 @@
                   </v-row>
                   <v-row>
                     <v-col class="profile_downside">
-                      <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" />自己紹介</v-card-subtitle>
+                      <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" color="orange-darken-2"/>自己紹介</v-card-subtitle>
                       <v-card-text class="text-subtitle-1">{{ item.selfIntroduction }}</v-card-text>
                     </v-col>
                   </v-row>
