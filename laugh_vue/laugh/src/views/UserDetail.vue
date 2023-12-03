@@ -177,6 +177,7 @@
     overflow-y: auto;
     line-height: 1.5rem;
     font-size: 23px;
+    padding-left: 10px;
   }
 
   .float-btn {
