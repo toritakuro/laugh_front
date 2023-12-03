@@ -25,16 +25,16 @@
               </v-col>
               <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
                 <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ user?.userName }}</v-card-title>
-                <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" /> 性別： 男 </v-card-subtitle>
-                <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" /> 性別： 女 </v-card-subtitle>
-                <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" /> 性別： 男女 </v-card-subtitle>
-                <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" /> メンバー： {{ user?.memberNum }} 人</v-card-subtitle>
-                <v-card-subtitle v-if="user?.userType == 2 && user?.feeType == 1"><v-icon icon="mdi-cash-multiple" /> 料金体系： 時給 </v-card-subtitle>
-                <v-card-subtitle v-if="user?.userType == 2 && user?.feeType == 2"><v-icon icon="mdi-cash-multiple" /> 料金体系： 出来高 </v-card-subtitle>
-                <v-card-subtitle v-if="user?.userType == 2"><v-icon icon="mdi-currency-jpy" /> 料金： {{ user?.fee }} 円</v-card-subtitle>
-                <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" /> 活動歴： {{ user?.activityDt }}</v-card-subtitle>
-                <v-card-subtitle><v-icon icon="mdi-office-building" /> 事務所： {{ user?.officeName }}</v-card-subtitle>
-                <v-card-subtitle><v-icon icon="mdi-map-marker" /> 活動地域： {{ user?.areaName }}</v-card-subtitle>
+                <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 性別： 男 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 性別： 女 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 性別： 男女 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 1"><v-icon icon="mdi-account" color="orange-darken-2"/> メンバー： {{ user?.memberNum }} 人</v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 2 && user?.feeType == 1"><v-icon icon="mdi-cash-multiple" color="orange-darken-2"/> 料金体系： 時給 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 2 && user?.feeType == 2"><v-icon icon="mdi-cash-multiple" color="orange-darken-2"/> 料金体系： 出来高 </v-card-subtitle>
+                <v-card-subtitle v-if="user?.userType == 2"><v-icon icon="mdi-currency-jpy" color="orange-darken-2"/> 料金： {{ user?.fee }} 円</v-card-subtitle>
+                <v-card-subtitle><v-icon icon="mdi-calendar-account-outline" color="orange-darken-2"/> 活動歴： {{ user?.activityDt }}</v-card-subtitle>
+                <v-card-subtitle><v-icon icon="mdi-office-building" color="orange-darken-2"/> 事務所： {{ user?.officeName }}</v-card-subtitle>
+                <v-card-subtitle><v-icon icon="mdi-map-marker" color="orange-darken-2"/> 活動地域： {{ user?.areaName }}</v-card-subtitle>
               </v-col>
             </v-row>
             <v-row>
@@ -78,7 +78,7 @@
             </v-row>
             <v-row>
               <v-col class="profile_downside">
-                <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" />自己紹介</v-card-subtitle>
+                <v-card-subtitle class="mb-1 text-subtitle-1"><v-icon icon="mdi-comment-account-outline" color="orange-darken-2"/>自己紹介</v-card-subtitle>
                 <v-card-text class="text-subtitle-1 profile_selfIntroduction">{{ user?.selfIntroduction }}</v-card-text>
               </v-col>
             </v-row>
