@@ -449,7 +449,7 @@
   .profile_info_name {
     border-bottom: 2px solid #FB8C00;
     margin-left: 7px;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
   }
   .profile_downside {
     padding: 0.5rem 0rem;
