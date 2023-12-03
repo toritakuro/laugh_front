@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid="true" class="content">
+  <v-container fluid="true" class="content" id="page-top">
     <v-row>
       <v-col cols="6" class="content_box">
         <v-card class="mx-auto pa-2 detail_card">
@@ -247,7 +247,10 @@
   import http from "@/http-common"
   import type User from "@/types/User";
 
-  onMounted(() => { getData(); });
+  onMounted(() => { 
+    getData();
+    moveToTop();
+   });
 
   const oogiriRef = ref();
   const contentRef = ref();
@@ -257,6 +260,13 @@
   const userType = store.getters['user/getUserType'];
   const src = ref("/img/man.svg");
 
+  /** スクロール位置を一番上へ */
+  const moveToTop = () => { 
+    document.getElementById('page-top').scrollIntoView({
+      behavior: 'auto',
+      block: 'start'
+    }); 
+  }
   
   /** 大喜利取得 */
   const getOogiri = () => {
