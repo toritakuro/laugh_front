@@ -22,7 +22,7 @@
           </v-avatar>
           </td>
           <td class="name pa-0 font-weight-bold">{{ item.name }}</td>
-          <td class="text-right active-term  pa-0">{{ item.activeTermYear }}年目</td>
+          <td class="text-right active-term  pa-0">{{ item.activeTermYear }}年 {{ item.activeTermMonth }}ヶ月</td>
           <td>
             <v-chip
               class="ma-2"
