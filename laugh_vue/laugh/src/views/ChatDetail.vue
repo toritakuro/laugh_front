@@ -49,8 +49,9 @@
                 v-model="newMessage"
                 clearable
                 auto-grow
-                hide-details="false"
                 rows="2"
+                counter
+                :maxlength="500"
               ></v-textarea>
             </v-col>
             <v-col cols="2" align-self="end">
@@ -224,6 +225,7 @@ defineExpose({
   margin: 0 !important;
   line-height: 1.5;
   text-align: left;
+  word-break: break-word;
 }
 .says p {
   margin: 8px 0 0 !important;
@@ -244,6 +246,6 @@ defineExpose({
   align-self: flex-end;
 }
 .send-btn {
-  margin-bottom: 5px;
+  margin-bottom: 20px;
 }
 </style>
