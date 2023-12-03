@@ -24,7 +24,7 @@
               </div>
               </v-col>
               <v-col class="pa-0 profile_info" lg="6" md="6" sm="12">
-                <v-card-title class="font-weight-black pt-0 pb-0 profile_info_name">{{ user?.userName }}</v-card-title>
+                <span class="font-weight-black pt-1 pb-2 profile_info_name">{{ user?.userName }}</span>
                 <v-card-subtitle v-if="user?.gender == 1"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 性別： 男 </v-card-subtitle>
                 <v-card-subtitle v-if="user?.gender == 2"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 性別： 女 </v-card-subtitle>
                 <v-card-subtitle v-if="user?.gender == 3"><v-icon icon="mdi-gender-male-female" color="orange-darken-2"/> 性別： 男女 </v-card-subtitle>
@@ -170,6 +170,13 @@
     border-bottom: 2px solid #FB8C00;
     margin-left: 7px;
     margin-bottom: 20px;
+    display: -webkit-box; /* 必須 */
+    -webkit-box-orient: vertical; /* 必須 */
+    overflow: hidden;
+    max-height: 85px;
+    overflow-y: auto;
+    line-height: 1.5rem;
+    font-size: 23px;
   }
 
   .float-btn {
