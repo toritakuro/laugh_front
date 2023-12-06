@@ -18,7 +18,6 @@
                 <v-tabs bg-color="orange-darken-1"  class="full-height-tabs">
                   <div class="d-flex align-center">
                     <h3 class="flex-item" v-html="formatStr(item.themeContent)"></h3>
-                    <v-card-title>{{ item.themeContent }}</v-card-title>
                     <v-card-subtitle>{{ item.themeUserName }}</v-card-subtitle>
                   </div>
                 </v-tabs>
@@ -43,8 +42,7 @@
                       </template>
                       <!-- 回答情報 -->
                       <div class="d-flex align-center justify-space-between mb-1">
-                        <div v-html="formatStr(answer.answerContent)"></div>
-                        <v-list-item-title class="answer-content">{{ answer.answerContent }}</v-list-item-title>
+                        <div v-html="formatStr(answer.answerContent)" class="answer-content"></div>
                         <v-btn
                           class="ma-1"
                           :disabled="isUserAnswer(answer)"
