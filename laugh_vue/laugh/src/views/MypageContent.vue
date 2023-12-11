@@ -78,8 +78,9 @@
               </div>
               <div>
                 <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
-                  <div v-html="limitedDetail(formatDetail(item.detail))"></div>
-                  <span @click="openEdit(item)" class="show-more">もっと見る</span>
+                  <!-- <div v-html="limitedDetail(formatDetail(item.detail))"></div> -->
+                  {{ item.detail }}
+                  <!-- <span @click="openEdit(item)" class="show-more">もっと見る</span> -->
                 </div>
                 <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
               </div>
@@ -144,8 +145,9 @@
               </div>
               <div>
                 <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
-                  <div v-html="limitedDetail(formatDetail(item.detail))"></div>
-                  <span @click="openEdit(item)" class="show-more">もっと見る</span>
+                  <!-- <div v-html="limitedDetail(formatDetail(item.detail))"></div> -->
+                  {{ item.detail }}
+                  <!-- <span @click="openEdit(item)" class="show-more">もっと見る</span> -->
                 </div>
                 <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
               </div>
