@@ -17,7 +17,7 @@
                 <!-- お題 -->
                 <v-tabs bg-color="orange-darken-1"  class="full-height-tabs">
                   <div class="d-flex align-center">
-                    <h3 class="flex-item" v-html="formatStr(item.themeContent)"></h3>
+                    <h3 class="flex-item pl-5" v-html="formatStr(item.themeContent)"></h3>
                     <v-card-subtitle>{{ item.themeUserName }}</v-card-subtitle>
                   </div>
                 </v-tabs>

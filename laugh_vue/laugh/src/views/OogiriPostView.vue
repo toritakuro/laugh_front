@@ -34,33 +34,35 @@
     </v-card>
 
     <div style="height: 460px; overflow-y: auto;">
-      <v-list  v-for="(item, i) in oogiri" :key="i">
-        <v-row no-gutters id="theme-height">
-          <v-col cols="9">
-            <router-link :to="{ path: '/oogiri/detail', query: { themeId: item.themeId } }">
-              <v-list-item-title id="theme">
-                <v-icon color="orange-darken-1">mdi mdi-note-text-outline</v-icon>
-                {{ item.themeContent }}
-              </v-list-item-title>
-            </router-link>
-          </v-col>
-          <v-col cols="2">
-            <v-list-item-title>回答数 {{ item.answerCount }}件</v-list-item-title>
-          </v-col>
-          <v-col cols="1">
-            <v-btn
-              v-if="item.answerCount === 0 && item.themeUserId === userId"
-              class="mb-1"
-              @click="openDeleteDialog(item.themeId)"
-              size="x-small"
-              icon
-              color="orange-darken-1">
-              <v-icon>mdi-trash-can-outline</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-divider class="mt-2"></v-divider>
-      </v-list>
+      <div v-for="(item, i) in oogiri" :key="i">
+        <v-list v-if="item.themeUserId == userId">
+          <v-row no-gutters id="theme-height">
+            <v-col cols="9">
+              <router-link :to="{ path: '/oogiri/detail', query: { themeId: item.themeId } }">
+                <v-list-item-title id="theme">
+                  <v-icon color="orange-darken-1">mdi mdi-note-text-outline</v-icon>
+                  {{ item.themeContent }}
+                </v-list-item-title>
+              </router-link>
+            </v-col>
+            <v-col cols="2">
+              <v-list-item-title>回答数 {{ item.answerCount }}件</v-list-item-title>
+            </v-col>
+            <v-col cols="1">
+              <v-btn
+                v-if="item.answerCount === 0 && item.themeUserId === userId"
+                class="mb-1"
+                @click="openDeleteDialog(item.themeId)"
+                size="x-small"
+                icon
+                color="orange-darken-1">
+                <v-icon>mdi-trash-can-outline</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-divider class="mt-2"></v-divider>
+        </v-list>
+      </div>
     </div>
     <!-- 削除モーダル -->
     <v-dialog v-model="showDialog" width="auto">
