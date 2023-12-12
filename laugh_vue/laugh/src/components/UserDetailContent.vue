@@ -13,11 +13,15 @@
             <v-card class="pb-2">
               <v-list>
                 <div>
-                  <v-card-title>{{ item.title }}</v-card-title>
+                <v-card-title @mouseover="showTooltip(i,item.title,'movie')" @mouseout="hideTooltip">{{ item.title }}</v-card-title>
+                <!-- 吹き出しの表示部分 -->
+                <div v-if="tooltipVisible && tooltipVisibleNum == i && tooltipVisibleType == 'movie'" class="tooltip" @mouseover.stop @mouseout.stop>
+                  {{ item.title }}
                 </div>
+              </div>
                 <div>
                   <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
-                    <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                    {{ item.detail }}
                   </div>
                   <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
                 </div>
@@ -56,11 +60,15 @@
             <v-card class="pb-2">
               <v-list>
                 <div>
-                  <v-card-title>{{ item.title }}</v-card-title>
+                <v-card-title @mouseover="showTooltip(i,item.title,'pdf')" @mouseout="hideTooltip">{{ item.title }}</v-card-title>
+                <!-- 吹き出しの表示部分 -->
+                <div v-if="tooltipVisible && tooltipVisibleNum == i && tooltipVisibleType == 'pdf'" class="tooltip" @mouseover.stop @mouseout.stop>
+                  {{ item.title }}
                 </div>
+              </div>
                 <div>
                   <div v-if="isTooLong(formatDetail(item.detail))" class="detail-text">
-                    <div v-html="limitedDetail(formatDetail(item.detail))"></div>
+                    {{ item.detail }}
                   </div>
                   <div v-else class="detail-text" v-html="formatDetail(item.detail)"></div>
                 </div>
@@ -173,6 +181,40 @@
   defineExpose({
     getContent,
   })
+
+  // 投稿ファイルのタイトル処理
+  const tooltipVisible = ref(false);
+  const tooltipVisibleNum = ref(0);
+  const tooltipVisibleType = ref();
+
+  const showTooltip = (i:number, text:string, type:string) => {
+    var zenkakuNum = countFullWidthCharacters(text)*2;
+    var hankakuNum = countHalfWidthCharacters(text);
+
+    if(zenkakuNum > 10 || hankakuNum > 9 || zenkakuNum + hankakuNum > 10) {
+      tooltipVisible.value = true;
+    }
+    tooltipVisibleNum.value = i;
+    tooltipVisibleType.value = type;
+  };
+
+  const hideTooltip = () => {
+    tooltipVisible.value = false;
+  };
+  function countHalfWidthCharacters(input: string): number {
+    // 半角文字の範囲を正規表現で指定
+    const halfWidthRegex = /[ -~]/g;
+    const matches = input.match(halfWidthRegex);
+
+    return matches ? matches.length : 0;
+  }
+  function countFullWidthCharacters(input: string): number {
+    // 全角文字の範囲を正規表現で指定
+    const fullWidthRegex = /[^\x00-\x7F]/g;
+    const matches = input.match(fullWidthRegex);
+
+    return matches ? matches.length : 0;
+  }
   </script>
   
 <style scoped>
@@ -239,5 +281,12 @@
   }
   ::-webkit-scrollbar-thumb {
   border-radius: 5px;
+}
+.tooltip {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>
